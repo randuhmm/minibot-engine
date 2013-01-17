@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>MiniBot Library Demo</title>
+	<meta charset="utf-8">
+    <script src="../lib/prototype.js" type="text/javascript"></script>
+    <script type="text/javascript">
+			(function() {
+				var main = function() 
+				{
+					var paramString = window.location.search.substring(1);
+					var params = paramString.toQueryParams();
+					var dataMain = 'js/test/main.js';
+					var requireJS = '../lib/require.js';
+					if('debug' in params) {
+						dataMain = 'js/test/main.debug.js';
+					}
+					var script = new Element('script', {
+						'type'		:	'text/javascript',
+						'charset'	: 	'utf-8',
+						'src'		: 	requireJS,
+						'data-main'	: 	dataMain
+					});
+					$$('head')[0].insert(script);
+				}
+				
+				main();
+				
+			}());
+	</script>
+</head>
+<body>
+</body>
+</html>

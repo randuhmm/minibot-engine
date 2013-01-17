@@ -1,0 +1,51 @@
+// see a complete list of options here:
+// https://github.com/jrburke/r.js/blob/master/build/example.build.js
+({
+  // all modules loaded are relative to this path
+  // e.g. require(["grid/core"]) would grab /lib/grid/core.js
+  baseUrl: "../../src",
+
+  // specify custom module name paths
+  paths: {
+    "prototype": "../lib/prototype"
+  },
+
+  // target amd loader shim as the main module, path is relative to baseUrl.
+  name: "minibot",
+
+  optimize: "none",
+
+  // files to include along with almond.  only lib/skeleton.js is defined, as
+  // it pulls in the rest of the dependencies automatically.
+
+  // code to wrap around the start / end of the resulting build file
+  // the global variable used to expose the API is defined here
+  /*
+  wrap: {
+    start: "(function(global, define) {\n"+
+              // check for amd loader on global namespace
+           "  var globalDefine = global.define;\n",
+
+    end:   "  var library = require('miniboss');\n"+
+           "  if(typeof module !== 'undefined' && module.exports) {\n"+
+                // export library for node
+           "    module.exports = library;\n"+
+           "  } else if(globalDefine) {\n"+
+                // define library for global amd loader that is already present
+           "    (function (define) {\n"+
+           "      define(function () { return library; });\n"+
+           "    }(globalDefine));\n"+
+           "  } else {\n"+
+                // define library on global namespace for inline script loading
+           "    global['miniboss'] = library;\n"+
+           "  }\n"+
+           "}(this));\n"
+  },
+  */
+
+  // don't include coffeescript compiler in optimized file
+  exclude: ["prototype"],
+
+  // build file destination, relative to the build file itself
+  out: "../../bin/js/minibot.js"
+})
