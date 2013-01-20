@@ -2,7 +2,6 @@
   
   <property name="r.js" location="${basedir}/build/lib/r.js"/>
   <property name="minibot.build.js" location="${basedir}/build/lib/minibot.build.js"/>
-  <property name="minibot.iso.build.js" location="${basedir}/build/lib/minibot.iso.build.js"/>
   
   <property name="jsdoc" location="${basedir}/build/lib/jsdoc-toolkit"/>
   <property name="minibot.doc.conf" location="${basedir}/build/lib/minibot.doc.conf"/>
@@ -19,12 +18,6 @@
       <arg value="${r.js}"/>
       <arg value="-o"/>
       <arg value="${minibot.build.js}"/>
-    </exec>
-    
-    <exec executable="node">
-      <arg value="${r.js}"/>
-      <arg value="-o"/>
-      <arg value="${minibot.iso.build.js}"/>
     </exec>
     
   </target>
