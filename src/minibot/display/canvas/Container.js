@@ -63,9 +63,24 @@ define(
 							if(displayObject === layer[d]) {
 								layer.splice(d, 1);
 								displayObject.onRemovedFromCanvas();
+								return;
 							}
 						}
 					}
+				},
+				
+				removeAll: function()
+				{
+					var layers = this.layers;
+					var displayObject;
+					for(var l = 0; l < layers.length; l++) {
+						var layer = layers[l];
+						for(var d = 0; d < layer.length; d++) {
+							displayObject = layer[d]
+							displayObject.onRemovedFromCanvas();
+						}
+					}
+					this.layers = new Array();
 				},
 				
 				render: function(dt, context, x, y)
@@ -109,6 +124,24 @@ define(
 					else
 						console.log('undefined context??');
 					*/
+				},
+				
+				setChildIndex: function(displayObject, index)
+				{
+					for(var l = 0; l < this.layers.length; l++) {
+						var layer = this.layers[l];
+						for(var d = 0; d < layer.length; d++) {
+							if(displayObject === layer[d]) {
+								
+								if(index >= layer.length) return;
+								
+								layer.splice(d, 1);
+								layer.splice(index, 0, displayObject);
+								
+								return;
+							}
+						}
+					}
 				},
 				
 				dispatchEvent: function($super, event)

@@ -6,11 +6,13 @@
  */
 define(
 	[
-		'minibot/resource/Resource'
+		'minibot/resource/Resource',
+		'minibot/resource/SpriteResource'
 	],
 	function
 	(
-		Resource
+		Resource,
+		SpriteResource
 	)
 	{
 		var AnimationResource = Class.create(
@@ -41,8 +43,15 @@ define(
 					$super(id);
 					
 					
-					if(data.frames != undefined) this.spriteIds = data.frames;
-					if(data.delays != undefined) this.delays = data.delays;
+					this.spriteIds = [];
+					this.delays = [];
+					if(data.frames != undefined) {
+
+						for(var i = 0; i < data.frames.length; i++) {
+							this.spriteIds.push(data.frames[i].sprite_id);
+							this.delays.push(data.frames[i].delay);
+						}
+					}
 					
 					this.numberOfFrames = this.spriteIds.length;
 					

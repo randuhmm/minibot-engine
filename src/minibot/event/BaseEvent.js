@@ -12,6 +12,8 @@ function(utils)
 			
 			data: null,
 			
+			target: null,
+			
 			initialize: function(type, data)
 			{
 				this.type = type;

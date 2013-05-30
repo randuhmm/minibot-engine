@@ -14,6 +14,8 @@ define(
 				
 				sprite: null,
 				
+				composite: null,
+				
 				/**
 				 * Description of constructor.
 				 * @class Short description of class.

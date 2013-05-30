@@ -6,11 +6,13 @@
  */
 define(
 	[
-		'minibot/resource/Resource'
+		'minibot/resource/Resource',
+		'minibot/resource/ImageResource'
 	],
 	function
 	(
-		Resource
+		Resource,
+		ImageResource
 	)
 	{
 		
@@ -56,17 +58,22 @@ define(
 				
 				load: function(manager, callback)
 				{
-					this.imageResource = manager.getResource(
-						ImageResource.TYPE,
-						this.imageId
-					);
+					try {
+						this.imageResource = manager.getResource(
+							ImageResource.TYPE,
+							this.imageId
+						);
+						
+						this.img = this.imageResource.img;
+						
+						if(this.w == -1) this.w = this.img.width;
+						if(this.h == -1) this.h = this.img.height;
+						
+						this.loaded = true;
+					} catch(e) {
+						console.log("ERROR");
+					}
 					
-					this.img = this.imageResource.img;
-					
-					if(this.w == -1) this.w = this.img.width;
-					if(this.h == -1) this.h = this.img.height;
-					
-					this.loaded = true;
 					callback();
 				}
 			}

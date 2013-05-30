@@ -123,6 +123,9 @@ define(
 				}
 				
 			}
-		)
+		);
+		
+		return Button;
+		
 	}
 );

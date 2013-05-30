@@ -51,6 +51,7 @@ define(
 					} else {
 						callbacks = this.listeners[event.type];
 					}
+					event.target = this;
 					for(var i = 0; i < callbacks.length; i++) {
 						var callback = callbacks[i];
 						callback(event);

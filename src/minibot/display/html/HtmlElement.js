@@ -139,6 +139,18 @@ define(
 								case HtmlEvent.KEY_UP:
 									htmlType = 'keyup';
 									break;
+								case HtmlEvent.DRAG_ENTER:
+									htmlType = 'dragenter';
+									break;
+								case HtmlEvent.DRAG_EXIT:
+									htmlType = 'dragexit';
+									break;
+								case HtmlEvent.DRAG_OVER:
+									htmlType = 'dragover';
+									break;
+								case HtmlEvent.DROP:
+									htmlType = 'drop';
+									break;
 								default:
 									break;
 							}

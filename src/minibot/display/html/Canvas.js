@@ -43,15 +43,19 @@ define(
 					
 					this.container = new Container();
 					this.container.resizable = false;
-					this.container.w = this.element.width;
-					this.container.h = this.element.height;
+					this.container.w = this.w = this.element.width;
+					this.container.h = this.h = this.element.height;
 					this.container.root = this.container;
 					this.container.canvas = this;
 					
 					var topElement = element;
 					if(overlay != undefined) topElement = overlay;
 					
-					if('createTouch' in document) {
+					//topElement.observe('mousedown', this.handleUIEvent.bind(this));
+					//topElement.observe('mouseup', this.handleUIEvent.bind(this));
+					//topElement.observe('mousemove', this.handleUIEvent.bind(this));
+					
+					if(Canvas.TOUCH_EVENTS) {
 						topElement.observe('touchstart', this.handleUIEvent.bind(this));
 						topElement.observe('touchend', this.handleUIEvent.bind(this));
 						topElement.observe('touchmove', this.handleUIEvent.bind(this));
@@ -94,7 +98,7 @@ define(
 				
 				removeAllChildren: function()
 				{
-					this.container.layers = [];
+					this.container.removeAll();
 				},
 				
 				addToHtmlOverlay: function(element)
@@ -120,7 +124,7 @@ define(
 				
 				clear: function()
 				{
-					this.element.width = this.element.width;
+					this.element.width = this.w;
 				},
 				
 				render: function(dt)
@@ -153,13 +157,16 @@ define(
 					var y = (event.currentTarget.offsetTop * -1) + (event.currentTarget.offsetParent.offsetTop * -1);
 					var type;
 					
-					if('createTouch' in document) {
+					if(Canvas.TOUCH_EVENTS) {
 						x += event.changedTouches[0].clientX;
 						y += event.changedTouches[0].clientY;
 					} else {
 						x += event.clientX;
 						y += event.clientY;
 					}
+					
+					//x += event.clientX;
+					//y += event.clientY;
 					
 					x = x * this.scale;
 					y = y * this.scale;
@@ -188,6 +195,8 @@ define(
 				
 			}
 		);
+		
+		Canvas.TOUCH_EVENTS = false;
 		
 		return Canvas;
 		

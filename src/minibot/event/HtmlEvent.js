@@ -25,7 +25,12 @@ function(utils, BaseEvent)
 			KEY_UP:			"HtmlEvent_KeyUp",
 			
 			FOCUS:			"HtmlEvent_Focus",
-			BLUR:			"HtmlEvent_Blur"
+			BLUR:			"HtmlEvent_Blur",
+			
+			DRAG_ENTER:		"HtmlEvent_DragEnter",
+			DRAG_EXIT:		"HtmlEvent_DragExit",
+			DRAG_OVER:		"HtmlEvent_DragOver",
+			DROP:			"HtmlEvent_Drop"
 		}
 	)
 });
