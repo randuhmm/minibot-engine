@@ -247,6 +247,7 @@ define('minibot/event/EventDispatcher',
 					} else {
 						callbacks = this.listeners[event.type];
 					}
+					event.target = this;
 					for(var i = 0; i < callbacks.length; i++) {
 						var callback = callbacks[i];
 						callback(event);
@@ -625,6 +626,8 @@ function(utils)
 			
 			data: null,
 			
+			target: null,
+			
 			initialize: function(type, data)
 			{
 				this.type = type;
@@ -720,7 +723,10 @@ define('minibot/display/canvas/Button',
 				 * Long Description of class.
 				 * @extends display.canvas.CanvasDisplayObject
 				 * @constructs
-				 * @param 
+				 * @param
+				 * @param {display.DisplayObject} upState The resource to display when the button is "up".
+				 * @param {display.DisplayObject} downState The resource to display when the button is "down".
+				 * @param {display.DisplayObject} overState The resource to display when the button is "over".
 				 */
 				initialize: function($super, upState, downState, overState)
 				{
@@ -743,6 +749,19 @@ define('minibot/display/canvas/Button',
 					this.touchEndCallback = this.handleTouchEnd.bindAsEventListener(this);
 				},
 				
+				/** 
+				 * Function description.
+				 * @access public
+				 */
+				render: function(dt, context, x, y)
+				{
+					this.currentState.render(dt, context, this.x + x, this.y + y);
+				},
+				
+				/** 
+				 * Function description.
+				 * @access protected
+				 */
 				onAddedToCanvas: function($super)
 				{
 					$super();
@@ -753,13 +772,10 @@ define('minibot/display/canvas/Button',
 					}.bind(this));
 				},
 				
-				render: function(dt, context, x, y)
-				{
-					this.currentState.render(dt, context, this.x + x, this.y + y);
-					//context.strokeStyle = '#000000';
-					//context.strokeRect(this.x + x, this.y + y, this.w, this.h);
-				},
-				
+				/** 
+				 * Function description.
+				 * @access protected
+				 */
 				dispatchEvent: function($super, event)
 				{
 					if(!this.isDown) {
@@ -781,6 +797,10 @@ define('minibot/display/canvas/Button',
 					return $super(event);
 				},
 				
+				/** 
+				 * Function description.
+				 * @access private
+				 */
 				handleTouchMove: function(event)
 				{
 					var canvasX = this.getCanvasX();
@@ -799,9 +819,12 @@ define('minibot/display/canvas/Button',
 					}
 				},
 				
+				/** 
+				 * Function description.
+				 * @access private
+				 */
 				handleTouchEnd: function(event)
 				{
-					console.log("handleTouchEnd");
 					this.currentState = this.upState;
 					this.isDown = false;
 					this.root.removeEventListener(UIEvent.TOUCH_MOVE, this.touchMoveCallback);
@@ -809,7 +832,10 @@ define('minibot/display/canvas/Button',
 				}
 				
 			}
-		)
+		);
+		
+		return Button;
+		
 	}
 );
 
@@ -878,9 +904,24 @@ define('minibot/display/canvas/Container',
 							if(displayObject === layer[d]) {
 								layer.splice(d, 1);
 								displayObject.onRemovedFromCanvas();
+								return;
 							}
 						}
 					}
+				},
+				
+				removeAll: function()
+				{
+					var layers = this.layers;
+					var displayObject;
+					for(var l = 0; l < layers.length; l++) {
+						var layer = layers[l];
+						for(var d = 0; d < layer.length; d++) {
+							displayObject = layer[d]
+							displayObject.onRemovedFromCanvas();
+						}
+					}
+					this.layers = new Array();
 				},
 				
 				render: function(dt, context, x, y)
@@ -924,6 +965,24 @@ define('minibot/display/canvas/Container',
 					else
 						console.log('undefined context??');
 					*/
+				},
+				
+				setChildIndex: function(displayObject, index)
+				{
+					for(var l = 0; l < this.layers.length; l++) {
+						var layer = this.layers[l];
+						for(var d = 0; d < layer.length; d++) {
+							if(displayObject === layer[d]) {
+								
+								if(index >= layer.length) return;
+								
+								layer.splice(d, 1);
+								layer.splice(index, 0, displayObject);
+								
+								return;
+							}
+						}
+					}
 				},
 				
 				dispatchEvent: function($super, event)
@@ -1203,6 +1262,8 @@ define('minibot/display/canvas/Sprite',
 			{
 				
 				sprite: null,
+				
+				composite: null,
 				
 				/**
 				 * Description of constructor.
@@ -1498,7 +1559,12 @@ function(utils, BaseEvent)
 			KEY_UP:			"HtmlEvent_KeyUp",
 			
 			FOCUS:			"HtmlEvent_Focus",
-			BLUR:			"HtmlEvent_Blur"
+			BLUR:			"HtmlEvent_Blur",
+			
+			DRAG_ENTER:		"HtmlEvent_DragEnter",
+			DRAG_EXIT:		"HtmlEvent_DragExit",
+			DRAG_OVER:		"HtmlEvent_DragOver",
+			DROP:			"HtmlEvent_Drop"
 		}
 	)
 });
@@ -1645,6 +1711,18 @@ define('minibot/display/html/HtmlElement',
 								case HtmlEvent.KEY_UP:
 									htmlType = 'keyup';
 									break;
+								case HtmlEvent.DRAG_ENTER:
+									htmlType = 'dragenter';
+									break;
+								case HtmlEvent.DRAG_EXIT:
+									htmlType = 'dragexit';
+									break;
+								case HtmlEvent.DRAG_OVER:
+									htmlType = 'dragover';
+									break;
+								case HtmlEvent.DROP:
+									htmlType = 'drop';
+									break;
 								default:
 									break;
 							}
@@ -1745,13 +1823,99 @@ define('minibot/resource/Resource',
  * @author Jonny Morrill jonny@morrill.me
  * @version 0.1
  */
-define('minibot/resource/SpriteResource',
+define('minibot/resource/ImageResource',
 	[
 		'minibot/resource/Resource'
 	],
 	function
 	(
 		Resource
+	)
+	{
+		
+		var ImageResource = Class.create(
+			Resource,
+			/** @lends resource.ImageResource# */
+			{
+				
+				/**
+				 * The src URL.
+				 * @type String
+				 */
+				src: null,
+				
+				/**
+				 * The Image object.
+				 * @type Image
+				 */
+				img: null,
+				
+				/**
+				 * Create a new ImageResource object. 
+				 * @class The base ImageResource object.
+				 * It is intended to be used as an Interface, although such types are not
+				 * @extends resource.Resource
+				 * @constructs
+				 * @param {String} id The id of the Resource.
+				 * @param {Object} data The data associated with the Resource.
+				 * @param 
+				 */
+				initialize: function($super, id, data)
+				{
+					$super(id);
+					if(data.src != undefined) this.src = data.src;
+				},
+				
+				load: function(manager, callback)
+				{
+					this.loaded = true;
+					if(this.src != null) {
+						this.img = new Image();
+						this.img.addEventListener("load", this.handleLoadImageSuccess.bindAsEventListener(this, callback), false);
+						this.img.addEventListener("error", this.handleLoadImageFailure.bindAsEventListener(this, callback), false);
+						this.img.src = this.src;
+					} else {
+						callback();
+					}
+				},
+				
+				handleLoadImageSuccess: function(event, callback)
+				{
+					callback();
+				},
+				
+				handleLoadImageFailure: function(event, callback)
+				{
+					// TODO: Adjust error reporting
+					console.log('ImageResource: Failed to load image.');
+					callback();
+				}
+				
+			}
+		);
+		
+		ImageResource.TYPE = 1;
+		
+		return ImageResource;
+		
+	}
+);
+
+/** 
+ * @fileoverview 
+ *
+ * @author Jonny Morrill jonny@morrill.me
+ * @version 0.1
+ */
+define('minibot/resource/SpriteResource',
+	[
+		'minibot/resource/Resource',
+		'minibot/resource/ImageResource'
+	],
+	function
+	(
+		Resource,
+		ImageResource
 	)
 	{
 		
@@ -1797,17 +1961,22 @@ define('minibot/resource/SpriteResource',
 				
 				load: function(manager, callback)
 				{
-					this.imageResource = manager.getResource(
-						ImageResource.TYPE,
-						this.imageId
-					);
+					try {
+						this.imageResource = manager.getResource(
+							ImageResource.TYPE,
+							this.imageId
+						);
+						
+						this.img = this.imageResource.img;
+						
+						if(this.w == -1) this.w = this.img.width;
+						if(this.h == -1) this.h = this.img.height;
+						
+						this.loaded = true;
+					} catch(e) {
+						console.log("ERROR");
+					}
 					
-					this.img = this.imageResource.img;
-					
-					if(this.w == -1) this.w = this.img.width;
-					if(this.h == -1) this.h = this.img.height;
-					
-					this.loaded = true;
 					callback();
 				}
 			}
@@ -1865,15 +2034,19 @@ define('minibot/display/html/Canvas',
 					
 					this.container = new Container();
 					this.container.resizable = false;
-					this.container.w = this.element.width;
-					this.container.h = this.element.height;
+					this.container.w = this.w = this.element.width;
+					this.container.h = this.h = this.element.height;
 					this.container.root = this.container;
 					this.container.canvas = this;
 					
 					var topElement = element;
 					if(overlay != undefined) topElement = overlay;
 					
-					if('createTouch' in document) {
+					//topElement.observe('mousedown', this.handleUIEvent.bind(this));
+					//topElement.observe('mouseup', this.handleUIEvent.bind(this));
+					//topElement.observe('mousemove', this.handleUIEvent.bind(this));
+					
+					if(Canvas.TOUCH_EVENTS) {
 						topElement.observe('touchstart', this.handleUIEvent.bind(this));
 						topElement.observe('touchend', this.handleUIEvent.bind(this));
 						topElement.observe('touchmove', this.handleUIEvent.bind(this));
@@ -1916,7 +2089,7 @@ define('minibot/display/html/Canvas',
 				
 				removeAllChildren: function()
 				{
-					this.container.layers = [];
+					this.container.removeAll();
 				},
 				
 				addToHtmlOverlay: function(element)
@@ -1942,7 +2115,7 @@ define('minibot/display/html/Canvas',
 				
 				clear: function()
 				{
-					this.element.width = this.element.width;
+					this.element.width = this.w;
 				},
 				
 				render: function(dt)
@@ -1975,13 +2148,16 @@ define('minibot/display/html/Canvas',
 					var y = (event.currentTarget.offsetTop * -1) + (event.currentTarget.offsetParent.offsetTop * -1);
 					var type;
 					
-					if('createTouch' in document) {
+					if(Canvas.TOUCH_EVENTS) {
 						x += event.changedTouches[0].clientX;
 						y += event.changedTouches[0].clientY;
 					} else {
 						x += event.clientX;
 						y += event.clientY;
 					}
+					
+					//x += event.clientX;
+					//y += event.clientY;
 					
 					x = x * this.scale;
 					y = y * this.scale;
@@ -2010,6 +2186,8 @@ define('minibot/display/html/Canvas',
 				
 			}
 		);
+		
+		Canvas.TOUCH_EVENTS = false;
 		
 		return Canvas;
 		
@@ -2428,11 +2606,13 @@ define('minibot/resource/ResourceManager',
  */
 define('minibot/resource/AnimationResource',
 	[
-		'minibot/resource/Resource'
+		'minibot/resource/Resource',
+		'minibot/resource/SpriteResource'
 	],
 	function
 	(
-		Resource
+		Resource,
+		SpriteResource
 	)
 	{
 		var AnimationResource = Class.create(
@@ -2463,8 +2643,15 @@ define('minibot/resource/AnimationResource',
 					$super(id);
 					
 					
-					if(data.frames != undefined) this.spriteIds = data.frames;
-					if(data.delays != undefined) this.delays = data.delays;
+					this.spriteIds = [];
+					this.delays = [];
+					if(data.frames != undefined) {
+
+						for(var i = 0; i < data.frames.length; i++) {
+							this.spriteIds.push(data.frames[i].sprite_id);
+							this.delays.push(data.frames[i].delay);
+						}
+					}
 					
 					this.numberOfFrames = this.spriteIds.length;
 					
@@ -2518,90 +2705,6 @@ define('minibot/resource/AnimationResource',
 		AnimationResource.TYPE = 3;
 		
 		return AnimationResource;
-	}
-);
-
-/** 
- * @fileoverview 
- *
- * @author Jonny Morrill jonny@morrill.me
- * @version 0.1
- */
-define('minibot/resource/ImageResource',
-	[
-		'minibot/resource/Resource'
-	],
-	function
-	(
-		Resource
-	)
-	{
-		
-		var ImageResource = Class.create(
-			Resource,
-			/** @lends resource.ImageResource# */
-			{
-				
-				/**
-				 * The src URL.
-				 * @type String
-				 */
-				src: null,
-				
-				/**
-				 * The Image object.
-				 * @type Image
-				 */
-				img: null,
-				
-				/**
-				 * Create a new ImageResource object. 
-				 * @class The base ImageResource object.
-				 * It is intended to be used as an Interface, although such types are not
-				 * @extends resource.Resource
-				 * @constructs
-				 * @param {String} id The id of the Resource.
-				 * @param {Object} data The data associated with the Resource.
-				 * @param 
-				 */
-				initialize: function($super, id, data)
-				{
-					$super(id);
-					if(data.src != undefined) this.src = data.src;
-				},
-				
-				load: function(manager, callback)
-				{
-					this.loaded = true;
-					if(this.src != null) {
-						this.img = new Image();
-						this.img.addEventListener("load", this.handleLoadImageSuccess.bindAsEventListener(this, callback), false);
-						this.img.addEventListener("error", this.handleLoadImageFailure.bindAsEventListener(this, callback), false);
-						this.img.src = this.src;
-					} else {
-						callback();
-					}
-				},
-				
-				handleLoadImageSuccess: function(event, callback)
-				{
-					callback();
-				},
-				
-				handleLoadImageFailure: function(event, callback)
-				{
-					// TODO: Adjust error reporting
-					console.log('ImageResource: Failed to load image.');
-					callback();
-				}
-				
-			}
-		);
-		
-		ImageResource.TYPE = 1;
-		
-		return ImageResource;
-		
 	}
 );
 

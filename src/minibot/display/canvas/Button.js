@@ -34,7 +34,10 @@ define(
 				 * Long Description of class.
 				 * @extends display.canvas.CanvasDisplayObject
 				 * @constructs
-				 * @param 
+				 * @param
+				 * @param {display.DisplayObject} upState The resource to display when the button is "up".
+				 * @param {display.DisplayObject} downState The resource to display when the button is "down".
+				 * @param {display.DisplayObject} overState The resource to display when the button is "over".
 				 */
 				initialize: function($super, upState, downState, overState)
 				{
@@ -57,6 +60,19 @@ define(
 					this.touchEndCallback = this.handleTouchEnd.bindAsEventListener(this);
 				},
 				
+				/** 
+				 * Function description.
+				 * @access public
+				 */
+				render: function(dt, context, x, y)
+				{
+					this.currentState.render(dt, context, this.x + x, this.y + y);
+				},
+				
+				/** 
+				 * Function description.
+				 * @access protected
+				 */
 				onAddedToCanvas: function($super)
 				{
 					$super();
@@ -67,13 +83,10 @@ define(
 					}.bind(this));
 				},
 				
-				render: function(dt, context, x, y)
-				{
-					this.currentState.render(dt, context, this.x + x, this.y + y);
-					//context.strokeStyle = '#000000';
-					//context.strokeRect(this.x + x, this.y + y, this.w, this.h);
-				},
-				
+				/** 
+				 * Function description.
+				 * @access protected
+				 */
 				dispatchEvent: function($super, event)
 				{
 					if(!this.isDown) {
@@ -95,6 +108,10 @@ define(
 					return $super(event);
 				},
 				
+				/** 
+				 * Function description.
+				 * @access private
+				 */
 				handleTouchMove: function(event)
 				{
 					var canvasX = this.getCanvasX();
@@ -113,9 +130,12 @@ define(
 					}
 				},
 				
+				/** 
+				 * Function description.
+				 * @access private
+				 */
 				handleTouchEnd: function(event)
 				{
-					console.log("handleTouchEnd");
 					this.currentState = this.upState;
 					this.isDown = false;
 					this.root.removeEventListener(UIEvent.TOUCH_MOVE, this.touchMoveCallback);

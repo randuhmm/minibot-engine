@@ -146,27 +146,39 @@
 <span class='line'>139</span> </span><span class="WHIT">								</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">HtmlEvent.KEY_UP</span><span class="PUNC">:</span><span class="WHIT">
 <span class='line'>140</span> </span><span class="WHIT">									</span><span class="NAME">htmlType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'keyup'</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>141</span> </span><span class="WHIT">									</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>142</span> </span><span class="WHIT">								</span><span class="KEYW">default</span><span class="PUNC">:</span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">									</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>144</span> </span><span class="WHIT">							</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>145</span> </span><span class="WHIT">							
-<span class='line'>146</span> 						</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">htmlType</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>147</span> </span><span class="WHIT">							</span><span class="NAME">this.htmlListeners</span><span class="PUNC">[</span><span class="NAME">type</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.handleHtmlEvent.bindAsEventListener</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">type</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>148</span> </span><span class="WHIT">							</span><span class="NAME">this.element.observe</span><span class="PUNC">(</span><span class="NAME">htmlType</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.htmlListeners</span><span class="PUNC">[</span><span class="NAME">type</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>149</span> </span><span class="WHIT">						</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>150</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>151</span> </span><span class="WHIT">					</span><span class="NAME">$super</span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>152</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>153</span> </span><span class="WHIT">				
-<span class='line'>154</span> 				</span><span class="NAME">handleHtmlEvent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">type</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>155</span> </span><span class="WHIT">				</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>156</span> </span><span class="WHIT">					</span><span class="NAME">this.dispatchEvent</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">HtmlEvent</span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">event</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>158</span> </span><span class="WHIT">				
-<span class='line'>159</span> 			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>160</span> </span><span class="WHIT">		</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>161</span> </span><span class="WHIT">		
-<span class='line'>162</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">HtmlElement</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>163</span> </span><span class="WHIT">		
-<span class='line'>164</span> 	</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>165</span> </span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
+<span class='line'>142</span> </span><span class="WHIT">								</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">HtmlEvent.DRAG_ENTER</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">									</span><span class="NAME">htmlType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'dragenter'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">									</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">								</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">HtmlEvent.DRAG_EXIT</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">									</span><span class="NAME">htmlType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'dragexit'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>147</span> </span><span class="WHIT">									</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">								</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">HtmlEvent.DRAG_OVER</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">									</span><span class="NAME">htmlType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'dragover'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">									</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">								</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">HtmlEvent.DROP</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">									</span><span class="NAME">htmlType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'drop'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">									</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">								</span><span class="KEYW">default</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">									</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">							</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">							
+<span class='line'>158</span> 						</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">htmlType</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">							</span><span class="NAME">this.htmlListeners</span><span class="PUNC">[</span><span class="NAME">type</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.handleHtmlEvent.bindAsEventListener</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">type</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">							</span><span class="NAME">this.element.observe</span><span class="PUNC">(</span><span class="NAME">htmlType</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.htmlListeners</span><span class="PUNC">[</span><span class="NAME">type</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">						</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">					</span><span class="NAME">$super</span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">				
+<span class='line'>166</span> 				</span><span class="NAME">handleHtmlEvent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">event</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">type</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">				</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">					</span><span class="NAME">this.dispatchEvent</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">HtmlEvent</span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">event</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">				
+<span class='line'>171</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">		</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">		
+<span class='line'>174</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">HtmlElement</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">		
+<span class='line'>176</span> 	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
