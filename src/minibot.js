@@ -6,8 +6,6 @@ define(function(require) {
 	
 	var core, display, event, geom, resource;
 	
-	require('prototype');
-	
 	minibot.utils = require('minibot/utils');
 	
 	/** @namespace Core namespace */

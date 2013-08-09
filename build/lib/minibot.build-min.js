@@ -10,14 +10,12 @@
 	
 	include: ["minibot"],
 	
-	optimize: "none",
-	
 	wrap: {
 		startFile:	"start.frag",
 		endFile:	"end.frag"
 	},
 	
 	// build file destination, relative to the build file itself
-	out: "../../bin/js/minibot.js"
+	out: "../../bin/js/minibot-min.js"
 	
 })

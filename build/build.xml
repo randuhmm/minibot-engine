@@ -1,63 +1,46 @@
 <project name="MiniBot" basedir=".." default="all">
-  
-  <property name="r.js" location="${basedir}/build/lib/r.js"/>
-  <property name="minibot.build.js" location="${basedir}/build/lib/minibot.build.js"/>
-  
-  <property name="jsdoc" location="${basedir}/build/lib/jsdoc-toolkit"/>
-  <property name="minibot.doc.conf" location="${basedir}/build/lib/minibot.doc.conf"/>
-  
-  <target name="all" depends="cleanup, minify"/>
 
-  <target name="cleanup" description="Remove any previously generated artifacts.">
-    
-  </target>
-  
-  <target name="build" description="Build javascript source files into a single library file.">
-    
-    <exec executable="node">
-      <arg value="${r.js}"/>
-      <arg value="-o"/>
-      <arg value="${minibot.build.js}"/>
-    </exec>
-    
-  </target>
-  
-  <target name="minify" description="Minify a set of files" depends="build">
-  	<!--
-    <taskdef name="yuicompress" classname="com.yahoo.platform.yui.compressor.YUICompressTask">
-      <classpath>
-        <pathelement path="${basedir}/build/lib/yuicompressor-2.4.2.jar" />
-        <pathelement path="${basedir}/build/lib/yuiant.jar" />
-      </classpath>
-    </taskdef>
+	<property name="r.js" location="${basedir}/build/lib/r.js"/>
+	<property name="minibot.build.js" location="${basedir}/build/lib/minibot.build.js"/>
+	<property name="minibot.build-min.js" location="${basedir}/build/lib/minibot.build-min.js"/>
 
-    <yuicompress
-        charset="UTF-8"
-        linebreak="80"
-        warn="false"
-        munge="no"
-        preserveallsemicolons="true"
-        preservestringlitterals="true"
-        outputfolder="${output-dir}"
-        outputsuffix=".min"
-        >
-      <fileset dir="${output-dir}">
-        <include name="${output-file}"/>
-      </fileset>
-    </yuicompress>
-    -->
-  </target>
-  
-  <target name="doc" description="Build Documentation.">
-    
-    <exec executable="java">
-    	<arg value="-Djsdoc.dir=${jsdoc}"/>
-    	<arg value="-jar"/>
-    	<arg value="${jsdoc}/jsrun.jar"/>
-    	<arg value="${jsdoc}/app/run.js"/>
-    	<arg value="-c=${minibot.doc.conf}"/>
-    </exec>
-    
-  </target>
-  
+	<property name="jsdoc" location="${basedir}/build/lib/jsdoc-toolkit"/>
+	<property name="minibot.doc.conf" location="${basedir}/build/lib/minibot.doc.conf"/>
+
+	<target name="all" depends="cleanup, build"/>
+	
+	<target name="min" depends="cleanup, build-min"/>
+	
+	<target name="cleanup" description="Remove any previously generated artifacts.">
+		
+	</target>
+
+	<target name="build" description="Build javascript source files into a single library file.">
+		<exec executable="node">
+			<arg value="${r.js}"/>
+			<arg value="-o"/>
+			<arg value="${minibot.build.js}"/>
+		</exec>
+	</target>
+
+	<target name="build-min" description="Build javascript source files into a single library file.">
+		<exec executable="node">
+			<arg value="${r.js}"/>
+			<arg value="-o"/>
+			<arg value="${minibot.build-min.js}"/>
+		</exec>
+	</target>
+	
+	<target name="doc" description="Build Documentation.">
+		
+		<exec executable="java">
+			<arg value="-Djsdoc.dir=${jsdoc}"/>
+			<arg value="-jar"/>
+			<arg value="${jsdoc}/jsrun.jar"/>
+			<arg value="${jsdoc}/app/run.js"/>
+			<arg value="-c=${minibot.doc.conf}"/>
+		</exec>
+		
+	</target>
+
 </project>
