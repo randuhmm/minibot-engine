@@ -36,17 +36,7 @@ define(
 				
 				onAddedToParent: function()
 				{
-					
-				},
-				
-				isCanvasObject: function()
-				{
-					return false;
-				},
-				
-				isHtmlObject: function()
-				{
-					return false;
+					// override
 				}
 				
 			}

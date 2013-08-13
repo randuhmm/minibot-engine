@@ -7,6 +7,7 @@ define(function(require) {
 	var core, display, event, geom, resource;
 	
 	minibot.utils = require('minibot/utils');
+	minibot.system = require('minibot/system');
 	
 	/** @namespace Core namespace */
 	core = {};
@@ -16,30 +17,28 @@ define(function(require) {
 	display = {};
 	display.DisplayObject = require('minibot/display/DisplayObject');
 	
-	/** @namespace Display.Canvas namespace */
-	display.canvas = {};
-	display.canvas.CanvasDisplayObject = require('minibot/display/canvas/CanvasDisplayObject');
-	display.canvas.Animation = require('minibot/display/canvas/Animation');
-	display.canvas.Button = require('minibot/display/canvas/Button');
-	display.canvas.Container = require('minibot/display/canvas/Container');
-	display.canvas.Mask = require('minibot/display/canvas/Mask');
-	display.canvas.Rect = require('minibot/display/canvas/Rect');
-	display.canvas.RoundedRect = require('minibot/display/canvas/RoundedRect');
-	display.canvas.Sprite = require('minibot/display/canvas/Sprite');
-	display.canvas.Text = require('minibot/display/canvas/Text');
-	display.canvas.TextInput = require('minibot/display/canvas/TextInput');
+	/** @namespace Display.Scene namespace */
+	display.scene = {};
+	display.scene.SceneDisplayObject = require('minibot/display/scene/SceneDisplayObject');
+	//display.scene.Animation = require('minibot/display/scene/Animation');
+	display.scene.Button = require('minibot/display/scene/Button');
+	display.scene.Container = require('minibot/display/scene/Container');
+	//display.scene.Mask = require('minibot/display/scene/Mask');
+	//display.scene.Rect = require('minibot/display/scene/Rect');
+	//display.scene.RoundedRect = require('minibot/display/scene/RoundedRect');
+	display.scene.Sprite = require('minibot/display/scene/Sprite');
+	//display.scene.Text = require('minibot/display/scene/Text');
 	
 	/** @namespace Display.Html namespace */
 	display.html = {};
 	display.html.HtmlElement = require('minibot/display/html/HtmlElement');
-	display.html.Canvas = require('minibot/display/html/Canvas');
-	//display.html.Container = require('minibot/display/html/Container');
+	display.html.CanvasScene = require('minibot/display/html/CanvasScene');
 	
 	/** @namespace Event namespace */
 	event = {};
 	event.EventDispatcher = require('minibot/event/EventDispatcher');
 	event.BaseEvent = require('minibot/event/BaseEvent');
-	event.UIEvent = require('minibot/event/UIEvent');
+	event.MouseEvent = require('minibot/event/MouseEvent');
 	
 	/** @namespace Geom namespace */
 	geom = {};

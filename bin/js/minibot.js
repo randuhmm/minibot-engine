@@ -725,17 +725,7 @@ define('minibot/display/DisplayObject',
 				
 				onAddedToParent: function()
 				{
-					
-				},
-				
-				isCanvasObject: function()
-				{
-					return false;
-				},
-				
-				isHtmlObject: function()
-				{
-					return false;
+					// override
 				}
 				
 			}
@@ -773,7 +763,7 @@ define('minibot/display/DisplayObject',
 	}
 );
 
-define('minibot/display/canvas/CanvasDisplayObject',
+define('minibot/display/scene/SceneDisplayObject',
 	[
 		'minibot/display/DisplayObject'
 	],
@@ -783,21 +773,24 @@ define('minibot/display/canvas/CanvasDisplayObject',
 	)
 	{
 		
-		var CanvasDisplayObject = Class.create(
+		var SceneDisplayObject = Class.create(
 			DisplayObject,
-			/** @lends display.canvas.CanvasDisplayObject# */
+			/** @lends display.scene.SceneDisplayObject# */
 			{
 				
 				x: 0,
+				
 				y: 0,
+				
 				w: 0,
+				
 				h: 0,
 				
 				root: null,
-				canvas: null,
+				
+				scene: null,
 				
 				isVisible: true,
-				touchEnabled: true,
 				
 				/**
 				 * Description of constructor.
@@ -812,45 +805,59 @@ define('minibot/display/canvas/CanvasDisplayObject',
 					$super();
 				},
 				
-				isCanvasObject: function()
-				{
-					return true;
-				},
-				
-				render: function(dt, context, x, y)
+				render: function(dt, x, y)
 				{
 					// This function must be overloaded in the sub class
 				},
 				
-				onAddedToCanvas: function()
+				onAddedToScene: function()
 				{
-					// This callback is triggered when a canvas object is added to a canvas element
+					// This callback is triggered when a scene object is added to a scene
 				},
 				
-				
-				onRemovedFromCanvas: function()
+				onRemovedFromScene: function()
 				{
-					// This callback is triggered when a canvas object is removed from a canvas element
+					// This callback is triggered when a scene object is removed from a scene
 				},
 				
-				getCanvasX: function()
+				getSceneX: function()
 				{
-					var canvasX = 0;
+					var sceneX = 0;
 					if(this.parent != null) {
-						canvasX += this.parent.getCanvasX();
+						sceneX += this.parent.getSceneX();
 					}
-					canvasX += this.x;
-					return canvasX;
+					sceneX += this.x;
+					return sceneX;
 				},
 				
-				getCanvasY: function()
+				getSceneY: function()
 				{
-					var canvasY = 0;
+					var sceneY = 0;
 					if(this.parent != null) {
-						canvasY += this.parent.getCanvasY();
+						sceneY += this.parent.getSceneY();
 					}
-					canvasY += this.y;
-					return canvasY;
+					sceneY += this.y;
+					return sceneY;
+				},
+				
+				setRoot: function(root)
+				{
+					this.root = root;
+				},
+				
+				setScene: function(scene)
+				{
+					this.scene = scene;
+				},
+				
+				setWidth: function(width)
+				{
+					this.w = width;
+				},
+				
+				setHeight: function(height)
+				{
+					this.h = height;
 				},
 				
 				hide: function()
@@ -866,243 +873,134 @@ define('minibot/display/canvas/CanvasDisplayObject',
 			}
 		);
 		
-		return CanvasDisplayObject;
+		return SceneDisplayObject;
 		
 	}
 );
 
-define('minibot/display/canvas/Animation',
-	[
-		'minibot/display/canvas/CanvasDisplayObject'
-	],
-	function
-	(
-		CanvasDisplayObject
-	)
+/** 
+ * @fileoverview 
+ *
+ * @author Jonny Morrill jonny@morrill.me
+ * @version 0.1
+ */
+define('minibot/event/BaseEvent',
+	[],
+	function()
 	{
-		var Animation = Class.create(
-			CanvasDisplayObject,
-			/** @lends display.canvas.Animation# */
+		
+		var BaseEvent = Class.create(
+			/** @lends event.BaseEvent# */
 			{
 				
-				animation: null,
+				type: null,
 				
-				currentFrame: 0,
+				target: null,
 				
-				currentSprite: null,
+				currentTarget: null,
 				
-				currentDelay: null,
+				bubbles: null,
 				
-				time: 0,
+				cancelable: null,
 				
-				loops: 0,
-				
-				playing: false,
+				currentPhase: null,
 				
 				/**
 				 * Description of constructor.
 				 * @class Short description of class.
 				 * Long Description of class.
-				 * @extends display.canvas.CanvasDisplayObject
 				 * @constructs
-				 * @param {resource.AnimationResource} animation
-				 * @param {bool} play
-				 * @param {int} loops
-				 * @param
 				 */
-				initialize: function($super, animation, play, loops)
+				initialize: function(type, bubbles, cancelable)
 				{
-					$super();
+					this.type = type;
 					
-					this.loops = Animation.INFINITE_LOOPS;
-					
-					this.setAnimation(animation, play, loops);
+					this.bubbles = ((bubbles == undefined)?(false):(bubbles));
+					this.cancelable = ((cancelable == undefined)?(false):(cancelable));
 				},
 				
-				setAnimation: function(animation, play, loops)
+				preventDefault: function()
 				{
-					this.playing = (play == undefined || play);
 					
-					if(loops == undefined) {
-						this.loops == Animation.INFINITE_LOOPS;
-					} else {
-						this.loops = loops;
-					}
-					
-					this.currentFrame = 0;
-					this.time = 0;
-					
-					this.animation = animation;
-					this.setupFrame();
-				},
-				
-				setupFrame: function()
-				{
-					if(this.animation == null) return;
-					this.currentSprite = this.animation.getSprite(this.currentFrame);
-					this.currentDelay = this.animation.getDelay(this.currentFrame);
-					if(this.w == 0) this.w = this.currentSprite.w;
-					if(this.h == 0) this.h = this.currentSprite.h;
-				},
-				
-				stop: function()
-				{
-					this.playing = false;
-					this.currentFrame = 0;
-					this.time = 0;
-					this.setupFrame();
-				},
-				
-				play: function(loops)
-				{
-					this.playing = true;
-					
-					if(loops == undefined) {
-						this.loops == Animation.INFINITE_LOOPS;
-					} else {
-						this.loops = loops;
-					}
-				},
-				
-				render: function(dt, context, x, y)
-				{
-					if(this.animation == null) return;
-					
-					if(this.playing) {
-						this.time += dt;
-						while(this.time >= this.currentDelay) {
-							
-							// Handle looping
-							if(this.loops != Animation.INFINITE_LOOPS) {
-								if(this.animation.atEnd(this.currentFrame)) {
-									if(this.loops == 0) {
-										this.stop();
-										this.setupFrame();
-										break;
-									} else {
-										this.loops -= 1;
-									}
-								}
-							}
-							
-							this.time -= this.currentDelay;
-							this.currentFrame = this.animation.nextFrame(this.currentFrame);
-							this.setupFrame();
-						}
-					}
-					
-					context.drawImage(
-						this.currentSprite.img,
-						this.currentSprite.x, //sx,
-						this.currentSprite.y, //sy,
-						this.currentSprite.w, //sw,
-						this.currentSprite.h, //sh,
-						this.x + x, //dx,
-						this.y + y, //dy,
-						this.w, //dw,
-						this.h //dh
-					);
 				}
 				
 			}
 		);
 		
-		Animation.INFINITE_LOOPS = -1;
+		return BaseEvent;
 		
-		return Animation;
 	}
 );
 
-define('minibot/event/BaseEvent',
-['minibot/utils'],
-function(utils)
-{
-	return utils.define(
-		{
-			name: 'minibot.event.BaseEvent'
-		},
-		{
-			
-			type: null,
-			
-			data: null,
-			
-			target: null,
-			
-			initialize: function(type, data)
-			{
-				this.type = type;
-				this.data = data;
-			},
-			
-			isTouchEvent: function()
-			{
-				return false;
-			}
-			
-		}
-	);
-});
-
-define('minibot/event/UIEvent',
-['minibot/utils', 'minibot/event/BaseEvent'],
-function(utils, BaseEvent)
-{
-	return utils.define(
-		{
-			name: 'minibot.event.UIEvent',
-			parent: BaseEvent
-		},
-		{
-			
-			canvasX: null,
-			canvasY: null,
-			
-			x: null,
-			y: null,
-			
-			initialize: function($super, type, data, x, y)
-			{
-				this.canvasX = x;
-				this.canvasY = y;
-				this.x = x;
-				this.y = y;
-				$super(type, data);
-			},
-			
-			isTouchEvent: function()
-			{
-				return true;
-			}
-			
-		},
-		{
-			TOUCH_START: "uIEvent_TouchStart",
-			TOUCH_MOVE: "uIEvent_TouchMove",
-			TOUCH_END: "uIEvent_TouchEnd",
-			
-			FOCUS: "uIEvent_Focus",
-			BLUR: "uIEvent_Blur",
-		}
-	)
-});
-
-
-define('minibot/display/canvas/Button',
+/** 
+ * @fileoverview 
+ *
+ * @author Jonny Morrill jonny@morrill.me
+ * @version 0.1
+ */
+define('minibot/event/MouseEvent',
 	[
-		'minibot/display/canvas/CanvasDisplayObject',
-		'minibot/event/UIEvent'
+		'./BaseEvent'
 	],
 	function
 	(
-		CanvasDisplayObject,
-		UIEvent
+		BaseEvent
+	)
+	{
+		
+		var MouseEvent = Class.create(
+			BaseEvent,
+			/** @lends event.MouseEvent# */
+			{
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @constructs
+				 */
+				initialize: function
+				(
+					$super,
+					type, 
+					bubbles,
+					cancelable,
+					localX,
+					localY,
+					displayObject
+				)
+				{
+					$super(type, bubbles, cancelable);
+				}
+				
+			}
+		);
+		
+		MouseEvent.CLICK			= "click";
+		MouseEvent.MOUSE_DOWN		= "mouseDown";
+		MouseEvent.MOUSE_UP			= "mouseUp";
+		MouseEvent.MOUSE_MOVE		= "mouseMove";
+		
+		return MouseEvent;
+	
+	}
+);
+
+define('minibot/display/scene/Button',
+	[
+		'./SceneDisplayObject',
+		'minibot/event/MouseEvent'
+	],
+	function
+	(
+		SceneDisplayObject,
+		MouseEvent
 	)
 	{
 		
 		var Button = Class.create(
-			CanvasDisplayObject,
-			/** @lends display.canvas.Button# */
+			SceneDisplayObject,
+			/** @lends display.scene.Button# */
 			{
 				
 				upState: null,
@@ -1115,14 +1013,14 @@ define('minibot/display/canvas/Button',
 				isDown: false,
 				isOver: false,
 				
-				touchMoveCallback: null,
-				touchEndCallback: null,
+				mouseMoveCallback: null,
+				mouseUpCallback: null,
 				
 				/**
 				 * Description of constructor.
 				 * @class Short description of class.
 				 * Long Description of class.
-				 * @extends display.canvas.CanvasDisplayObject
+				 * @extends display.scene.SceneDisplayObject
 				 * @constructs
 				 * @param
 				 * @param {display.DisplayObject} upState The resource to display when the button is "up".
@@ -1146,8 +1044,8 @@ define('minibot/display/canvas/Button',
 					if(this.downState != null) this.states.push(this.downState);
 					if(this.overState != null) this.states.push(this.overState);
 					
-					this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
-					this.touchEndCallback = this.handleTouchEnd.bindAsEventListener(this);
+					this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+					this.mouseUpCallback = this.handleMouseEnd.bindAsEventListener(this);
 				},
 				
 				/** 
@@ -1163,13 +1061,13 @@ define('minibot/display/canvas/Button',
 				 * Function description.
 				 * @access protected
 				 */
-				onAddedToCanvas: function($super)
+				onAddedToScene: function($super)
 				{
 					$super();
 					this.states.each(function(displayObject) {
 						displayObject.root = this.root;
 						displayObject.parent = this;
-						displayObject.onAddedToCanvas();
+						displayObject.onAddedToScene();
 					}.bind(this));
 				},
 				
@@ -1180,19 +1078,20 @@ define('minibot/display/canvas/Button',
 				dispatchEvent: function($super, event)
 				{
 					if(!this.isDown) {
-						if(event.type == UIEvent.TOUCH_START) {
+						if(event.type == MouseEvent.MOUSE_DOWN) {
+							console.log("button down");
 							this.currentState = this.downState;
 							this.isDown = true;
-							this.root.addEventListener(UIEvent.TOUCH_MOVE, this.touchMoveCallback);
-							this.root.addEventListener(UIEvent.TOUCH_END, this.touchEndCallback);
+							this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
 						}
-						if(event.type == UIEvent.TOUCH_END) return;
+						if(event.type == MouseEvent.MOUSE_UP) return;
 					} else {
-						if(event.type == UIEvent.TOUCH_END) {
+						if(event.type == MouseEvent.MOUSE_UP) {
 							this.currentState = this.upState;
 							this.isDown = false;
-							this.root.removeEventListener(UIEvent.TOUCH_MOVE, this.touchMoveCallback);
-							this.root.removeEventListener(UIEvent.TOUCH_END, this.touchEndCallback);
+							this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
 						}
 					}
 					return $super(event);
@@ -1202,15 +1101,15 @@ define('minibot/display/canvas/Button',
 				 * Function description.
 				 * @access private
 				 */
-				handleTouchMove: function(event)
+				handleMouseMove: function(event)
 				{
-					var canvasX = this.getCanvasX();
-					var canvasY = this.getCanvasY();
+					var sceneX = this.getSceneX();
+					var sceneY = this.getSceneY();
 					if(
-						event.x >= canvasX && 
-						event.x <= (canvasX + this.w) && 
-						event.y >= canvasY && 
-						event.y <= (canvasY + this.h)
+						event.x >= sceneX && 
+						event.x <= (sceneX + this.w) && 
+						event.y >= sceneY && 
+						event.y <= (sceneY + this.h)
 					) {
 						this.currentState = this.downState;
 						this.isOver = true;
@@ -1224,12 +1123,12 @@ define('minibot/display/canvas/Button',
 				 * Function description.
 				 * @access private
 				 */
-				handleTouchEnd: function(event)
+				handleMouseUp: function(event)
 				{
 					this.currentState = this.upState;
 					this.isDown = false;
-					this.root.removeEventListener(UIEvent.TOUCH_MOVE, this.touchMoveCallback);
-					this.root.removeEventListener(UIEvent.TOUCH_END, this.touchEndCallback);
+					this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+					this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
 				}
 				
 			}
@@ -1240,30 +1139,32 @@ define('minibot/display/canvas/Button',
 	}
 );
 
-define('minibot/display/canvas/Container',
+define('minibot/display/scene/Container',
 	[
-		'minibot/display/canvas/CanvasDisplayObject'
+		'./SceneDisplayObject'
 	],
 	function
 	(
-		CanvasDisplayObject
+		SceneDisplayObject
 	)
 	{
 		
 		var Container = Class.create(
-			CanvasDisplayObject,
-			/** @lends display.canvas.Container# */
+			SceneDisplayObject,
+			/** @lends display.scene.Container# */
 			{
 				
 				layers: null,
+				
 				touchChildren: true,
+				
 				resizable: true,
 				
 				/**
 				 * Description of constructor.
 				 * @class Short description of class.
 				 * Long Description of class.
-				 * @extends display.canvas.CanvasDisplayObject
+				 * @extends display.scene.SceneDisplayObject
 				 * @constructs
 				 * @param 
 				 */
@@ -1285,9 +1186,9 @@ define('minibot/display/canvas/Container',
 					
 					if(this.root != null) {
 						displayObject.root = this.root;
-						displayObject.canvas = this.canvas;
+						displayObject.scene = this.scene;
 						displayObject.parent = this;
-						displayObject.onAddedToCanvas();
+						displayObject.onAddedToScene();
 					}
 					
 					if(this.resizable) {
@@ -1304,7 +1205,7 @@ define('minibot/display/canvas/Container',
 						for(var d = 0; d < layer.length; d++) {
 							if(displayObject === layer[d]) {
 								layer.splice(d, 1);
-								displayObject.onRemovedFromCanvas();
+								displayObject.onRemovedFromScene();
 								return;
 							}
 						}
@@ -1319,13 +1220,13 @@ define('minibot/display/canvas/Container',
 						var layer = layers[l];
 						for(var d = 0; d < layer.length; d++) {
 							displayObject = layer[d]
-							displayObject.onRemovedFromCanvas();
+							displayObject.onRemovedFromScene();
 						}
 					}
 					this.layers = new Array();
 				},
 				
-				render: function(dt, context, x, y)
+				render: function(dt, x, y)
 				{
 					if(x == undefined) x = 0;
 					if(y == undefined) y = 0;
@@ -1345,7 +1246,7 @@ define('minibot/display/canvas/Container',
 							// check if the display object is visible
 							if(!displayObject.isVisible) continue;
 							
-							// check if the display object is off the canvas
+							// check if the display object is outside the scene
 							xBounds = this.x + x + displayObject.x;
 							yBounds = this.y + y + displayObject.y;
 							if(
@@ -1356,16 +1257,9 @@ define('minibot/display/canvas/Container',
 							) continue;
 							
 							// render the display object
-							displayObject.render(dt, context, this.x + x, this.y + y);
+							displayObject.render(dt, this.x + x, this.y + y);
 						}
 					}
-					
-					/*
-					if(context != undefined)
-						context.strokeRect(this.x + x, this.y + y, this.w, this.h);	
-					else
-						console.log('undefined context??');
-					*/
 				},
 				
 				setChildIndex: function(displayObject, index)
@@ -1388,10 +1282,12 @@ define('minibot/display/canvas/Container',
 				
 				dispatchEvent: function($super, event)
 				{
+					/*
 					if(event.isTouchEvent()) {
 						if(!this.touchEnabled) return false;
 						if(!this.touchChildren) return $super(event);
 					}
+					*/
 					
 					var captured = false;
 					var dispatched = false;
@@ -1438,7 +1334,7 @@ define('minibot/display/canvas/Container',
 					}
 				},
 				
-				onAddedToCanvas: function($super)
+				onAddedToScene: function($super)
 				{
 					$super();
 					
@@ -1452,20 +1348,20 @@ define('minibot/display/canvas/Container',
 						for(d = 0; d < layer.length; d++) {
 							displayObject = layer[d];
 							displayObject.root = this.root;
-							displayObject.canvas = this.canvas;
+							displayObject.scene = this.scene;
 							displayObject.parent = this;
-							displayObject.onAddedToCanvas();
+							displayObject.onAddedToScene();
 						}
 					}
 				},
 				
-				onRemovedFromCanvas: function($super)
+				onRemovedFromScene: function($super)
 				{
 					$super();
 					for(var l = 0; l < this.layers.length; l++) {
 						var layer = this.layers[l];
 						for(var d = 0; d < layer.length; d++) {
-							layer[d].onRemovedFromCanvas();
+							layer[d].onRemovedFromScene();
 						}
 						this.layers[l] = null;
 					}
@@ -1480,184 +1376,18 @@ define('minibot/display/canvas/Container',
 	}
 );
 
-define('minibot/display/canvas/Mask',
-	['minibot/display/canvas/CanvasDisplayObject'],
-	function(CanvasDisplayObject)
-	{
-		return Class.create(
-			CanvasDisplayObject,
-			{
-				
-				base: null,
-				mask: null,
-				
-				maskCanvas: null,
-				maskContext: null,
-				
-				initialize: function($super, base, mask)
-				{
-					$super();
-					
-					this.base = base;
-					this.mask = mask;
-					
-					// Setup the mask canvas
-					this.maskCanvas = new Element('canvas');
-					this.maskCanvas.width = this.base.w + this.base.x;
-					this.maskCanvas.height = this.base.h + this.base.y;
-					this.maskContext = this.maskCanvas.getContext('2d');
-					
-					// Draw the mask pixels to the canvas
-					this.mask.render(0, this.maskContext, this.base.x, this.base.y);
-					
-					this.maskContext.globalCompositeOperation = 'source-in';
-					
-					this.base.render(0, this.maskContext, 0, 0);
-					
-					this.w = this.maskCanvas.width;
-					this.h = this.maskCanvas.height;
-					
-				},
-				
-				render: function(dt, context, x, y)
-				{
-					context.drawImage(
-						this.maskCanvas,
-						0, //sx,
-						0, //sy,
-						this.maskCanvas.width, //sw,
-						this.maskCanvas.height, //sh,
-						this.x + x, //dx,
-						this.y + y, //dy,
-						this.w, //dw,
-						this.h //dh
-					)
-				}
-				
-			}
-		);
-	}
-);
-
-define('minibot/display/canvas/Rect',
-['minibot/utils', 'minibot/display/canvas/CanvasDisplayObject'],
-function(utils, CanvasDisplayObject)
-{
-	return utils.define(
-		{
-			name: 'minibot.display.canvas.Rect',
-			parent: CanvasDisplayObject
-		},
-		{		
-			fillStyle: null,
-			strokeStyle: null,
-			
-			initialize: function($super, width, height, fillStyle, strokeStyle)
-			{
-				$super();
-				
-				if(fillStyle != undefined) this.fillStyle = fillStyle;
-				if(strokeStyle != undefined) this.strokeStyle = strokeStyle;
-				
-				this.w = width;
-				this.h = height;
-			},
-			
-			render: function(dt, context, x, y)
-			{
-				if(this.fillStyle != undefined) {
-					context.fillStyle = this.fillStyle;
-					context.fillRect(this.x + x, this.y + y, this.w, this.h);
-				}
-			}
-			
-		}
-	);
-});
-
-define('minibot/display/canvas/RoundedRect',
-['minibot/utils', 'minibot/display/canvas/CanvasDisplayObject'],
-function(utils, CanvasDisplayObject)
-{
-	return utils.define(
-		{
-			name: 'minibot.display.canvas.Rect',
-			parent: CanvasDisplayObject
-		},
-		{
-			
-			radius: null,
-			fillStyle: null,
-			strokeStyle: null,
-			
-			initialize: function($super, width, height, radius, fillStyle, strokeStyle)
-			{
-				$super();
-				
-				if(fillStyle != undefined) this.fillStyle = fillStyle;
-				if(strokeStyle != undefined) this.strokeStyle = strokeStyle;
-				
-				this.w = width;
-				this.h = height;
-				
-				if( typeof radius === 'string' ) {
-					this.radius = [10, 10, 10, 10];
-				} else {
-					this.radius = radius;
-				}
-			},
-			
-			render: function(dt, context, x, y)
-			{
-				
-				var r = this.radius;
-				var w = this.w;
-				var h = this.h;
-				x += this.x;
-				y += this.y;
-				
-				context.beginPath();
-				
-				
-				context.moveTo(x + r[0], y);
-				
-				context.lineTo(x + w - r[1], y);
-				if(r[1] != 0) context.quadraticCurveTo(x + w, y, x + w, y + r[1]);
-				
-				context.lineTo(x + w, y + h - r[2]);
-				if(r[2] != 0) context.quadraticCurveTo(x + w, y + h, x + w - r[2], y + h);
-				
-				context.lineTo(x + r[3], y + h);
-				if(r[3] != 0) context.quadraticCurveTo(x, y + h, x, y + h - r[3]);
-				
-				context.lineTo(x, y + r[0]);
-				if(r[0] != 0) context.quadraticCurveTo(x, y, x + r[0], y);
-				
-				context.closePath();
-				
-				if(this.fillStyle != undefined) {
-					context.fillStyle = this.fillStyle;
-					context.fill();
-				}
-				
-			}
-			
-		}
-	);
-});
-
-define('minibot/display/canvas/Sprite',
+define('minibot/display/scene/Sprite',
 	[
-		'minibot/display/canvas/CanvasDisplayObject'
+		'minibot/display/scene/SceneDisplayObject'
 	],
 	function
 	(
-		CanvasDisplayObject
+		SceneDisplayObject
 	)
 	{
 		var Sprite = Class.create(
-			CanvasDisplayObject,
-			/** @lends display.canvas.Sprite# */
+			SceneDisplayObject,
+			/** @lends display.scene.Sprite# */
 			{
 				
 				sprite: null,
@@ -1668,7 +1398,7 @@ define('minibot/display/canvas/Sprite',
 				 * Description of constructor.
 				 * @class Short description of class.
 				 * Long Description of class.
-				 * @extends display.canvas.CanvasDisplayObject
+				 * @extends display.scene.SceneDisplayObject
 				 * @constructs
 				 * @param {resource.SpriteResource} sprite
 				 * @param
@@ -1681,10 +1411,10 @@ define('minibot/display/canvas/Sprite',
 					this.h = sprite.h;
 				},
 				
-				render: function(dt, context, x, y)
+				render: function(dt, x, y)
 				{
 					try {
-						context.drawImage(
+						this.scene.drawImage(
 							this.sprite.img,
 							this.sprite.x, //sx,
 							this.sprite.y, //sy,
@@ -1707,230 +1437,6 @@ define('minibot/display/canvas/Sprite',
 		
 	}
 );
-define('minibot/display/canvas/Text',
-	[
-		'minibot/display/canvas/CanvasDisplayObject'
-	],
-	function
-	(
-		CanvasDisplayObject
-	)
-	{
-		
-		var Text = Class.create(
-			CanvasDisplayObject,
-			/** @lends display.canvas.Text# */
-			{
-				
-				text: '',
-				
-				font: null,
-				
-				fillStyle: null,
-				
-				textAlign: null,
-				
-				metrics: null,
-				
-				/**
-				 * Description of constructor.
-				 * @class Short description of class.
-				 * Long Description of class.
-				 * @extends display.canvas.CanvasDisplayObject
-				 * @constructs
-				 * @param {String} text
-				 * @param {String} font
-				 * @param {String} fillStyle
-				 * @param {String} textAlign
-				 * @param {Canvas 2DContext} context
-				 * @param 
-				 */
-				initialize: function($super, text, font, fillStyle, textAlign, context)
-				{
-					$super();
-					
-					this.text = text;
-					
-					if(font != undefined) this.font = font;
-					if(fillStyle != undefined) this.fillStyle = fillStyle;
-					if(textAlign != undefined) this.textAlign = textAlign;
-					
-					if(context != undefined) {
-						this.setStyle(context);
-						this.metrics = context.measureText(this.text);
-					}
-				},
-				
-				setStyle: function(context)
-				{
-					if(this.font != null) context.font = this.font;
-					if(this.textAlign != null) context.textAlign = this.textAlign;
-					if(this.fillStyle != null) context.fillStyle = this.fillStyle;
-				},
-				
-				getText: function()
-				{
-					return this.text;
-				},
-				
-				getMetrics: function()
-				{
-					return this.metrics;
-				},
-				
-				setText: function(text)
-				{
-					this.text = text;
-				},
-				
-				render: function(dt, context, x, y)
-				{
-					//context.font = 'bold 24px/30px Arial, san-serif';
-					//context.fillStyle = '#FFFFFF';
-					this.setStyle(context);
-					context.fillText(this.text, this.x + x, this.y + y);
-				}
-				
-			}
-		);
-		
-		return Text;
-	}
-);
-
-define('minibot/display/canvas/TextInput',[
-	'minibot/utils',
-	'minibot/display/canvas/CanvasDisplayObject',
-	'minibot/event/UIEvent'
-],
-function(
-	utils, 
-	CanvasDisplayObject,
-	UIEvent
-)
-{
-	return utils.define(
-		{
-			name: 'minibot.display.canvas.TextInput',
-			parent: CanvasDisplayObject
-		},
-		{
-			
-			input: null,
-			
-			inputX: null,
-			inputY: null,
-			inputW: null,
-			inputH: null,
-			
-			initialize: function($super, value, style)
-			{
-				$super();
-				
-				this.input = new Element('input', {type: 'text'});
-				
-				if(value != undefined) this.input.value = value;
-				if(style != undefined) this.input.setStyle(style);
-				
-				this.input.observe('focus', this.handleInputFocus.bindAsEventListener(this));
-				this.input.observe('blur', this.handleInputBlur.bindAsEventListener(this));
-			},
-			
-			setValue: function(value)
-			{
-				this.input.value = value;
-			},
-			
-			setType: function(type)
-			{
-				this.input.type = type;
-			},
-			
-			getValue: function()
-			{
-				return this.input.value;
-			},
-			
-			getType: function()
-			{
-				return this.input.type;
-			},
-			
-			onAddedToCanvas: function($super)
-			{
-				$super();
-				
-				console.log('added text');
-				this.canvas.addToHtmlOverlay(this.input);
-			},
-			
-			onRemovedFromCanvas: function($super)
-			{
-				$super();
-				
-				this.input.remove();
-			},
-			
-			render: function($super, dt, context, x, y)
-			{
-				
-				if(this.inputX != (this.x + x)) {
-					this.inputX = (this.x + x);
-					this.input.style.left = (this.inputX / this.canvas.scale) + "px";
-				}
-				
-				if(this.inputY != (this.y + y)) {
-					this.inputY = (this.y + y);
-					this.input.style.top = (this.inputY / this.canvas.scale) + "px";
-				}
-				
-				if(this.inputW != (this.w)) {
-					this.inputW = (this.w);
-					this.input.style.width = (this.inputW / this.canvas.scale) + "px";
-				}
-				
-				if(this.inputH != (this.h)) {
-					this.inputH = (this.h);
-					this.input.style.height = (this.inputH / this.canvas.scale) + "px";
-				}
-				
-				context.strokeRect(this.x + x, this.y + y, this.w, this.h);
-				
-				$super();
-				
-			},
-			
-			dispatchEvent: function($super, event)
-			{
-				console.log("TextInput::dispatchEvent");
-				if(event.type == UIEvent.TOUCH_START) {
-					this.input.focus();
-				}
-				return $super(event);
-			},
-			
-			handleInputFocus: function(event)
-			{
-				var x = 0;
-				var y = 0;
-				
-				var uIEvent = new UIEvent(UIEvent.FOCUS, {}, x, y);
-				this.dispatchEvent(uIEvent);
-			},
-			
-			handleInputBlur: function(event)
-			{
-				var x = 0;
-				var y = 0;
-				
-				var uIEvent = new UIEvent(UIEvent.BLUR, {}, x, y);
-				this.dispatchEvent(uIEvent);
-			}
-			
-		}
-	);
-});
-
 define('minibot/event/HtmlEvent',
 ['minibot/utils', 'minibot/event/BaseEvent'],
 function(utils, BaseEvent)
@@ -2146,339 +1652,90 @@ define('minibot/display/html/HtmlElement',
 		
 	}
 );
-/** 
- * @fileoverview 
- *
- * @author Jonny Morrill jonny@morrill.me
- * @version 0.1
- */
-define('minibot/resource/Resource',
-	[],
-	function()
-	{
- 		
-		var Resource = Class.create(
-			/** @lends resource.Resource# */
-			{
-				
-				/**
-				 * Create a new Resource object. 
-				 * @class This is the basic Resource class.
-				 * It is intended to be used as an Interface, although such types are not
-				 * enforced in JavaScript.
-				 * @constructs
-				 * @param {String} id The id of the Resource.
-				 */
-				initialize: function(id)
-				{
-					this.id = id;
-				},
-				
-				/**
-				 * The id of the Resource.
-				 * @type String
-				 */
-				id: null,
-				
-				/**
-				 * Value that represents if the resource has been loaded or not.
-				 * @private
-				 * @type bool
-				 */
-				loaded: false,
-				
-				/**
-				 * Load the Resource
-				 * @param {ResourceManager} manager The ResourceManager instance.
-				 * @param {Function} callback The callback function to call once loaded.
-				 */
-				load: function(manager, callback)
-				{
-					// Overload this function in the base class
-					this.loaded = true;
-					callback.defer();
-				},
-				
-				/**
-				 * Returns if the Resource has been loaded or not.
-				 * @type bool
-				 */
-				isLoaded: function()
-				{
-					return this.loaded;
-				}
-				
-			}
-		);
-		
-		return Resource;
-		
-	}
-);
-
-/** 
- * @fileoverview 
- *
- * @author Jonny Morrill jonny@morrill.me
- * @version 0.1
- */
-define('minibot/resource/ImageResource',
+define('minibot/display/scene/Scene',
 	[
-		'minibot/resource/Resource'
+		'minibot/event/EventDispatcher',
+		'./Container'
 	],
 	function
 	(
-		Resource
+		EventDispatcher,
+		Container
 	)
 	{
 		
-		var ImageResource = Class.create(
-			Resource,
-			/** @lends resource.ImageResource# */
+		var Scene = Class.create(
+			EventDispatcher,
+			/** @lends display.scene.Scene# */
 			{
 				
-				/**
-				 * The src URL.
-				 * @type String
-				 */
-				src: null,
-				
-				/**
-				 * The Image object.
-				 * @type Image
-				 */
-				img: null,
-				
-				/**
-				 * Create a new ImageResource object. 
-				 * @class The base ImageResource object.
-				 * It is intended to be used as an Interface, although such types are not
-				 * @extends resource.Resource
-				 * @constructs
-				 * @param {String} id The id of the Resource.
-				 * @param {Object} data The data associated with the Resource.
-				 * @param 
-				 */
-				initialize: function($super, id, data)
-				{
-					$super(id);
-					if(data.src != undefined) this.src = data.src;
-				},
-				
-				load: function(manager, callback)
-				{
-					this.loaded = true;
-					if(this.src != null) {
-						this.img = new Image();
-						this.img.addEventListener("load", this.handleLoadImageSuccess.bindAsEventListener(this, callback), false);
-						this.img.addEventListener("error", this.handleLoadImageFailure.bindAsEventListener(this, callback), false);
-						this.img.src = this.src;
-					} else {
-						callback();
-					}
-				},
-				
-				handleLoadImageSuccess: function(event, callback)
-				{
-					callback();
-				},
-				
-				handleLoadImageFailure: function(event, callback)
-				{
-					// TODO: Adjust error reporting
-					console.log('ImageResource: Failed to load image.');
-					callback();
-				}
-				
-			}
-		);
-		
-		ImageResource.TYPE = 1;
-		
-		return ImageResource;
-		
-	}
-);
-
-/** 
- * @fileoverview 
- *
- * @author Jonny Morrill jonny@morrill.me
- * @version 0.1
- */
-define('minibot/resource/SpriteResource',
-	[
-		'minibot/resource/Resource',
-		'minibot/resource/ImageResource'
-	],
-	function
-	(
-		Resource,
-		ImageResource
-	)
-	{
-		
-		var SpriteResource = Class.create(
-			Resource,
-			/** @lends resource.SpriteResource# */
-			{
-				imageId: null,
-				
-				imageResource: null,
-				
-				img: null,
-				
-				x: 0,
-				y: 0,
-				w: -1,
-				h: -1,
-				
-				/**
-				 * Description of constructor.
-				 * @class Short description of class.
-				 * Long Description of class.
-				 * @extends resource.Resource
-				 * @constructs
-				 * @param {String} id The id of the Resource.
-				 * @param {Object} data The data associated with the Resource.
-				 * @param 
-				 */
-				initialize: function($super, id, data)
-				{
-					$super(id);
-					
-					if(data != undefined) {
-						if(data.image_id != undefined) this.imageId = data.image_id;
-						else if(data.imageId != undefined) this.imageId = data.imageId;
-						
-						if(data.x != undefined) this.x = data.x;
-						if(data.y != undefined) this.y = data.y;
-						if(data.w != undefined) this.w = data.w;
-						if(data.h != undefined) this.h = data.h;
-					}
-				},
-				
-				load: function(manager, callback)
-				{
-					try {
-						this.imageResource = manager.getResource(
-							ImageResource.TYPE,
-							this.imageId
-						);
-						
-						this.img = this.imageResource.img;
-						
-						if(this.w == -1) this.w = this.img.width;
-						if(this.h == -1) this.h = this.img.height;
-						
-						this.loaded = true;
-					} catch(e) {
-						console.log("ERROR");
-					}
-					
-					callback();
-				}
-			}
-		);
-		
-		SpriteResource.TYPE = 2;
-		
-		return SpriteResource;
-		
-	}
-);
-
-define('minibot/display/html/Canvas',
-	[
-		'minibot/display/html/HtmlElement', 
-		'minibot/display/canvas/Container', 
-		'minibot/event/UIEvent', 
-		'minibot/resource/SpriteResource'
-	],
-	function
-	(
-		HtmlElement, 
-		Container, 
-		UIEvent, 
-		SpriteResource
-	)
-	{
-		
-		var Canvas = Class.create(
-			HtmlElement,
-			/** @lends display.html.Canvas# */
-			{
-				
-				scale: 1,
-				context: null,
 				container: null,
-				overlay: null,
+				
+				width: null,
+				
+				height: null,
 				
 				/**
 				 * Description of constructor.
 				 * @class Short description of class.
 				 * Long Description of class.
-				 * @extends display.html.HtmlElement
+				 * @extends display.canvas.CanvasDisplayObject
 				 * @constructs
+				 * @param 
 				 */
-				initialize: function($super, element, scale, overlay)
+				initialize: function($super)
 				{
-					if(element == undefined || element == null) element = new Element('canvas');
-					$super(element);
-					
-					if(scale != undefined) this.scale = scale;
-					if(overlay != undefined) this.overlay = overlay;
-					
-					this.context = this.element.getContext("2d");
+					$super();
 					
 					this.container = new Container();
 					this.container.resizable = false;
-					this.container.w = this.w = this.element.width;
-					this.container.h = this.h = this.element.height;
-					this.container.root = this.container;
-					this.container.canvas = this;
-					
-					var topElement = element;
-					if(overlay != undefined) topElement = overlay;
-					
-					//topElement.observe('mousedown', this.handleUIEvent.bind(this));
-					//topElement.observe('mouseup', this.handleUIEvent.bind(this));
-					//topElement.observe('mousemove', this.handleUIEvent.bind(this));
-					
-					if(Canvas.TOUCH_EVENTS) {
-						topElement.observe('touchstart', this.handleUIEvent.bind(this));
-						topElement.observe('touchend', this.handleUIEvent.bind(this));
-						topElement.observe('touchmove', this.handleUIEvent.bind(this));
-					} else {
-						topElement.observe('mousedown', this.handleUIEvent.bind(this));
-						topElement.observe('mouseup', this.handleUIEvent.bind(this));
-						topElement.observe('mousemove', this.handleUIEvent.bind(this));
-					}
+					this.container.setRoot(this.container);
+					this.container.setScene(this);
 				},
 				
-				asSpriteResource: function(sx, sy, sw, sh)
+				// Public Methods -->
+				
+				setWidth: function(width)
 				{
-					var resource = new SpriteResource();
-					if(sx == undefined) sx = 0;
-					if(sy == undefined) sy = 0;
-					if(sw == undefined) sw = this.w;
-					if(sh == undefined) sh = this.h;
+					this.width = width;
+					this.container.setWidth(width);
+				},
+				
+				getWidth: function()
+				{
+					return this.width;
+				},
+				
+				setHeight: function(height)
+				{
+					this.height = height;
+					this.container.setHeight(height);
+				},
+				
+				getHeight: function()
+				{
+					return this.height;
+				},
+				
+				drawImage: function(image, sx, sy, sw, sh, dx, dy)
+				{
+				
+				},
+				
+				drawLine: function(x1, y1, x2, y2)
+				{
 					
-					resource.img = this.element;
-					resource.x = sx;
-					resource.y = sy;
-					resource.w = sw;
-					resource.h = sh;
+				},
+				
+				fillRect: function(x, y, w, h)
+				{
 					
-					return resource;
 				},
 				
 				addChild: function(displayObject, layer)
 				{
 					if(layer == undefined || layer == null) layer = 0;
 					this.container.addChild(displayObject, layer);
-					//var event = new DisplayEvent(DisplayEvent.ADDED_TO_CANVAS, {});
-					//displayObject.dispatchEvent(event);
 				},
 				
 				removeChild: function(displayObject)
@@ -2491,55 +1748,99 @@ define('minibot/display/html/Canvas',
 					this.container.removeAll();
 				},
 				
-				addToHtmlOverlay: function(element)
-				{
-					if(this.overlay == undefined) return;
-					
-					this.overlay.insert(element);
-				},
-				
-				setHeight: function(height)
-				{
-					this.h = height;
-					this.element.height = height;
-					this.container.h = height;
-				},
-				
-				setWidth: function(width)
-				{
-					this.w = width;
-					this.element.width = width;
-					this.container.w = width;
-				},
-				
-				clear: function()
-				{
-					this.element.width = this.w;
-				},
-				
 				render: function(dt)
 				{
-					/*
-					if(CanvasObject.LastTime == null) {
-						CanvasObject.LastTime = time;
-					} else {
-						CanvasObject.LastTime = CanvasObject.ThisTime;
-					}
-					CanvasObject.ThisTime = time;
-					*/
-					//CanvasObject.DT = dt;
+					this.container.render(dt);
+				}
+				
+				// <-- Public Methods
+				
+				
+			}
+		);
+		
+		return Scene;
+		
+	}
+);
+
+define('minibot/display/html/CanvasScene',
+	[
+		'minibot/display/scene/Scene',
+		'minibot/event/MouseEvent'
+	],
+	function
+	(
+		Scene,
+		MouseEvent
+	)
+	{
+		
+		var CanvasScene = Class.create(
+			Scene,
+			/** @lends display.html.CanvasScene# */
+			{
+				
+				element: null,
+				
+				context: null,
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @extends display.html.HtmlElement
+				 * @constructs
+				 */
+				initialize: function($super, element)
+				{
+					$super();
 					
-					// Render to the buffer
-					//this.bufferElement.width = this.element.width;
-					this.container.render(dt, this.context);
+					this.element = ((element == undefined)?(new Element('canvas')):(element));
 					
-					// Copy the buffer to the canvas
-					//this.element.width = this.element.width;
-					//this.context.drawImage(this.bufferElement, 0, 0, this.element.width, this.element.height);
+					this.context = this.element.getContext("2d");
+					
+					this.element.observe('mousedown', this.handleMouseEvent.bind(this));
+					this.element.observe('mouseup', this.handleMouseEvent.bind(this));
+					this.element.observe('mousemove', this.handleMouseEvent.bind(this));
 					
 				},
 				
-				handleUIEvent: function(event)
+				setWidth: function($super, width)
+				{
+					$super(width);
+					this.element.width = width;
+				},
+				
+				setHeight: function($super, height)
+				{
+					$super(height);
+					this.element.height = height;
+				},
+				
+				getElement: function()
+				{
+					return this.element;
+				},
+				
+				drawImage: function(image, sx, sy, sw, sh, dx, dy, dw, dh)
+				{
+					this.context.drawImage(
+						image,
+						sx,
+						sy,
+						sw,
+						sh,
+						dx,
+						dy,
+						dw,
+						dh
+					);
+				},
+				
+				// <-- Public Methods
+				
+				handleMouseEvent: function(event)
 				{
 					event.preventDefault();
 					
@@ -2547,51 +1848,81 @@ define('minibot/display/html/Canvas',
 					var y = (event.currentTarget.offsetTop * -1) + (event.currentTarget.offsetParent.offsetTop * -1);
 					var type;
 					
-					if(Canvas.TOUCH_EVENTS) {
-						x += event.changedTouches[0].clientX;
-						y += event.changedTouches[0].clientY;
-					} else {
-						x += event.clientX;
-						y += event.clientY;
-					}
+					x += event.clientX;
+					y += event.clientY;
 					
-					//x += event.clientX;
-					//y += event.clientY;
-					
-					x = x * this.scale;
-					y = y * this.scale;
+					//x = x * this.scale;
+					//y = y * this.scale;
 					
 					switch(event.type) {
-						case 'touchstart':
 						case 'mousedown':
-							type = UIEvent.TOUCH_START;
+							type = MouseEvent.MOUSE_DOWN;
 							break;
-						case 'touchmove':
 						case 'mousemove':
-							//return;
-							type = UIEvent.TOUCH_MOVE;
+							type = MouseEvent.MOUSE_MOVE;
 							break;
-						case 'touchend':
 						case 'mouseup':
-							type = UIEvent.TOUCH_END;
+							type = MouseEvent.MOUSE_UP;
 							break;
 						default:
 							return;
 					}
 					
-					var uIEvent = new UIEvent(type, {}, x, y);
-					this.container.dispatchEvent(uIEvent);
+					var mouseEvent = new MouseEvent(type, false, false, x, y, this.container);
+					this.container.dispatchEvent(mouseEvent);
 				}
 				
 			}
 		);
 		
-		Canvas.TOUCH_EVENTS = false;
-		
-		return Canvas;
+		return CanvasScene;
 		
 	}
 );
+define('minibot/event/UIEvent',
+['minibot/utils', 'minibot/event/BaseEvent'],
+function(utils, BaseEvent)
+{
+	return utils.define(
+		{
+			name: 'minibot.event.UIEvent',
+			parent: BaseEvent
+		},
+		{
+			
+			canvasX: null,
+			canvasY: null,
+			
+			x: null,
+			y: null,
+			
+			initialize: function($super, type, data, x, y)
+			{
+				this.canvasX = x;
+				this.canvasY = y;
+				this.x = x;
+				this.y = y;
+				$super(type, data);
+			},
+			
+			isTouchEvent: function()
+			{
+				return true;
+			}
+			
+		},
+		{
+			TOUCH_START: "uIEvent_TouchStart",
+			TOUCH_MOVE: "uIEvent_TouchMove",
+			TOUCH_END: "uIEvent_TouchEnd",
+			
+			FOCUS: "uIEvent_Focus",
+			BLUR: "uIEvent_Blur",
+		}
+	)
+});
+
+
 /** 
  * @fileoverview 
  *
@@ -2839,6 +2170,76 @@ define('minibot/geom/Vector2',
  * @author Jonny Morrill jonny@morrill.me
  * @version 0.1
  */
+define('minibot/resource/Resource',
+	[],
+	function()
+	{
+ 		
+		var Resource = Class.create(
+			/** @lends resource.Resource# */
+			{
+				
+				/**
+				 * Create a new Resource object. 
+				 * @class This is the basic Resource class.
+				 * It is intended to be used as an Interface, although such types are not
+				 * enforced in JavaScript.
+				 * @constructs
+				 * @param {String} id The id of the Resource.
+				 */
+				initialize: function(id)
+				{
+					this.id = id;
+				},
+				
+				/**
+				 * The id of the Resource.
+				 * @type String
+				 */
+				id: null,
+				
+				/**
+				 * Value that represents if the resource has been loaded or not.
+				 * @private
+				 * @type bool
+				 */
+				loaded: false,
+				
+				/**
+				 * Load the Resource
+				 * @param {ResourceManager} manager The ResourceManager instance.
+				 * @param {Function} callback The callback function to call once loaded.
+				 */
+				load: function(manager, callback)
+				{
+					// Overload this function in the base class
+					this.loaded = true;
+					callback.defer();
+				},
+				
+				/**
+				 * Returns if the Resource has been loaded or not.
+				 * @type bool
+				 */
+				isLoaded: function()
+				{
+					return this.loaded;
+				}
+				
+			}
+		);
+		
+		return Resource;
+		
+	}
+);
+
+/** 
+ * @fileoverview 
+ *
+ * @author Jonny Morrill jonny@morrill.me
+ * @version 0.1
+ */
 define('minibot/resource/ResourceManager',
 	[
 		'minibot/utils',
@@ -3003,6 +2404,178 @@ define('minibot/resource/ResourceManager',
  * @author Jonny Morrill jonny@morrill.me
  * @version 0.1
  */
+define('minibot/resource/ImageResource',
+	[
+		'minibot/resource/Resource'
+	],
+	function
+	(
+		Resource
+	)
+	{
+		
+		var ImageResource = Class.create(
+			Resource,
+			/** @lends resource.ImageResource# */
+			{
+				
+				/**
+				 * The src URL.
+				 * @type String
+				 */
+				src: null,
+				
+				/**
+				 * The Image object.
+				 * @type Image
+				 */
+				img: null,
+				
+				/**
+				 * Create a new ImageResource object. 
+				 * @class The base ImageResource object.
+				 * It is intended to be used as an Interface, although such types are not
+				 * @extends resource.Resource
+				 * @constructs
+				 * @param {String} id The id of the Resource.
+				 * @param {Object} data The data associated with the Resource.
+				 * @param 
+				 */
+				initialize: function($super, id, data)
+				{
+					$super(id);
+					if(data.src != undefined) this.src = data.src;
+				},
+				
+				load: function(manager, callback)
+				{
+					this.loaded = true;
+					if(this.src != null) {
+						this.img = new Image();
+						this.img.addEventListener("load", this.handleLoadImageSuccess.bindAsEventListener(this, callback), false);
+						this.img.addEventListener("error", this.handleLoadImageFailure.bindAsEventListener(this, callback), false);
+						this.img.src = this.src;
+					} else {
+						callback();
+					}
+				},
+				
+				handleLoadImageSuccess: function(event, callback)
+				{
+					callback();
+				},
+				
+				handleLoadImageFailure: function(event, callback)
+				{
+					// TODO: Adjust error reporting
+					console.log('ImageResource: Failed to load image.');
+					callback();
+				}
+				
+			}
+		);
+		
+		ImageResource.TYPE = 1;
+		
+		return ImageResource;
+		
+	}
+);
+
+/** 
+ * @fileoverview 
+ *
+ * @author Jonny Morrill jonny@morrill.me
+ * @version 0.1
+ */
+define('minibot/resource/SpriteResource',
+	[
+		'minibot/resource/Resource',
+		'minibot/resource/ImageResource'
+	],
+	function
+	(
+		Resource,
+		ImageResource
+	)
+	{
+		
+		var SpriteResource = Class.create(
+			Resource,
+			/** @lends resource.SpriteResource# */
+			{
+				imageId: null,
+				
+				imageResource: null,
+				
+				img: null,
+				
+				x: 0,
+				y: 0,
+				w: -1,
+				h: -1,
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @extends resource.Resource
+				 * @constructs
+				 * @param {String} id The id of the Resource.
+				 * @param {Object} data The data associated with the Resource.
+				 * @param 
+				 */
+				initialize: function($super, id, data)
+				{
+					$super(id);
+					
+					if(data != undefined) {
+						if(data.image_id != undefined) this.imageId = data.image_id;
+						else if(data.imageId != undefined) this.imageId = data.imageId;
+						
+						if(data.x != undefined) this.x = data.x;
+						if(data.y != undefined) this.y = data.y;
+						if(data.w != undefined) this.w = data.w;
+						if(data.h != undefined) this.h = data.h;
+					}
+				},
+				
+				load: function(manager, callback)
+				{
+					try {
+						this.imageResource = manager.getResource(
+							ImageResource.TYPE,
+							this.imageId
+						);
+						
+						this.img = this.imageResource.img;
+						
+						if(this.w == -1) this.w = this.img.width;
+						if(this.h == -1) this.h = this.img.height;
+						
+						this.loaded = true;
+					} catch(e) {
+						console.log("ERROR");
+					}
+					
+					callback();
+				}
+			}
+		);
+		
+		SpriteResource.TYPE = 2;
+		
+		return SpriteResource;
+		
+	}
+);
+
+/** 
+ * @fileoverview 
+ *
+ * @author Jonny Morrill jonny@morrill.me
+ * @version 0.1
+ */
 define('minibot/resource/AnimationResource',
 	[
 		'minibot/resource/Resource',
@@ -3108,7 +2681,7 @@ define('minibot/resource/AnimationResource',
 );
 
 
-define('minibot',['require','minibot/utils','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/canvas/CanvasDisplayObject','minibot/display/canvas/Animation','minibot/display/canvas/Button','minibot/display/canvas/Container','minibot/display/canvas/Mask','minibot/display/canvas/Rect','minibot/display/canvas/RoundedRect','minibot/display/canvas/Sprite','minibot/display/canvas/Text','minibot/display/canvas/TextInput','minibot/display/html/HtmlElement','minibot/display/html/Canvas','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/UIEvent','minibot/geom/Vector2','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
+define('minibot',['require','minibot/utils','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Sprite','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/UIEvent','minibot/geom/Vector2','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
 	
 	/** @namespace Namespace description. */
 	var minibot = {};
@@ -3125,24 +2698,22 @@ define('minibot',['require','minibot/utils','minibot/core/Manager','minibot/disp
 	display = {};
 	display.DisplayObject = require('minibot/display/DisplayObject');
 	
-	/** @namespace Display.Canvas namespace */
-	display.canvas = {};
-	display.canvas.CanvasDisplayObject = require('minibot/display/canvas/CanvasDisplayObject');
-	display.canvas.Animation = require('minibot/display/canvas/Animation');
-	display.canvas.Button = require('minibot/display/canvas/Button');
-	display.canvas.Container = require('minibot/display/canvas/Container');
-	display.canvas.Mask = require('minibot/display/canvas/Mask');
-	display.canvas.Rect = require('minibot/display/canvas/Rect');
-	display.canvas.RoundedRect = require('minibot/display/canvas/RoundedRect');
-	display.canvas.Sprite = require('minibot/display/canvas/Sprite');
-	display.canvas.Text = require('minibot/display/canvas/Text');
-	display.canvas.TextInput = require('minibot/display/canvas/TextInput');
+	/** @namespace Display.Scene namespace */
+	display.scene = {};
+	display.scene.SceneDisplayObject = require('minibot/display/scene/SceneDisplayObject');
+	//display.scene.Animation = require('minibot/display/scene/Animation');
+	display.scene.Button = require('minibot/display/scene/Button');
+	display.scene.Container = require('minibot/display/scene/Container');
+	//display.scene.Mask = require('minibot/display/scene/Mask');
+	//display.scene.Rect = require('minibot/display/scene/Rect');
+	//display.scene.RoundedRect = require('minibot/display/scene/RoundedRect');
+	display.scene.Sprite = require('minibot/display/scene/Sprite');
+	//display.scene.Text = require('minibot/display/scene/Text');
 	
 	/** @namespace Display.Html namespace */
 	display.html = {};
 	display.html.HtmlElement = require('minibot/display/html/HtmlElement');
-	display.html.Canvas = require('minibot/display/html/Canvas');
-	//display.html.Container = require('minibot/display/html/Container');
+	display.html.CanvasScene = require('minibot/display/html/CanvasScene');
 	
 	/** @namespace Event namespace */
 	event = {};

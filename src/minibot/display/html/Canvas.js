@@ -51,10 +51,6 @@ define(
 					var topElement = element;
 					if(overlay != undefined) topElement = overlay;
 					
-					//topElement.observe('mousedown', this.handleUIEvent.bind(this));
-					//topElement.observe('mouseup', this.handleUIEvent.bind(this));
-					//topElement.observe('mousemove', this.handleUIEvent.bind(this));
-					
 					if(Canvas.TOUCH_EVENTS) {
 						topElement.observe('touchstart', this.handleUIEvent.bind(this));
 						topElement.observe('touchend', this.handleUIEvent.bind(this));
