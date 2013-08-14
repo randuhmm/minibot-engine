@@ -11,9 +11,11 @@ define(
 		var	ResourceManager = minibot.resource.ResourceManager
 		,	ImageResource = minibot.resource.ImageResource
 		,	SpriteResource = minibot.resource.SpriteResource
+		,	AnimationResource = minibot.resource.AnimationResource
 		,	CanvasScene = minibot.display.html.CanvasScene
 		,	Button = minibot.display.scene.Button
 		,	Sprite = minibot.display.scene.Sprite
+		,	Animation = minibot.display.scene.Animation
 		,	MouseEvent = minibot.event.MouseEvent
 		;
 		
@@ -21,11 +23,6 @@ define(
 			{
 
 				resourceManager: null,
-				sprite: null,
-				canvas: null,
-				
-				moveBfx: null,
-				endBfx: null,
 				
 				initialize: function()
 				{
@@ -39,52 +36,288 @@ define(
 						SpriteResource.TYPE,
 						SpriteResource
 					);
+					this.resourceManager.addType(
+						AnimationResource.TYPE,
+						AnimationResource
+					);
 					
 					this.resourceManager.addResource(
 						ImageResource.TYPE,
-						'button',
+						'sonic',
 						{
-							id: 'button',
-							src: 'img/button.png'
+							id: 'sonic',
+							src: 'img/sonic.png'
 						}
 					);
 					
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
-						'button_up',
+						'run_01',
 						{
-							id: 'button_up',
-							imageId: 'button',
+							id: 'run_01',
+							imageId: 'sonic',
 							x: 0,
 							y: 0,
-							w: 185,
-							h: 30
+							w: 48,
+							h: 48
 						}
 					);
 					
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
-						'button_over',
+						'run_02',
 						{
-							id: 'button_over',
-							imageId: 'button',
-							x: 0,
-							y: 30,
-							w: 185,
-							h: 30
+							id: 'run_02',
+							imageId: 'sonic',
+							x: 48*1,
+							y: 0,
+							w: 48,
+							h: 48
 						}
 					);
 					
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
-						'button_down',
+						'run_03',
 						{
-							id: 'button_down',
-							imageId: 'button',
-							x: 0,
-							y: 60,
-							w: 185,
-							h: 30
+							id: 'run_03',
+							imageId: 'sonic',
+							x: 48*2,
+							y: 0,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'run_04',
+						{
+							id: 'run_04',
+							imageId: 'sonic',
+							x: 48*3,
+							y: 0,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'run_05',
+						{
+							id: 'run_05',
+							imageId: 'sonic',
+							x: 48*4,
+							y: 0,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'run_06',
+						{
+							id: 'run_01',
+							imageId: 'sonic',
+							x: 48*5,
+							y: 0,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'sprint_01',
+						{
+							id: 'sprint_01',
+							imageId: 'sonic',
+							x: 48*0,
+							y: 48,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'sprint_02',
+						{
+							id: 'sprint_02',
+							imageId: 'sonic',
+							x: 48*1,
+							y: 48,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'sprint_03',
+						{
+							id: 'sprint_03',
+							imageId: 'sonic',
+							x: 48*2,
+							y: 48,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'sprint_04',
+						{
+							id: 'sprint_04',
+							imageId: 'sonic',
+							x: 48*3,
+							y: 48,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'zoom_01',
+						{
+							id: 'zoom_01',
+							imageId: 'sonic',
+							x: 48*0,
+							y: 96,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'zoom_02',
+						{
+							id: 'zoom_02',
+							imageId: 'sonic',
+							x: 48*1,
+							y: 96,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'zoom_03',
+						{
+							id: 'zoom_03',
+							imageId: 'sonic',
+							x: 48*2,
+							y: 96,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					this.resourceManager.addResource(
+						SpriteResource.TYPE,
+						'zoom_04',
+						{
+							id: 'zoom_04',
+							imageId: 'sonic',
+							x: 48*3,
+							y: 96,
+							w: 48,
+							h: 48
+						}
+					);
+					
+					var sonic_run_delay = 92;
+					this.resourceManager.addResource(
+						AnimationResource.TYPE,
+						'sonic_run',
+						{
+							id: 'sonic_run',
+							frames: [
+								{
+									sprite_id: 'run_01',
+									delay: sonic_run_delay
+								},
+								{
+									sprite_id: 'run_02',
+									delay: sonic_run_delay
+								},
+								{
+									sprite_id: 'run_03',
+									delay: sonic_run_delay
+								},
+								{
+									sprite_id: 'run_04',
+									delay: sonic_run_delay
+								},
+								{
+									sprite_id: 'run_05',
+									delay: sonic_run_delay
+								},
+								{
+									sprite_id: 'run_06',
+									delay: sonic_run_delay
+								},
+							]
+						}
+					);
+					
+					var sonic_sprint_delay = 64;
+					this.resourceManager.addResource(
+						AnimationResource.TYPE,
+						'sonic_sprint',
+						{
+							id: 'sonic_sprint',
+							frames: [
+								{
+									sprite_id: 'sprint_01',
+									delay: sonic_sprint_delay
+								},
+								{
+									sprite_id: 'sprint_02',
+									delay: sonic_sprint_delay
+								},
+								{
+									sprite_id: 'sprint_03',
+									delay: sonic_sprint_delay
+								},
+								{
+									sprite_id: 'sprint_04',
+									delay: sonic_sprint_delay
+								}
+							]
+						}
+					);
+					
+					var sonic_zoom_delay = 64;
+					this.resourceManager.addResource(
+						AnimationResource.TYPE,
+						'sonic_zoom',
+						{
+							id: 'sonic_zoom',
+							frames: [
+								{
+									sprite_id: 'zoom_01',
+									delay: sonic_zoom_delay
+								},
+								{
+									sprite_id: 'zoom_02',
+									delay: sonic_zoom_delay
+								},
+								{
+									sprite_id: 'zoom_03',
+									delay: sonic_zoom_delay
+								},
+								{
+									sprite_id: 'zoom_04',
+									delay: sonic_zoom_delay
+								}
+							]
 						}
 					);
 					
@@ -107,33 +340,37 @@ define(
 					this.scene.setHeight(400);
 					$$('body')[0].insert(this.scene.getElement());
 					
-					this.button = new Button(
-						new Sprite(this.resourceManager.getResource(SpriteResource.TYPE, 'button_up')),
-						new Sprite(this.resourceManager.getResource(SpriteResource.TYPE, 'button_down')),
-						new Sprite(this.resourceManager.getResource(SpriteResource.TYPE, 'button_over'))
+					var sonic_run = new Animation(
+						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_run')
 					);
-					this.scene.addChild(this.button);
-					this.button.x = 25;
+					this.scene.addChild(sonic_run);
+					sonic_run.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
 					
-					
-					var b = new Button(
-						new Sprite(this.resourceManager.getResource(SpriteResource.TYPE, 'button_up')),
-						new Sprite(this.resourceManager.getResource(SpriteResource.TYPE, 'button_down')),
-						new Sprite(this.resourceManager.getResource(SpriteResource.TYPE, 'button_over'))
+					var sonic_sprint = new Animation(
+						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_sprint')
 					);
-					b.x = 100;
-					b.y = 100;
-					this.scene.addChild(b);
+					this.scene.addChild(sonic_sprint);
+					sonic_sprint.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
+					sonic_sprint.x = 50;
 					
-					this.button.addEventListener(MouseEvent.CLICK, function(event) {
-						alert("Button 1 Clicked");
-					});
-					b.addEventListener(MouseEvent.CLICK, function(event) {
-						alert("Button 2 Clicked");
-					});
+					var sonic_zoom = new Animation(
+						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_zoom')
+					);
+					this.scene.addChild(sonic_zoom);
+					sonic_zoom.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
+					sonic_zoom.x = 100;
 					
 					minibot.system.setRenderCallback(this.scene.render.bind(this.scene));
 					minibot.system.run();
+				},
+				
+				toggleAnimation: function(event)
+				{
+					if(event.target.isPlaying()) {
+						event.target.stop();
+					} else {
+						event.target.play();
+					}
 				}
 				
 			}

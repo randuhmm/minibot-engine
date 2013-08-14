@@ -1,15 +1,15 @@
 define(
 	[
-		'minibot/display/canvas/CanvasDisplayObject'
+		'minibot/display/scene/SceneDisplayObject'
 	],
 	function
 	(
-		CanvasDisplayObject
+		SceneDisplayObject
 	)
 	{
 		var Animation = Class.create(
-			CanvasDisplayObject,
-			/** @lends display.canvas.Animation# */
+			SceneDisplayObject,
+			/** @lends display.scene.Animation# */
 			{
 				
 				animation: null,
@@ -30,7 +30,7 @@ define(
 				 * Description of constructor.
 				 * @class Short description of class.
 				 * Long Description of class.
-				 * @extends display.canvas.CanvasDisplayObject
+				 * @extends display.scene.SceneDisplayObject
 				 * @constructs
 				 * @param {resource.AnimationResource} animation
 				 * @param {bool} play
@@ -91,7 +91,12 @@ define(
 					}
 				},
 				
-				render: function(dt, context, x, y)
+				isPlaying: function()
+				{
+					return this.playing;
+				},
+				
+				render: function(dt, x, y)
 				{
 					if(this.animation == null) return;
 					
@@ -118,17 +123,22 @@ define(
 						}
 					}
 					
-					context.drawImage(
-						this.currentSprite.img,
-						this.currentSprite.x, //sx,
-						this.currentSprite.y, //sy,
-						this.currentSprite.w, //sw,
-						this.currentSprite.h, //sh,
-						this.x + x, //dx,
-						this.y + y, //dy,
-						this.w, //dw,
-						this.h //dh
-					);
+					try {
+						this.scene.drawImage(
+							this.currentSprite.img,
+							this.currentSprite.x, //sx,
+							this.currentSprite.y, //sy,
+							this.currentSprite.w, //sw,
+							this.currentSprite.h, //sh,
+							this.x + x, //dx,
+							this.y + y, //dy,
+							this.w, //dw,
+							this.h //dh
+						);
+					} catch(error) {
+						console.log('Animation: Rendering Fatal Error');
+					}
+					
 				}
 				
 			}

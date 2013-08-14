@@ -508,6 +508,52 @@ define('minibot/utils',
 		
 	}
 );
+define('minibot/system',
+	[
+		'./utils'
+	],
+	function
+	(
+		
+	)
+	{
+		
+		var system = {};
+		
+		system.onUpdate = null;
+		
+		system.onRender = null;
+		
+		system.lastTime = null;
+		
+		system.handleAnimationFrame = function(time)
+		{
+			window.requestAnimationFrame(this.handleAnimationFrame.bind(this));
+			var dt = 0;
+			if(this.lastTime != null) dt = time - this.lastTime;
+			if(this.onUpdate != null) this.onUpdate(dt);
+			if(this.onRender != null) this.onRender(dt);
+			this.lastTime = time;
+		};
+		
+		system.setUpdateCallback = function(f)
+		{
+			system.onUpdate = f;
+		};
+		
+		system.setRenderCallback = function(f)
+		{
+			system.onRender = f;
+		};
+		
+		system.run = function()
+		{
+			window.requestAnimationFrame(this.handleAnimationFrame.bind(this));
+		};
+		
+		return system;
+	}
+);
 /** 
  * @fileoverview 
  *
@@ -953,6 +999,12 @@ define('minibot/event/MouseEvent',
 			/** @lends event.MouseEvent# */
 			{
 				
+				x: null,
+				
+				y: null,
+				
+				displayObject: null,
+				
 				/**
 				 * Description of constructor.
 				 * @class Short description of class.
@@ -965,18 +1017,25 @@ define('minibot/event/MouseEvent',
 					type, 
 					bubbles,
 					cancelable,
-					localX,
-					localY,
+					x,
+					y,
 					displayObject
 				)
 				{
 					$super(type, bubbles, cancelable);
+					
+					this.x = x;
+					
+					this.y = y;
+					
+					this.displayObject = displayObject;
+					
 				}
 				
 			}
 		);
 		
-		MouseEvent.CLICK			= "click";
+		MouseEvent.CLICK			= "mouseClick";
 		MouseEvent.MOUSE_DOWN		= "mouseDown";
 		MouseEvent.MOUSE_UP			= "mouseUp";
 		MouseEvent.MOUSE_MOVE		= "mouseMove";
@@ -1045,16 +1104,16 @@ define('minibot/display/scene/Button',
 					if(this.overState != null) this.states.push(this.overState);
 					
 					this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
-					this.mouseUpCallback = this.handleMouseEnd.bindAsEventListener(this);
+					this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
 				},
 				
 				/** 
 				 * Function description.
 				 * @access public
 				 */
-				render: function(dt, context, x, y)
+				render: function(dt, x, y)
 				{
-					this.currentState.render(dt, context, this.x + x, this.y + y);
+					this.currentState.render(dt, this.x + x, this.y + y);
 				},
 				
 				/** 
@@ -1067,6 +1126,7 @@ define('minibot/display/scene/Button',
 					this.states.each(function(displayObject) {
 						displayObject.root = this.root;
 						displayObject.parent = this;
+						displayObject.scene = this.scene;
 						displayObject.onAddedToScene();
 					}.bind(this));
 				},
@@ -1079,19 +1139,19 @@ define('minibot/display/scene/Button',
 				{
 					if(!this.isDown) {
 						if(event.type == MouseEvent.MOUSE_DOWN) {
-							console.log("button down");
 							this.currentState = this.downState;
 							this.isDown = true;
 							this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 							this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
 						}
-						if(event.type == MouseEvent.MOUSE_UP) return;
 					} else {
 						if(event.type == MouseEvent.MOUSE_UP) {
 							this.currentState = this.upState;
 							this.isDown = false;
 							this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 							this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+							
+							this.sendClick.bind(this).defer(event);
 						}
 					}
 					return $super(event);
@@ -1129,6 +1189,23 @@ define('minibot/display/scene/Button',
 					this.isDown = false;
 					this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 					this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+				},
+				
+				/** 
+				 * Function description.
+				 * @access private
+				 */
+				sendClick: function(event)
+				{
+					console.log("sendClick");
+					event.preventDefault();
+					
+					var x = event.x;
+					var y = event.y;
+					var type = MouseEvent.CLICK;
+					
+					var mouseEvent = new MouseEvent(type, false, false, x, y, this);
+					this.dispatchEvent(mouseEvent);
 				}
 				
 			}
@@ -1879,50 +1956,6 @@ define('minibot/display/html/CanvasScene',
 		
 	}
 );
-define('minibot/event/UIEvent',
-['minibot/utils', 'minibot/event/BaseEvent'],
-function(utils, BaseEvent)
-{
-	return utils.define(
-		{
-			name: 'minibot.event.UIEvent',
-			parent: BaseEvent
-		},
-		{
-			
-			canvasX: null,
-			canvasY: null,
-			
-			x: null,
-			y: null,
-			
-			initialize: function($super, type, data, x, y)
-			{
-				this.canvasX = x;
-				this.canvasY = y;
-				this.x = x;
-				this.y = y;
-				$super(type, data);
-			},
-			
-			isTouchEvent: function()
-			{
-				return true;
-			}
-			
-		},
-		{
-			TOUCH_START: "uIEvent_TouchStart",
-			TOUCH_MOVE: "uIEvent_TouchMove",
-			TOUCH_END: "uIEvent_TouchEnd",
-			
-			FOCUS: "uIEvent_Focus",
-			BLUR: "uIEvent_Blur",
-		}
-	)
-});
-
-
 /** 
  * @fileoverview 
  *
@@ -2681,7 +2714,7 @@ define('minibot/resource/AnimationResource',
 );
 
 
-define('minibot',['require','minibot/utils','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Sprite','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/UIEvent','minibot/geom/Vector2','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
+define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Sprite','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/MouseEvent','minibot/geom/Vector2','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
 	
 	/** @namespace Namespace description. */
 	var minibot = {};
@@ -2689,6 +2722,7 @@ define('minibot',['require','minibot/utils','minibot/core/Manager','minibot/disp
 	var core, display, event, geom, resource;
 	
 	minibot.utils = require('minibot/utils');
+	minibot.system = require('minibot/system');
 	
 	/** @namespace Core namespace */
 	core = {};
@@ -2719,7 +2753,7 @@ define('minibot',['require','minibot/utils','minibot/core/Manager','minibot/disp
 	event = {};
 	event.EventDispatcher = require('minibot/event/EventDispatcher');
 	event.BaseEvent = require('minibot/event/BaseEvent');
-	event.UIEvent = require('minibot/event/UIEvent');
+	event.MouseEvent = require('minibot/event/MouseEvent');
 	
 	/** @namespace Geom namespace */
 	geom = {};

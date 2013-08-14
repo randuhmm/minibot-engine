@@ -20,7 +20,7 @@ define(function(require) {
 	/** @namespace Display.Scene namespace */
 	display.scene = {};
 	display.scene.SceneDisplayObject = require('minibot/display/scene/SceneDisplayObject');
-	//display.scene.Animation = require('minibot/display/scene/Animation');
+	display.scene.Animation = require('minibot/display/scene/Animation');
 	display.scene.Button = require('minibot/display/scene/Button');
 	display.scene.Container = require('minibot/display/scene/Container');
 	//display.scene.Mask = require('minibot/display/scene/Mask');
