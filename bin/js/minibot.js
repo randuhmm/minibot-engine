@@ -924,6 +924,158 @@ define('minibot/display/scene/SceneDisplayObject',
 	}
 );
 
+define('minibot/display/scene/Animation',
+	[
+		'minibot/display/scene/SceneDisplayObject'
+	],
+	function
+	(
+		SceneDisplayObject
+	)
+	{
+		var Animation = Class.create(
+			SceneDisplayObject,
+			/** @lends display.scene.Animation# */
+			{
+				
+				animation: null,
+				
+				currentFrame: 0,
+				
+				currentSprite: null,
+				
+				currentDelay: null,
+				
+				time: 0,
+				
+				loops: 0,
+				
+				playing: false,
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @extends display.scene.SceneDisplayObject
+				 * @constructs
+				 * @param {resource.AnimationResource} animation
+				 * @param {bool} play
+				 * @param {int} loops
+				 * @param
+				 */
+				initialize: function($super, animation, play, loops)
+				{
+					$super();
+					
+					this.loops = Animation.INFINITE_LOOPS;
+					
+					this.setAnimation(animation, play, loops);
+				},
+				
+				setAnimation: function(animation, play, loops)
+				{
+					this.playing = (play == undefined || play);
+					
+					if(loops == undefined) {
+						this.loops == Animation.INFINITE_LOOPS;
+					} else {
+						this.loops = loops;
+					}
+					
+					this.currentFrame = 0;
+					this.time = 0;
+					
+					this.animation = animation;
+					this.setupFrame();
+				},
+				
+				setupFrame: function()
+				{
+					if(this.animation == null) return;
+					this.currentSprite = this.animation.getSprite(this.currentFrame);
+					this.currentDelay = this.animation.getDelay(this.currentFrame);
+					if(this.w == 0) this.w = this.currentSprite.w;
+					if(this.h == 0) this.h = this.currentSprite.h;
+				},
+				
+				stop: function()
+				{
+					this.playing = false;
+					this.currentFrame = 0;
+					this.time = 0;
+					this.setupFrame();
+				},
+				
+				play: function(loops)
+				{
+					this.playing = true;
+					
+					if(loops == undefined) {
+						this.loops == Animation.INFINITE_LOOPS;
+					} else {
+						this.loops = loops;
+					}
+				},
+				
+				isPlaying: function()
+				{
+					return this.playing;
+				},
+				
+				render: function(dt, x, y)
+				{
+					if(this.animation == null) return;
+					
+					if(this.playing) {
+						this.time += dt;
+						while(this.time >= this.currentDelay) {
+							
+							// Handle looping
+							if(this.loops != Animation.INFINITE_LOOPS) {
+								if(this.animation.atEnd(this.currentFrame)) {
+									if(this.loops == 0) {
+										this.stop();
+										this.setupFrame();
+										break;
+									} else {
+										this.loops -= 1;
+									}
+								}
+							}
+							
+							this.time -= this.currentDelay;
+							this.currentFrame = this.animation.nextFrame(this.currentFrame);
+							this.setupFrame();
+						}
+					}
+					
+					try {
+						this.scene.drawImage(
+							this.currentSprite.img,
+							this.currentSprite.x, //sx,
+							this.currentSprite.y, //sy,
+							this.currentSprite.w, //sw,
+							this.currentSprite.h, //sh,
+							this.x + x, //dx,
+							this.y + y, //dy,
+							this.w, //dw,
+							this.h //dh
+						);
+					} catch(error) {
+						console.log('Animation: Rendering Fatal Error');
+					}
+					
+				}
+				
+			}
+		);
+		
+		Animation.INFINITE_LOOPS = -1;
+		
+		return Animation;
+	}
+);
+
 /** 
  * @fileoverview 
  *
@@ -2714,7 +2866,7 @@ define('minibot/resource/AnimationResource',
 );
 
 
-define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Sprite','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/MouseEvent','minibot/geom/Vector2','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
+define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Animation','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Sprite','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/MouseEvent','minibot/geom/Vector2','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
 	
 	/** @namespace Namespace description. */
 	var minibot = {};
@@ -2735,7 +2887,7 @@ define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manag
 	/** @namespace Display.Scene namespace */
 	display.scene = {};
 	display.scene.SceneDisplayObject = require('minibot/display/scene/SceneDisplayObject');
-	//display.scene.Animation = require('minibot/display/scene/Animation');
+	display.scene.Animation = require('minibot/display/scene/Animation');
 	display.scene.Button = require('minibot/display/scene/Button');
 	display.scene.Container = require('minibot/display/scene/Container');
 	//display.scene.Mask = require('minibot/display/scene/Mask');
