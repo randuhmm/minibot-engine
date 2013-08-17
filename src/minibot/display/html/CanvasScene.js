@@ -1,12 +1,14 @@
 define(
 	[
 		'minibot/display/scene/Scene',
-		'minibot/event/MouseEvent'
+		'minibot/event/MouseEvent',
+		'minibot/graphics/Color'
 	],
 	function
 	(
 		Scene,
-		MouseEvent
+		MouseEvent,
+		Color
 	)
 	{
 		
@@ -31,6 +33,9 @@ define(
 					$super();
 					
 					this.element = ((element == undefined)?(new Element('canvas')):(element));
+					
+					this.setWidth(this.element.width);
+					this.setHeight(this.element.height);
 					
 					this.context = this.element.getContext("2d");
 					
@@ -57,6 +62,11 @@ define(
 					return this.element;
 				},
 				
+				clear: function()
+				{
+					this.setWidth(this.width);
+				},
+				
 				drawImage: function(image, sx, sy, sw, sh, dx, dy, dw, dh)
 				{
 					this.context.drawImage(
@@ -70,6 +80,36 @@ define(
 						dw,
 						dh
 					);
+				},
+				
+				drawLine: function(x1, y1, x2, y2)
+				{
+					
+				},
+				
+				drawRect: function(mode, x, y, w, h)
+				{
+					this.context.fillRect(x,y,w,h); 
+				},
+				
+				setFillColor: function(color)
+				{
+					this.context.fillStyle = 'rgba('+color.getAsString(Color.RGB)+')';
+				},
+				
+				setLineColor: function(color)
+				{
+					
+				},
+				
+				setLineStyle: function(style)
+				{
+				
+				},
+				
+				setLineWidth: function(width)
+				{
+				
 				},
 				
 				// <-- Public Methods

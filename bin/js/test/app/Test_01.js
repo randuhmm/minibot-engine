@@ -343,22 +343,30 @@ define(
 					var sonic_run = new Animation(
 						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_run')
 					);
-					this.scene.addChild(sonic_run);
-					sonic_run.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
+					//this.scene.addChild(sonic_run);
+					//sonic_run.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
 					
 					var sonic_sprint = new Animation(
 						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_sprint')
 					);
-					this.scene.addChild(sonic_sprint);
-					sonic_sprint.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
-					sonic_sprint.x = 50;
+					//this.scene.addChild(sonic_sprint);
+					//sonic_sprint.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
+					//sonic_sprint.x = 50;
 					
 					var sonic_zoom = new Animation(
 						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_zoom')
 					);
-					this.scene.addChild(sonic_zoom);
-					sonic_zoom.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
-					sonic_zoom.x = 100;
+					//this.scene.addChild(sonic_zoom);
+					//sonic_zoom.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
+					//sonic_zoom.x = 100;
+					
+					
+					var button = new Button(
+						sonic_run,
+						sonic_sprint,
+						sonic_zoom
+					);
+					this.scene.addChild(button);
 					
 					minibot.system.setRenderCallback(this.scene.render.bind(this.scene));
 					minibot.system.run();

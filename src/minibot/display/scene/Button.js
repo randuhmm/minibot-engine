@@ -96,6 +96,9 @@ define(
 							this.isDown = true;
 							this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 							this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+						} else if(event.type == MouseEvent.MOUSE_MOVE) {
+							console.log("MOVE");
+							this.currentState = this.overState;
 						}
 					} else {
 						if(event.type == MouseEvent.MOUSE_UP) {

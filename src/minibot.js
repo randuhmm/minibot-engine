@@ -44,6 +44,10 @@ define(function(require) {
 	geom = {};
 	geom.Vector2 = require('minibot/geom/Vector2');
 	
+	/** @namespace Graphics namespace */
+	graphics = {};
+	graphics.Color = require('minibot/graphics/Color');
+	
 	/** @namespace Resource namespace */
 	resource = {};
 	resource.Resource = require('minibot/resource/Resource');
@@ -56,6 +60,7 @@ define(function(require) {
 	minibot.display = display;
 	minibot.event = event;
 	minibot.geom = geom;
+	minibot.graphics = graphics;
 	minibot.resource = resource;
 	
 	return minibot;

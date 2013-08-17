@@ -63,21 +63,6 @@ define(
 					return this.height;
 				},
 				
-				drawImage: function(image, sx, sy, sw, sh, dx, dy)
-				{
-				
-				},
-				
-				drawLine: function(x1, y1, x2, y2)
-				{
-					
-				},
-				
-				fillRect: function(x, y, w, h)
-				{
-					
-				},
-				
 				addChild: function(displayObject, layer)
 				{
 					if(layer == undefined || layer == null) layer = 0;
@@ -97,7 +82,46 @@ define(
 				render: function(dt)
 				{
 					this.container.render(dt);
-				}
+				},
+				
+				// Graphics Methods -->
+				
+				drawImage: function(image, sx, sy, sw, sh, dx, dy, dw, dh)
+				{
+				
+				},
+				
+				drawLine: function(x1, y1, x2, y2)
+				{
+					
+				},
+				
+				drawRect: function(mode, x, y, w, h)
+				{
+					
+				},
+				
+				setFillColor: function(color)
+				{
+					
+				},
+				
+				setLineColor: function(color)
+				{
+					
+				},
+				
+				setLineStyle: function(style)
+				{
+				
+				},
+				
+				setLineWidth: function(width)
+				{
+				
+				},
+				
+				// <-- Graphics Methods
 				
 				// <-- Public Methods
 				
