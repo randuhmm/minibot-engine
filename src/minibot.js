@@ -24,10 +24,11 @@ define(function(require) {
 	display.scene.Button = require('minibot/display/scene/Button');
 	display.scene.Container = require('minibot/display/scene/Container');
 	//display.scene.Mask = require('minibot/display/scene/Mask');
-	//display.scene.Rect = require('minibot/display/scene/Rect');
+	display.scene.Rect = require('minibot/display/scene/Rect');
 	//display.scene.RoundedRect = require('minibot/display/scene/RoundedRect');
 	display.scene.Sprite = require('minibot/display/scene/Sprite');
-	//display.scene.Text = require('minibot/display/scene/Text');
+	display.scene.Text = require('minibot/display/scene/Text');
+	display.scene.TextStyle = require('minibot/display/scene/TextStyle');
 	
 	/** @namespace Display.Html namespace */
 	display.html = {};

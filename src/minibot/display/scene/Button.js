@@ -56,8 +56,8 @@ define(
 					if(this.downState != null) this.states.push(this.downState);
 					if(this.overState != null) this.states.push(this.overState);
 					
-					this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
-					this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
+					//this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+					//this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
 				},
 				
 				/** 
@@ -94,18 +94,44 @@ define(
 						if(event.type == MouseEvent.MOUSE_DOWN) {
 							this.currentState = this.downState;
 							this.isDown = true;
-							this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
-							this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+							
+							if(!this.mouseMoveCallback) {
+								this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+								this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							}
+							
+							if(!this.mouseUpCallback) {
+								this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
+								this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+							}
+							
 						} else if(event.type == MouseEvent.MOUSE_MOVE) {
-							console.log("MOVE");
+							
+							
+							
 							this.currentState = this.overState;
+							
+							if(!this.mouseMoveCallback) {
+								this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+								this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							}
+							
 						}
 					} else {
 						if(event.type == MouseEvent.MOUSE_UP) {
-							this.currentState = this.upState;
 							this.isDown = false;
-							this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
-							this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+							
+							if(this.mouseMoveCallback) {
+								this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+								this.mouseMoveCallback = null;
+							}
+							
+							if(this.mouseUpCallback) {
+								this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+								this.mouseUpCallback = null;
+							}
+							
+							this.currentState = this.upState;
 							
 							this.sendClick.bind(this).defer(event);
 						}
@@ -119,20 +145,35 @@ define(
 				 */
 				handleMouseMove: function(event)
 				{
+					
+					this.isOver = this.isEventOver(event);
+					
+					if(this.isOver && this.isDown) {
+						this.currentState = this.downState;
+					} else if(this.isOver) {
+						this.currentState = this.overState;
+					} else if(this.isDown) {
+						this.currentState = this.upState;
+					} else {
+						this.currentState = this.upState;
+						if(this.mouseMoveCallback) {
+							this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							this.mouseMoveCallback = null;
+						}
+					}
+					
+				},
+				
+				isEventOver: function(event)
+				{
 					var sceneX = this.getSceneX();
 					var sceneY = this.getSceneY();
-					if(
+					return (
 						event.x >= sceneX && 
 						event.x <= (sceneX + this.w) && 
 						event.y >= sceneY && 
 						event.y <= (sceneY + this.h)
-					) {
-						this.currentState = this.downState;
-						this.isOver = true;
-					} else {
-						this.currentState = this.upState;
-						this.isOver = false;
-					}
+					);
 				},
 				
 				/** 
@@ -143,8 +184,16 @@ define(
 				{
 					this.currentState = this.upState;
 					this.isDown = false;
-					this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
-					this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+					
+					if(this.mouseMoveCallback) {
+						this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+						this.mouseMoveCallback = null;
+					}
+					
+					if(this.mouseUpCallback) {
+						this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+						this.mouseUpCallback = null;
+					}
 				},
 				
 				/** 
@@ -153,9 +202,6 @@ define(
 				 */
 				sendClick: function(event)
 				{
-					console.log("sendClick");
-					event.preventDefault();
-					
 					var x = event.x;
 					var y = event.y;
 					var type = MouseEvent.CLICK;

@@ -1,59 +1,45 @@
 define(
 	[
-		'minibot'
+		'minibot',
+		'BaseDemo'
 	],
 	function
 	(
-		minibot
+		minibot,
+		BaseDemo
 	)
 	{
 		
 		var	CanvasScene = minibot.display.html.CanvasScene
 		,	Color = minibot.graphics.Color
+		,	Vector2 = minibot.geom.Vector2
 		;
 		
 		var Demo = Class.create(
+			BaseDemo,
 			{
-				
-				element: null,
-				
-				scene:  null,
 				
 				color: null,
 				
 				mul: null,
 				mul_dir: null,
 				
-				initialize: function(element)
+				line: null,
+				angle: null,
+				
+				initialize: function($super, element)
 				{
-					this.element = element;
-					var canvasElement = new Element(
-						'canvas', 
-						{
-							width: 640,
-							height: 320
-						}
-					);
-					canvasElement.innerHTML = 
-						'<p>' + 
-							'<b>Error:</b> You are using a browser that does not support the <i>&lt;canvas&gt;</i> tag.' +
-							'Please view this page using a browser that supports this feature. Thanks!' +
-						'</p>';
-					this.scene = new CanvasScene(canvasElement);
-					this.element.insert(canvasElement);
+					$super(element);
 					
 					this.color = new Color(Color.HSL, 255, 128, 128);
 					
 					this.mul = 1.0;
 					this.mul_dir = 1;
 					
-					minibot.system.setRenderCallback(this.render.bind(this));
-					minibot.system.run();
-				},
-				
-				destroy: function()
-				{
-					this.element.remove();
+					this.line = new Vector2(100, 0);
+					this.angle = 0;
+					
+					this.run();
 				},
 				
 				render: function(dt)
@@ -73,8 +59,13 @@ define(
 					var hsl = this.color.getAsArray(Color.HSL);
 					this.color.setColor(Color.HSL, (hsl[0]+(dt*Demo.HUE_SPEED))%255, hsl[1], hsl[2]);
 					
+					var s = 100*this.mul;
+					
 					this.scene.setFillColor(this.color);
-					this.scene.drawRect("", 20, 20, 100*this.mul, 100*this.mul);
+					this.scene.drawRect("", 100 + (100-s)/2, 100 + (100-s)/2, s, s);
+					
+					this.line.rotate(Demo.ANGLE_SPEED * dt);
+					this.scene.drawLine(400, 150, 400 + this.line.x, 150 + this.line.y);
 					
 				}
 				
@@ -84,6 +75,7 @@ define(
 		
 		Demo.HUE_SPEED = 32 / 1000;
 		Demo.MUL_SPEED = 0.5 / 1000;
+		Demo.ANGLE_SPEED = 90 / 1000;
 		
 		return Demo;
 	}

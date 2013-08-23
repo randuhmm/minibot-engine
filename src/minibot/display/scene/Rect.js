@@ -1,35 +1,57 @@
 define(
-['minibot/utils', 'minibot/display/canvas/CanvasDisplayObject'],
-function(utils, CanvasDisplayObject)
-{
-	return utils.define(
-		{
-			name: 'minibot.display.canvas.Rect',
-			parent: CanvasDisplayObject
-		},
-		{		
-			fillStyle: null,
-			strokeStyle: null,
-			
-			initialize: function($super, width, height, fillStyle, strokeStyle)
+	[
+		'./SceneDisplayObject'
+	],
+	function
+	(
+		SceneDisplayObject
+	)
+	{
+		
+		var Rect = Class.create(
+			SceneDisplayObject,
+			/** @lends display.scene.Rect# */
 			{
-				$super();
 				
-				if(fillStyle != undefined) this.fillStyle = fillStyle;
-				if(strokeStyle != undefined) this.strokeStyle = strokeStyle;
+				mode: null,
 				
-				this.w = width;
-				this.h = height;
-			},
-			
-			render: function(dt, context, x, y)
-			{
-				if(this.fillStyle != undefined) {
-					context.fillStyle = this.fillStyle;
-					context.fillRect(this.x + x, this.y + y, this.w, this.h);
+				fillColor: null,
+				strokeColor: null,
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @extends display.scene.SceneDisplayObject
+				 * @constructs
+				 * @param
+				 * @param {int} width The width of the rectangle.
+				 */
+				initialize: function($super, width, height, mode, fillColor, strokeColor)
+				{
+					$super();
+					
+					this.w = width;
+					this.h = height;
+					
+					this.mode = mode;
+					
+					if(fillColor != undefined) this.fillColor = fillColor;
+					if(strokeColor != undefined) this.strokeColor = strokeColor;
+					
+				},
+				
+				render: function(dt, x, y)
+				{
+					if(this.fillColor != null) this.scene.setFillColor(this.fillColor);
+					
+					this.scene.drawRect(this.mode, this.x + x, this.y + y, this.w, this.h);
 				}
+				
 			}
-			
-		}
-	);
-});
+		);
+		
+		return Rect;
+		
+	}
+);

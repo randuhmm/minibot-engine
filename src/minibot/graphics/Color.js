@@ -91,7 +91,7 @@ define(
 		
 		Color.RgbToHsl = function(r, g, b)
 		{
-		}
+		};
 		
 		Color.HslToRgb = function(h, s, l)
 		{
@@ -114,7 +114,27 @@ define(
 			else				{ r = c; g = 0; b = x }
 			
 			return [(r+m)*255,(g+m)*255,(b+m)*255]
-		}
+		};
+		
+		Color.FromHex = function(hex)
+		{
+			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			if(result) {
+				return new Color(
+					Color.RGB,
+					parseInt(result[1], 16), // r
+					parseInt(result[2], 16), // g
+					parseInt(result[3], 16)  // b
+				);
+			} else {
+				return null;
+			}
+			return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+			} : null;
+		};
 		
 		Color.RGB = "rgb";
 		Color.HSL = "hsl";

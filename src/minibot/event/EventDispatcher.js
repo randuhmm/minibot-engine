@@ -55,8 +55,8 @@ define(
 					for(var i = 0; i < callbacks.length; i++) {
 						var callback = callbacks[i];
 						callback(event);
-						return true;
 					}
+					return true;
 				},
 				
 				removeEventListener: function(type, callback)

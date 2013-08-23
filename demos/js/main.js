@@ -8,6 +8,9 @@
 	{
 		
 		// destruct current demo if it exists
+		if(currentDemo != null) {
+			currentDemo.destroy();
+		}
 		
 		// setup new demo
 		require
@@ -20,8 +23,8 @@
 				Demo
 			)
 			{
-				var demo = new Demo(parentElement);
-			}
+				currentDemo = new Demo(parentElement);
+			}.bind(this)
 		);
 	};
 	

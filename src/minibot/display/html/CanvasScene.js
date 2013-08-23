@@ -84,12 +84,35 @@ define(
 				
 				drawLine: function(x1, y1, x2, y2)
 				{
-					
+					this.context.beginPath();
+					this.context.moveTo(x1, y1);
+					this.context.lineTo(x2, y2);
+					this.context.stroke();
+				},
+				
+				drawPoly: function(mode, c, closed)
+				{
+					/*
+					this.context.beginPath();
+					this.context.moveTo(x1, y1);
+					this.context.lineTo(x2, y2);
+					this.context.stroke();
+					*/
 				},
 				
 				drawRect: function(mode, x, y, w, h)
 				{
 					this.context.fillRect(x,y,w,h); 
+				},
+				
+				drawText: function(mode, text, style, x, y)
+				{
+					if(style != null) {
+						this.context.font = style.getSize() + "pt " + style.getFamily();
+						this.setFillColor(style.getColor());
+					}
+					
+					this.context.fillText(text, x, y);
 				},
 				
 				setFillColor: function(color)
