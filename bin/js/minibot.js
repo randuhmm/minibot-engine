@@ -526,14 +526,19 @@ define('minibot/system',
 		
 		system.lastTime = null;
 		
+		system.isRunning = false;
+		
+		system.animationFrameId = null;
+		
 		system.handleAnimationFrame = function(time)
 		{
-			window.requestAnimationFrame(this.handleAnimationFrame.bind(this));
+			if(!system.isRunning) return;
+			system.animationFrameId = window.requestAnimationFrame(system.handleAnimationFrame.bind(this));
 			var dt = 0;
-			if(this.lastTime != null) dt = time - this.lastTime;
-			if(this.onUpdate != null) this.onUpdate(dt);
-			if(this.onRender != null) this.onRender(dt);
-			this.lastTime = time;
+			if(system.lastTime != null) dt = time - system.lastTime;
+			if(system.onUpdate != null) system.onUpdate(dt);
+			if(system.onRender != null) system.onRender(dt);
+			system.lastTime = time;
 		};
 		
 		system.setUpdateCallback = function(f)
@@ -548,8 +553,21 @@ define('minibot/system',
 		
 		system.run = function()
 		{
-			window.requestAnimationFrame(this.handleAnimationFrame.bind(this));
+			// We can't run the system twice!
+			if(system.isRunning) return;
+			
+			system.isRunning = true;
+			system.animationFrameId = window.requestAnimationFrame(system.handleAnimationFrame.bind(system));
 		};
+		
+		system.stop = function()
+		{
+			// We can't stop the system if it isnt running
+			if(!system.isRunning) return;
+			
+			window.cancelAnimationFrame(system.animationFrameId);
+			system.isRunning = false;
+		}
 		
 		return system;
 	}
@@ -698,8 +716,8 @@ define('minibot/event/EventDispatcher',
 					for(var i = 0; i < callbacks.length; i++) {
 						var callback = callbacks[i];
 						callback(event);
-						return true;
 					}
+					return true;
 				},
 				
 				removeEventListener: function(type, callback)
@@ -1255,8 +1273,8 @@ define('minibot/display/scene/Button',
 					if(this.downState != null) this.states.push(this.downState);
 					if(this.overState != null) this.states.push(this.overState);
 					
-					this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
-					this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
+					//this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+					//this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
 				},
 				
 				/** 
@@ -1293,18 +1311,44 @@ define('minibot/display/scene/Button',
 						if(event.type == MouseEvent.MOUSE_DOWN) {
 							this.currentState = this.downState;
 							this.isDown = true;
-							this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
-							this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+							
+							if(!this.mouseMoveCallback) {
+								this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+								this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							}
+							
+							if(!this.mouseUpCallback) {
+								this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
+								this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+							}
+							
 						} else if(event.type == MouseEvent.MOUSE_MOVE) {
-							console.log("MOVE");
+							
+							
+							
 							this.currentState = this.overState;
+							
+							if(!this.mouseMoveCallback) {
+								this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+								this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							}
+							
 						}
 					} else {
 						if(event.type == MouseEvent.MOUSE_UP) {
-							this.currentState = this.upState;
 							this.isDown = false;
-							this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
-							this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+							
+							if(this.mouseMoveCallback) {
+								this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+								this.mouseMoveCallback = null;
+							}
+							
+							if(this.mouseUpCallback) {
+								this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+								this.mouseUpCallback = null;
+							}
+							
+							this.currentState = this.upState;
 							
 							this.sendClick.bind(this).defer(event);
 						}
@@ -1318,20 +1362,35 @@ define('minibot/display/scene/Button',
 				 */
 				handleMouseMove: function(event)
 				{
+					
+					this.isOver = this.isEventOver(event);
+					
+					if(this.isOver && this.isDown) {
+						this.currentState = this.downState;
+					} else if(this.isOver) {
+						this.currentState = this.overState;
+					} else if(this.isDown) {
+						this.currentState = this.upState;
+					} else {
+						this.currentState = this.upState;
+						if(this.mouseMoveCallback) {
+							this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							this.mouseMoveCallback = null;
+						}
+					}
+					
+				},
+				
+				isEventOver: function(event)
+				{
 					var sceneX = this.getSceneX();
 					var sceneY = this.getSceneY();
-					if(
+					return (
 						event.x >= sceneX && 
 						event.x <= (sceneX + this.w) && 
 						event.y >= sceneY && 
 						event.y <= (sceneY + this.h)
-					) {
-						this.currentState = this.downState;
-						this.isOver = true;
-					} else {
-						this.currentState = this.upState;
-						this.isOver = false;
-					}
+					);
 				},
 				
 				/** 
@@ -1342,8 +1401,16 @@ define('minibot/display/scene/Button',
 				{
 					this.currentState = this.upState;
 					this.isDown = false;
-					this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
-					this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+					
+					if(this.mouseMoveCallback) {
+						this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+						this.mouseMoveCallback = null;
+					}
+					
+					if(this.mouseUpCallback) {
+						this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+						this.mouseUpCallback = null;
+					}
 				},
 				
 				/** 
@@ -1352,9 +1419,6 @@ define('minibot/display/scene/Button',
 				 */
 				sendClick: function(event)
 				{
-					console.log("sendClick");
-					event.preventDefault();
-					
 					var x = event.x;
 					var y = event.y;
 					var type = MouseEvent.CLICK;
@@ -1608,6 +1672,64 @@ define('minibot/display/scene/Container',
 	}
 );
 
+define('minibot/display/scene/Rect',
+	[
+		'./SceneDisplayObject'
+	],
+	function
+	(
+		SceneDisplayObject
+	)
+	{
+		
+		var Rect = Class.create(
+			SceneDisplayObject,
+			/** @lends display.scene.Rect# */
+			{
+				
+				mode: null,
+				
+				fillColor: null,
+				strokeColor: null,
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @extends display.scene.SceneDisplayObject
+				 * @constructs
+				 * @param
+				 * @param {int} width The width of the rectangle.
+				 */
+				initialize: function($super, width, height, mode, fillColor, strokeColor)
+				{
+					$super();
+					
+					this.w = width;
+					this.h = height;
+					
+					this.mode = mode;
+					
+					if(fillColor != undefined) this.fillColor = fillColor;
+					if(strokeColor != undefined) this.strokeColor = strokeColor;
+					
+				},
+				
+				render: function(dt, x, y)
+				{
+					if(this.fillColor != null) this.scene.setFillColor(this.fillColor);
+					
+					this.scene.drawRect(this.mode, this.x + x, this.y + y, this.w, this.h);
+				}
+				
+			}
+		);
+		
+		return Rect;
+		
+	}
+);
+
 define('minibot/display/scene/Sprite',
 	[
 		'minibot/display/scene/SceneDisplayObject'
@@ -1669,6 +1791,307 @@ define('minibot/display/scene/Sprite',
 		
 	}
 );
+define('minibot/display/scene/Text',
+	[
+		'minibot/display/scene/SceneDisplayObject'
+	],
+	function
+	(
+		SceneDisplayObject
+	)
+	{
+		
+		var Text = Class.create(
+			SceneDisplayObject,
+			/** @lends display.scene.Text# */
+			{
+				
+				text: '',
+				
+				style: null,
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @extends display.scene.SceneDisplayObject
+				 * @constructs
+				 * @param {String} text
+				 * @param {display.scene.TextStyle} style
+				 * @param {String} textAlign
+				 * @param {Scene 2DContext} context
+				 * @param 
+				 */
+				initialize: function($super, text, style)
+				{
+					$super();
+					
+					this.text = text;
+					
+					if(style != undefined) this.style = style;
+					
+					/*
+					if(font != undefined) this.font = font;
+					if(fillStyle != undefined) this.fillStyle = fillStyle;
+					if(textAlign != undefined) this.textAlign = textAlign;
+					
+					if(context != undefined) {
+						this.setStyle(context);
+						this.metrics = context.measureText(this.text);
+					}
+					*/
+				},
+				
+				setStyle: function(context)
+				{
+					if(this.font != null) context.font = this.font;
+					if(this.textAlign != null) context.textAlign = this.textAlign;
+					if(this.fillStyle != null) context.fillStyle = this.fillStyle;
+				},
+				
+				getText: function()
+				{
+					return this.text;
+				},
+				
+				getMetrics: function()
+				{
+					return this.metrics;
+				},
+				
+				setText: function(text)
+				{
+					this.text = text;
+				},
+				
+				render: function(dt, x, y)
+				{
+					this.scene.drawText("", this.text, this.style, this.x + x, this.y + y);
+				}
+				
+			}
+		);
+		
+		return Text;
+	}
+);
+
+define('minibot/graphics/Color',
+	[
+		
+	],
+	function
+	(
+		
+	)
+	{
+		
+		var Color = Class.create(
+			/** @lends graphics.Color# */
+			{
+				
+				r: null,
+				
+				g: null,
+				
+				b: null,
+				
+				h: null,
+				
+				s: null,
+				
+				l: null,
+				
+				a: null,
+				
+				mode: null,
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @extends display.canvas.CanvasDisplayObject
+				 * @constructs
+				 * @param 
+				 */
+				initialize: function(mode, v1, v2, v3, a)
+				{
+					this.setColor(mode, v1, v2, v3, a);
+				},
+				
+				// Public Methods -->
+				
+				setColor: function(mode, v1, v2, v3, a)
+				{
+					this.mode = mode;
+					this.a = ((a != undefined)?(a):(1.0));
+					if(mode == Color.RGB) {
+						this.r = v1;
+						this.g = v2;
+						this.b = v3;
+					} else if(mode == Color.HSL) {
+						this.h = v1;
+						this.s = v2;
+						this.l = v3;
+						var rgb = Color.HslToRgb(this.h, this.s, this.l);
+						this.r = Math.round(rgb[0]);
+						this.g = Math.round(rgb[1]);
+						this.b = Math.round(rgb[2]);
+					} else {
+						throw new Error("Color: unrecognized color mode.");
+					}
+				},
+				
+				getAsArray: function(mode)
+				{
+					if(mode == Color.RGB) {
+						return [this.r, this.g, this.b, this.a];
+					} else if(mode == Color.HSL) {
+						return [this.h, this.s, this.l, this.a];
+					} else {
+						throw new Error("Color: unrecognized color mode.");
+					}
+				},
+				
+				getAsString: function(mode, spacer)
+				{
+					spacer = ((spacer == undefined)?(","):(spacer));
+					return this.getAsArray(mode).join(spacer);
+				}
+				
+				// <-- Public Methods
+				
+				
+				
+				
+			}
+		);
+		
+		Color.RgbToHsl = function(r, g, b)
+		{
+		};
+		
+		Color.HslToRgb = function(h, s, l)
+		{
+			if(s <= 0) { return [l,l,l]; }
+			h = h / 256 * 6;
+			s = s / 255;
+			l = l / 255
+			var	c = (1 - Math.abs(2 * l - 1)) * s,
+				x = (1 - Math.abs(h % 2 - 1)) * c,
+				m = (l - 0.5 * c),
+				r = 0,
+				g = 0,
+				b = 0;
+				
+					if(h < 1)	{ r = c; g = x; b = 0 }
+			else	if(h < 2)	{ r = x; g = c; b = 0 }
+			else	if(h < 3)	{ r = 0; g = c; b = x }
+			else	if(h < 4)	{ r = 0; g = x; b = c }
+			else	if(h < 5)	{ r = x; g = 0; b = c }
+			else				{ r = c; g = 0; b = x }
+			
+			return [(r+m)*255,(g+m)*255,(b+m)*255]
+		};
+		
+		Color.FromHex = function(hex)
+		{
+			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			if(result) {
+				return new Color(
+					Color.RGB,
+					parseInt(result[1], 16), // r
+					parseInt(result[2], 16), // g
+					parseInt(result[3], 16)  // b
+				);
+			} else {
+				return null;
+			}
+			return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+			} : null;
+		};
+		
+		Color.RGB = "rgb";
+		Color.HSL = "hsl";
+		
+		return Color;
+		
+	}
+);
+
+define('minibot/display/scene/TextStyle',
+	[
+		'minibot/graphics/Color'
+	],
+	function
+	(
+		Color
+	)
+	{
+		
+		var TextStyle = Class.create(
+			/** @lends display.scene.TextStyle# */
+			{
+				
+				family: null,
+				
+				size: null,
+				
+				align: null,
+				
+				color: null,
+				
+				/**
+				 * Description of constructor.
+				 * @class Short description of class.
+				 * Long Description of class.
+				 * @constructs
+				 * @param {String} family
+				 * @param {int} size
+				 * @param {String} color
+				 * @param {String} align
+				 * @param 
+				 */
+				initialize: function(family, size, color, align)
+				{
+					
+					this.family = family;
+					this.size = size;
+					this.color = color;
+					this.align = align;
+					
+				},
+				
+				getFamily: function()
+				{
+					return this.family;
+				},
+				
+				getSize: function()
+				{
+					return this.size;
+				},
+				
+				getColor: function()
+				{
+					return this.color;
+				},
+				
+				getAlign: function()
+				{
+					return this.align;
+				}
+				
+			}
+		);
+		
+		return TextStyle;
+	}
+);
+
 define('minibot/event/HtmlEvent',
 ['minibot/utils', 'minibot/event/BaseEvent'],
 function(utils, BaseEvent)
@@ -2020,132 +2443,6 @@ define('minibot/display/scene/Scene',
 	}
 );
 
-define('minibot/graphics/Color',
-	[
-		
-	],
-	function
-	(
-		
-	)
-	{
-		
-		var Color = Class.create(
-			/** @lends graphics.Color# */
-			{
-				
-				r: null,
-				
-				g: null,
-				
-				b: null,
-				
-				h: null,
-				
-				s: null,
-				
-				l: null,
-				
-				a: null,
-				
-				mode: null,
-				
-				/**
-				 * Description of constructor.
-				 * @class Short description of class.
-				 * Long Description of class.
-				 * @extends display.canvas.CanvasDisplayObject
-				 * @constructs
-				 * @param 
-				 */
-				initialize: function(mode, v1, v2, v3, a)
-				{
-					this.setColor(mode, v1, v2, v3, a);
-				},
-				
-				// Public Methods -->
-				
-				setColor: function(mode, v1, v2, v3, a)
-				{
-					this.mode = mode;
-					this.a = ((a != undefined)?(a):(1.0));
-					if(mode == Color.RGB) {
-						this.r = v1;
-						this.g = v2;
-						this.b = v3;
-					} else if(mode == Color.HSL) {
-						this.h = v1;
-						this.s = v2;
-						this.l = v3;
-						var rgb = Color.HslToRgb(this.h, this.s, this.l);
-						this.r = Math.round(rgb[0]);
-						this.g = Math.round(rgb[1]);
-						this.b = Math.round(rgb[2]);
-					} else {
-						throw new Error("Color: unrecognized color mode.");
-					}
-				},
-				
-				getAsArray: function(mode)
-				{
-					if(mode == Color.RGB) {
-						return [this.r, this.g, this.b, this.a];
-					} else if(mode == Color.HSL) {
-						return [this.h, this.s, this.l, this.a];
-					} else {
-						throw new Error("Color: unrecognized color mode.");
-					}
-				},
-				
-				getAsString: function(mode, spacer)
-				{
-					spacer = ((spacer == undefined)?(","):(spacer));
-					return this.getAsArray(mode).join(spacer);
-				}
-				
-				// <-- Public Methods
-				
-				
-				
-				
-			}
-		);
-		
-		Color.RgbToHsl = function(r, g, b)
-		{
-		}
-		
-		Color.HslToRgb = function(h, s, l)
-		{
-			if(s <= 0) { return [l,l,l]; }
-			h = h / 256 * 6;
-			s = s / 255;
-			l = l / 255
-			var	c = (1 - Math.abs(2 * l - 1)) * s,
-				x = (1 - Math.abs(h % 2 - 1)) * c,
-				m = (l - 0.5 * c),
-				r = 0,
-				g = 0,
-				b = 0;
-				
-					if(h < 1)	{ r = c; g = x; b = 0 }
-			else	if(h < 2)	{ r = x; g = c; b = 0 }
-			else	if(h < 3)	{ r = 0; g = c; b = x }
-			else	if(h < 4)	{ r = 0; g = x; b = c }
-			else	if(h < 5)	{ r = x; g = 0; b = c }
-			else				{ r = c; g = 0; b = x }
-			
-			return [(r+m)*255,(g+m)*255,(b+m)*255]
-		}
-		
-		Color.RGB = "rgb";
-		Color.HSL = "hsl";
-		
-		return Color;
-		
-	}
-);
-
 define('minibot/display/html/CanvasScene',
 	[
 		'minibot/display/scene/Scene',
@@ -2232,12 +2529,35 @@ define('minibot/display/html/CanvasScene',
 				
 				drawLine: function(x1, y1, x2, y2)
 				{
-					
+					this.context.beginPath();
+					this.context.moveTo(x1, y1);
+					this.context.lineTo(x2, y2);
+					this.context.stroke();
+				},
+				
+				drawPoly: function(mode, c, closed)
+				{
+					/*
+					this.context.beginPath();
+					this.context.moveTo(x1, y1);
+					this.context.lineTo(x2, y2);
+					this.context.stroke();
+					*/
 				},
 				
 				drawRect: function(mode, x, y, w, h)
 				{
 					this.context.fillRect(x,y,w,h); 
+				},
+				
+				drawText: function(mode, text, style, x, y)
+				{
+					if(style != null) {
+						this.context.font = style.getSize() + "pt " + style.getFamily();
+						this.setFillColor(style.getColor());
+					}
+					
+					this.context.fillText(text, x, y);
 				},
 				
 				setFillColor: function(color)
@@ -3059,7 +3379,7 @@ define('minibot/resource/AnimationResource',
 );
 
 
-define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Animation','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Sprite','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/MouseEvent','minibot/geom/Vector2','minibot/graphics/Color','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
+define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Animation','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Rect','minibot/display/scene/Sprite','minibot/display/scene/Text','minibot/display/scene/TextStyle','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/MouseEvent','minibot/geom/Vector2','minibot/graphics/Color','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
 	
 	/** @namespace Namespace description. */
 	var minibot = {};
@@ -3084,10 +3404,11 @@ define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manag
 	display.scene.Button = require('minibot/display/scene/Button');
 	display.scene.Container = require('minibot/display/scene/Container');
 	//display.scene.Mask = require('minibot/display/scene/Mask');
-	//display.scene.Rect = require('minibot/display/scene/Rect');
+	display.scene.Rect = require('minibot/display/scene/Rect');
 	//display.scene.RoundedRect = require('minibot/display/scene/RoundedRect');
 	display.scene.Sprite = require('minibot/display/scene/Sprite');
-	//display.scene.Text = require('minibot/display/scene/Text');
+	display.scene.Text = require('minibot/display/scene/Text');
+	display.scene.TextStyle = require('minibot/display/scene/TextStyle');
 	
 	/** @namespace Display.Html namespace */
 	display.html = {};
