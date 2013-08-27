@@ -2627,6 +2627,575 @@ define('minibot/display/html/CanvasScene',
  * @author Jonny Morrill jonny@morrill.me
  * @version 0.1
  */
+define('minibot/engine/Engine',
+	[
+		'minibot/event/EventDispatcher'
+	],
+	function
+	(
+		EventDispatcher
+	)
+	{
+		
+		var Engine = Class.create(
+			EventDispatcher,
+			/** @lends engine.Engine# */
+			{
+				
+				// List of all systems
+				systems: null,
+				
+				// List of all systems by type
+				systemsByType: null,
+				
+				// List of all objects
+				objects: null,
+				
+				// List of objects by type
+				objectsByType: null,
+				
+				// The primary camera
+				camera: null,
+				
+				// the player
+				player: null,
+				
+				// The resource map
+				resources: null,
+				
+				// The update order
+				updateOrder: null,
+				
+				initialize: function($super)
+				{
+					$super();
+					
+					this.resources = {};
+					
+					this.systems = [];
+					this.systemsByType = {};
+					
+					this.objects = [];
+					this.objectsByType = {};
+					
+				},
+				
+				// Public Methods -->
+				
+				// Update/Render Methods -->
+				
+				update: function(dt)
+				{
+					
+					// Update the Systems in preset order
+					for(var s = 0; s < this.updateOrder.length; s++) {
+						this.systemsByType[this.updateOrder[s]].update(dt);
+					}
+					
+				},
+				
+				render: function(dt)
+				{
+					// Override this in sub class
+				},
+				
+				renderPhysics: function(dt)
+				{
+					// Override this in sub class
+				},
+				
+				setUpdateOrder: function(updateOrder)
+				{
+					this.updateOrder = updateOrder;
+				},
+				
+				// <-- Update/Render Methods
+				
+				// Object/System Methods -->
+				
+				addSystem: function(sys)
+				{
+					// Get type
+					var type = sys.getType();
+					if(this.systemsByType[type] != undefined) {
+						// ERROR?
+						return;
+					}
+					
+					// Add to systems
+					this.systems.push(sys);
+					
+					// Add to systemsByType
+					this.systemsByType[type] = sys;
+					
+					sys.setEngine(this);
+					sys.onAddedToEngine();
+				},
+				
+				removeSystem: function()
+				{
+					
+				},
+				
+				addObject: function(obj)
+				{
+					// Add to objects
+					this.objects.push(obj);
+					
+					// Add to objectsByType
+					var type = obj.getType();
+					if(this.objectsByType[type] == undefined) {
+						this.objectsByType[type] = [];
+					}
+					this.objectsByType[type].push(obj);
+					
+					// Add to systems if component is available
+					for(var i = 0; i < this.systems.length; i++) {
+						this.systems[i].addObject(obj);
+					}
+					
+					obj.setEngine(this);
+					obj.onAddedToEngine();
+				},
+				
+				removeObject: function()
+				{
+					
+				},
+				
+				// <-- Object/System Methods
+				
+				// Resource Methods -->
+				
+				getResources: function()
+				{
+					return this.resources;
+				},
+				
+				getResource: function(type, id)
+				{
+					if(this.resources[type] == undefined) return null;
+					if(this.resources[type][id] == undefined) return null;
+					return this.resources[type][id];
+				},
+				
+				addResource: function(type, id)
+				{
+					if(this.resources[type] == undefined) this.resources[type] = {};
+					this.resources[type][id] = null;
+				},
+				
+				onResourcesLoaded: function()
+				{
+					var i;
+					for(i = 0; i < this.systems.length; i++) {
+						this.systems[i].onResourcesLoaded();
+					}
+					for(i = 0; i < this.objects.length; i++) {
+						this.objects[i].onResourcesLoaded();
+					}
+				},
+				
+				// <-- Resource Methods
+				
+				// <-- Public Methods
+				
+				
+				
+			}
+		);
+		
+		return Engine;
+	
+	}
+);
+
+define('minibot/engine/EngineComponent',
+	[
+		
+	],
+	function
+	(
+		
+	)
+	{
+		var EngineComponent = Class.create(
+			{
+				
+				type: null,
+				
+				object: null,
+				
+				system: null,
+				
+				listeners: null,
+				
+				initialize: function(type)
+				{
+					this.type = type;
+					
+					this.listeners = {};
+				},
+				
+				getType: function()
+				{
+					return this.type;
+				},
+
+				setProperty: function(key, value)
+				{
+					this.object.setProperty(key, value);
+				},
+
+				getProperty: function(key)
+				{
+					return this.object.getProperty(key);
+				},
+
+				hasProperty: function(key)
+				{
+					return this.object.hasProperty(key);
+				},
+				
+				setObject: function(object)
+				{
+					this.object = object;
+				},
+				
+				onAddedToObject: function()
+				{
+					//-- OVERRIDE
+				},
+				
+				setSystem: function(system)
+				{
+					this.system = system;
+				},
+				
+				getSystem: function()
+				{
+					return this.system;
+				},
+				
+				onAddedToSystem: function()
+				{
+					//-- OVERIDE?
+				},
+
+				sendMessage: function(message)
+				{
+					this.object.sendMessage(message);
+				},
+
+				addListener: function(type, func, obj)
+				{
+					if(obj == null) obj = this.listeners;
+					obj[type] = func;
+				},
+				
+				addResource: function(type, id)
+				{
+					if(this.system == null) return;
+					this.system.addResource(type, id);
+				},
+				
+				getResource: function(type, id)
+				{
+					if(this.system == null) return;
+					return this.system.getResource(type, id);
+				},
+				
+				onResourcesLoaded: function()
+				{
+					
+				},
+
+				callListener: function(type, listeners, params)
+				{
+					var f = listeners[type];
+					if(f == null) return;
+					f(params)
+				},
+
+				receiveMessage: function(message)
+				{
+					this.callListener(message.type, this.listeners, message)
+				},
+
+				update: function(dt)
+				{
+					//-- OVERRIDE
+				}
+				
+			}
+		);
+		
+		return EngineComponent;
+		
+	}
+	
+);
+
+
+/*
+require 'engine/object/Player'
+require 'engine/component/player/PlayerPhysicsComponent'
+require 'engine/component/player/PlayerInputComponent'
+require 'engine/component/player/PlayerHealthComponent'
+
+require 'engine/factory/EquipmentFactory'
+
+PlayerFactory = {}
+
+function PlayerFactory.Create(world, equipments)
+	local player = Player()
+	player:setProperty("x", 0)
+	player:setProperty("y", 0)
+	player:setProperty("health", 5)
+	
+	player:addComponent(PlayerPhysicsComponent(world))
+	player:addComponent(PlayerInputComponent())
+	player:addComponent(PlayerHealthComponent())
+  
+  -- Add equipments
+  local e = {nil, nil, nil, nil, nil, nil, nil, nil}
+  for i,v in ipairs(equipments) do
+    e[i] = EquipmentFactory.Create(v, world)
+	end
+  player:setProperty("equipment", e)
+  
+	return player
+end
+*/;
+define("minibot/engine/EngineFactory", function(){});
+
+define('minibot/engine/EngineObject',
+	[
+		
+	],
+	function
+	(
+		
+	)
+	{
+		var EngineObject = Class.create(
+			{
+			
+				type: null,
+				
+				components: null,
+				
+				data: null,
+				
+				engine: null,
+				
+				initialize: function(type, data)
+				{
+					this.type = type;
+					this.components = {};
+					
+					if(data == undefined) data = {};
+					this.data = data;
+				},
+				
+				getType: function()
+				{
+					return this.type;
+				},
+
+				addComponent: function(component)
+				{
+					var type = component.getType()
+					if(this.components[type] == undefined) {
+						this.components[type] = component;
+						component.setObject(this);
+						component.onAddedToObject();
+					}
+				},
+
+				removeComponent: function(component)
+				{
+
+				},
+				
+				setEngine: function(engine)
+				{
+					this.engine = engine;
+				},
+
+				onAddedToEngine: function()
+				{
+					//-- OVERRIDE
+				},
+				
+				onResourcesLoaded: function()
+				{
+					for(var c in this.components) {
+						this.components[c].onResourcesLoaded();
+					}
+				},
+
+				getComponent: function(type)
+				{
+					if(this.components[type] != undefined)
+					{
+						return this.components[type];
+					}
+					return null;
+				},
+
+				hasComponent: function(type)
+				{
+					return (this.components[type] != undefined)
+				},
+
+				update: function(dt)
+				{
+					for(var c in this.components) {
+						this.components[c].update(dt);
+					}
+				},
+
+				setProperty: function(key, value)
+				{
+					this.data[key] = value;
+				},
+
+				getProperty: function(key)
+				{
+					return this.data[key];
+				},
+
+				hasProperty: function(key)
+				{
+					return (this.data[key] != undefined);
+				},
+
+				sendMessage: function(message)
+				{
+					for(var c in this.components) {
+						this.components[c].receiveMessage(message);
+					}
+				}
+				
+			}
+		);
+		return EngineObject;
+	}
+);
+
+define('minibot/engine/EngineSystem',
+	[
+		
+	],
+	function
+	(
+		
+	)
+	{
+		var EngineSystem = Class.create(
+			{
+				
+				type: null,
+				
+				components: null,
+				
+				componentsByObject: null,
+				
+				engine: null,
+				
+				initialize: function(type)
+				{
+					this.type = type;
+					
+					this.components = [];
+					
+					this.componentsByObject = {};
+					
+				},
+				
+				getType: function()
+				{
+					return this.type;
+				},
+				
+				addObject: function(obj)
+				{
+					if(obj.hasComponent(this.type)) {
+						var c = obj.getComponent(this.type);
+						this.components.push(c);
+						this.componentsByObject[obj] = c;
+						
+						c.setSystem(this);
+						c.onAddedToSystem();
+						
+						return c;
+					}
+					
+					return null;
+				},
+				
+				addResource: function(type, id)
+				{
+					if(!this.engine) return;
+					this.engine.addResource(type, id);
+				},
+				
+				getResource: function(type, id)
+				{
+					if(!this.engine) return;
+					return this.engine.getResource(type, id);
+				},
+				
+				removeObject: function(obj)
+				{
+				
+				},
+				
+				setEngine: function(engine)
+				{
+					this.engine = engine;
+				},
+
+				onAddedToEngine: function()
+				{
+					//-- OVERRIDE
+				},
+				
+				onResourcesLoaded: function()
+				{
+					
+				},
+				
+				update: function(dt)
+				{
+					//-- OVERRIDE
+				},
+				
+				// Helper function to update all components of the system
+				updateComponents: function(dt)
+				{
+					for(var i = 0; i < this.components.length; i++) {
+						this.components[i].update(dt);
+					}
+				}
+				
+			}
+		);
+		
+		return EngineSystem;
+		
+	}
+	
+);
+
+
+/** 
+ * @fileoverview 
+ *
+ * @author Jonny Morrill jonny@morrill.me
+ * @version 0.1
+ */
 define('minibot/geom/Vector2',
 	[],
 	function()
@@ -3379,12 +3948,12 @@ define('minibot/resource/AnimationResource',
 );
 
 
-define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Animation','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Rect','minibot/display/scene/Sprite','minibot/display/scene/Text','minibot/display/scene/TextStyle','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/MouseEvent','minibot/geom/Vector2','minibot/graphics/Color','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
+define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manager','minibot/display/DisplayObject','minibot/display/scene/SceneDisplayObject','minibot/display/scene/Animation','minibot/display/scene/Button','minibot/display/scene/Container','minibot/display/scene/Rect','minibot/display/scene/Sprite','minibot/display/scene/Text','minibot/display/scene/TextStyle','minibot/display/html/HtmlElement','minibot/display/html/CanvasScene','minibot/engine/Engine','minibot/engine/EngineComponent','minibot/engine/EngineFactory','minibot/engine/EngineObject','minibot/engine/EngineSystem','minibot/event/EventDispatcher','minibot/event/BaseEvent','minibot/event/MouseEvent','minibot/geom/Vector2','minibot/graphics/Color','minibot/resource/Resource','minibot/resource/ResourceManager','minibot/resource/AnimationResource','minibot/resource/ImageResource','minibot/resource/SpriteResource'],function(require) {
 	
 	/** @namespace Namespace description. */
 	var minibot = {};
 	
-	var core, display, event, geom, resource;
+	var core, display, engine, event, geom, graphics, resource;
 	
 	minibot.utils = require('minibot/utils');
 	minibot.system = require('minibot/system');
@@ -3415,6 +3984,14 @@ define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manag
 	display.html.HtmlElement = require('minibot/display/html/HtmlElement');
 	display.html.CanvasScene = require('minibot/display/html/CanvasScene');
 	
+	/** @namespace Engine namespace */
+	engine = {};
+	engine.Engine = require('minibot/engine/Engine');
+	engine.EngineComponent = require('minibot/engine/EngineComponent');
+	engine.EngineFactory = require('minibot/engine/EngineFactory');
+	engine.EngineObject = require('minibot/engine/EngineObject');
+	engine.EngineSystem = require('minibot/engine/EngineSystem');
+	
 	/** @namespace Event namespace */
 	event = {};
 	event.EventDispatcher = require('minibot/event/EventDispatcher');
@@ -3439,6 +4016,7 @@ define('minibot',['require','minibot/utils','minibot/system','minibot/core/Manag
 	
 	minibot.core = core;
 	minibot.display = display;
+	minibot.engine = engine;
 	minibot.event = event;
 	minibot.geom = geom;
 	minibot.graphics = graphics;
