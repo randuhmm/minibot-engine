@@ -1,71 +1,114 @@
+define(
+	[
+		
+	],
+	function
+	(
+		
+	)
+	{
+		var EngineObject = Class.create(
+			{
+			
+				type: null,
+				
+				components: null,
+				
+				data: null,
+				
+				engine: null,
+				
+				initialize: function(type, data)
+				{
+					this.type = type;
+					this.components = {};
+					
+					if(data == undefined) data = {};
+					this.data = data;
+				},
+				
+				getType: function()
+				{
+					return this.type;
+				},
 
-require 'utils/class'
-require 'engine/component/core/GameComponent'
+				addComponent: function(component)
+				{
+					var type = component.getType()
+					if(this.components[type] == undefined) {
+						this.components[type] = component;
+						component.setObject(this);
+						component.onAddedToObject();
+					}
+				},
 
-GameObject = class(
-	function(o, type)
-		o.type = type
-		o.components = {}
-		o.data = {}
-    o.game = nil
-	end
-)
+				removeComponent: function(component)
+				{
 
-function GameObject:getType()
-	return self.type
-end
+				},
+				
+				setEngine: function(engine)
+				{
+					this.engine = engine;
+				},
 
-function GameObject:addComponent(component)
-	local type = component:getType()
-	if self.components[type] == nil
-	then
-		table.insert(self.components, type, component)
-		component:setObject(self)
-		component:onAddedToObject()
-	end
-end
+				onAddedToEngine: function()
+				{
+					//-- OVERRIDE
+				},
+				
+				onResourcesLoaded: function()
+				{
+					for(var c in this.components) {
+						this.components[c].onResourcesLoaded();
+					}
+				},
 
-function GameObject:removeComponent(component)
+				getComponent: function(type)
+				{
+					if(this.components[type] != undefined)
+					{
+						return this.components[type];
+					}
+					return null;
+				},
 
-end
+				hasComponent: function(type)
+				{
+					return (this.components[type] != undefined)
+				},
 
-function GameObject:onAddedToGame(game)
-  self.game = game
-end
+				update: function(dt)
+				{
+					for(var c in this.components) {
+						this.components[c].update(dt);
+					}
+				},
 
-function GameObject:getComponent(type)
-	if not (self.components[type] == nil)
-	then
-		return self.components[type]
-	end
-	return nil
-end
+				setProperty: function(key, value)
+				{
+					this.data[key] = value;
+				},
 
-function GameObject:hasComponent(type)
+				getProperty: function(key)
+				{
+					return this.data[key];
+				},
 
-end
+				hasProperty: function(key)
+				{
+					return (this.data[key] != undefined);
+				},
 
-function GameObject:update(dt)
-	for k, v in pairs(self.components) do
-		v:update(dt)
-	end
-end
-
-function GameObject:setProperty(key, value)
-	self.data[key] = value
-end
-
-function GameObject:getProperty(key)
-	return self.data[key]
-end
-
-function GameObject:hasProperty(key)
-	return (self.data[key] == nil)
-end
-
-function GameObject:sendMessage(message)
-	for k, v in pairs(self.components) do
-		v:receiveMessage(message)
-	end
-end
-
+				sendMessage: function(message)
+				{
+					for(var c in this.components) {
+						this.components[c].receiveMessage(message);
+					}
+				}
+				
+			}
+		);
+		return EngineObject;
+	}
+);

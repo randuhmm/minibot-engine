@@ -1,115 +1,126 @@
-/** 
- * @fileoverview 
- *
- * @author Jonny Morrill jonny@morrill.me
- * @version 0.1
- */
 define(
 	[
-		'minibot/event/EventDispatcher'
+		
 	],
 	function
 	(
-		EventDispatcher
+		
 	)
 	{
-		
 		var EngineComponent = Class.create(
-			EventDispatcher,
-			/** @lends engine.EngineComponent# */
 			{
 				
 				type: null,
 				
 				object: null,
 				
-				data: null,
+				system: null,
 				
-				initialize: function($super, type)
+				listeners: null,
+				
+				initialize: function(type)
 				{
-					$super();
-					
 					this.type = type;
-					this.data = {};
+					
+					this.listeners = {};
 				},
 				
 				getType: function()
 				{
 					return this.type;
 				},
-				
-				setProperty: function()
+
+				setProperty: function(key, value)
 				{
+					this.object.setProperty(key, value);
+				},
+
+				getProperty: function(key)
+				{
+					return this.object.getProperty(key);
+				},
+
+				hasProperty: function(key)
+				{
+					return this.object.hasProperty(key);
+				},
 				
+				setObject: function(object)
+				{
+					this.object = object;
+				},
+				
+				onAddedToObject: function()
+				{
+					//-- OVERRIDE
+				},
+				
+				setSystem: function(system)
+				{
+					this.system = system;
+				},
+				
+				getSystem: function()
+				{
+					return this.system;
+				},
+				
+				onAddedToSystem: function()
+				{
+					//-- OVERIDE?
+				},
+
+				sendMessage: function(message)
+				{
+					this.object.sendMessage(message);
+				},
+
+				addListener: function(type, func, obj)
+				{
+					if(obj == null) obj = this.listeners;
+					obj[type] = func;
+				},
+				
+				addResource: function(type, id)
+				{
+					if(this.system == null) return;
+					this.system.addResource(type, id);
+				},
+				
+				getResource: function(type, id)
+				{
+					if(this.system == null) return;
+					return this.system.getResource(type, id);
+				},
+				
+				onResourcesLoaded: function()
+				{
+					
+				},
+
+				callListener: function(type, listeners, params)
+				{
+					var f = listeners[type];
+					if(f == null) return;
+					f(params)
+				},
+
+				receiveMessage: function(message)
+				{
+					this.callListener(message.type, this.listeners, message)
+				},
+
+				update: function(dt)
+				{
+					//-- OVERRIDE
 				}
-				
 				
 			}
 		);
 		
 		return EngineComponent;
-	
+		
 	}
+	
 );
 
-/*
-require 'utils/class'
-
-GameComponent = class(
-	function(o, type)
-		o.type = type
-		o.object = nil
-		o.data = {}
-    o.listeners = {}
-	end
-)
-
-function GameComponent:getType()
-	return self.type
-end
-
-function GameComponent:setProperty(key, value)
-	self.object:setProperty(key, value)
-end
-
-function GameComponent:getProperty(key)
-	return self.object:getProperty(key)
-end
-
-function GameComponent:hasProperty(key)
-	return self.object:hasProperty(key, type)
-end
-
-function GameComponent:setObject(object)
-	self.object = object
-end
-
-function GameComponent:onAddedToObject()
-	-- OVERRIDE
-end
-
-function GameComponent:sendMessage(message)
-	self.object:sendMessage(message)
-end
-
-function GameComponent:addListener(type, func, obj)
-  if obj == nil then obj = self.listeners end
-  obj[type] = func
-end
-
-function GameComponent:callListener(type, listeners, params)
-  local f = listeners[type]
-  if f == nil then return end
-  f(self, unpack(params))
-end
-
-function GameComponent:receiveMessage(message)
-  self:callListener(message.type, self.listeners, {message})
-end
-
-function GameComponent:update(dt)
-	-- OVERRIDE
-end
-
-GameComponent.COMPONENT_EVENT = "ComponentEvent"
-*/

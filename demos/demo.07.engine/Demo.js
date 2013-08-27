@@ -1,12 +1,14 @@
 define(
 	[
 		'minibot',
-		'BaseDemo'
+		'BaseDemo',
+		'./MyEngine'
 	],
 	function
 	(
 		minibot,
-		BaseDemo
+		BaseDemo,
+		MyEngine
 	)
 	{
 		
@@ -14,17 +16,29 @@ define(
 			BaseDemo,
 			{
 				
+				engine: null,
+				
 				initialize: function($super, element)
 				{
 					$super(element);
 					
+					this.engine = new MyEngine();
+					
 					this.run();
+				},
+				
+				update: function(dt)
+				{
+					this.engine.update(dt);
 				},
 				
 				render: function(dt)
 				{
 					this.scene.clear();
-					this.scene.render();
+					
+					this.engine.render(dt);
+					
+					this.scene.render(dt);
 				}
 				
 			}

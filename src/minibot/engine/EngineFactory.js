@@ -1,4 +1,4 @@
-
+/*
 require 'engine/object/Player'
 require 'engine/component/player/PlayerPhysicsComponent'
 require 'engine/component/player/PlayerInputComponent'
@@ -27,3 +27,4 @@ function PlayerFactory.Create(world, equipments)
   
 	return player
 end
+*/

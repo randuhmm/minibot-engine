@@ -23,9 +23,13 @@ define(
 				
 				stringArray: null,
 				
+				index: null,
+				
 				initialize: function($super, element)
 				{
 					$super(element);
+					
+					this.index = 0;
 					
 					this.stringArray = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 					
@@ -44,13 +48,16 @@ define(
 				{
 					this.scene.clear();
 					
-					var pos = Math.floor(Math.random() * this.stringArray.length);
+					//var pos = Math.floor(Math.random() * this.stringArray.length);
+					var pos = this.index;
 					
 					this.stringArray[pos] = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
 					
 					this.text.setText(this.stringArray.join(""));
 					
 					this.scene.render();
+					
+					this.index = (this.index + 1) % this.stringArray.length;
 				}
 				
 			}
