@@ -16,9 +16,13 @@ define(
 			EngineComponent,
 			{
 				
+				scene: null,
+				
+				camera: null,
+				
 				initialize: function($super)
 				{
-					$super();
+					$super(ComponentType.DISPLAY);
 				},
 				
 				update: function(dt)
@@ -26,13 +30,25 @@ define(
 					
 				},
 				
-				render: function(layer)
+				onAddedToSystem: function()
 				{
-					var p = this.getProperty("position");
-					context.beginPath();
-					context.arc(p.x, p.y, 16, 0, 2 * Math.PI, false);
-					context.fillStyle = 'green';
-					context.fill();
+					this.scene = this.getSystem().getScene();
+					this.camera = this.getSystem().getCamera();
+				},
+				
+				render: function(dt, layer, x, y)
+				{
+					this.scene.drawRect('', x + this.getProperty("x"), y + this.getProperty("x"), 50, 50);
+				},
+				
+				getLayers: function()
+				{
+					return [0];
+				},
+				
+				isVisible: function()
+				{
+					return true;
 				}
 				
 			}

@@ -1,12 +1,14 @@
 define(
 	[
 		'minibot',
-		'../enum/ComponentType'
+		'../enum/ComponentType',
+		'../object/PlayerObject'
 	],
 	function
 	(
 		minibot,
-		ComponentType
+		ComponentType,
+		PlayerObject
 	)
 	{
 		
@@ -18,17 +20,18 @@ define(
 				
 				initialize: function($super)
 				{
-					$super();
+					$super(ComponentType.INPUT);
 				},
 				
 				onAddedToObject: function()
 				{
-					
+					Event.observe(document, 'keydown', function() {
+						this.sendMessage({type: PlayerObject.START_MOVE});
+					}.bindAsEventListener(this));
 				},
 				
 				update: function(dt)
 				{
-					
 				}
 				
 			}

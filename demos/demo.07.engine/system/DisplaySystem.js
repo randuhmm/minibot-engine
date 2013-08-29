@@ -16,9 +16,18 @@ define(
 			EngineSystem,
 			{
 				
-				initialize: function($super)
+				scene: null,
+				
+				layers: null,
+				
+				initialize: function($super, scene)
 				{
 					$super(ComponentType.DISPLAY);
+					
+					this.scene = scene;
+					
+					this.layers = new Array();
+					
 				},
 				
 				update: function(dt)
@@ -56,16 +65,31 @@ define(
 					
 				},
 				
-				// render the scene layer by layer, check if each component is on screen first
-				render: function()
+				getScene: function()
 				{
+					return this.scene;
+				},
+				
+				getCamera: function()
+				{
+					return this.engine.getCamera();
+				},
+				
+				// render the scene layer by layer, check if each component is on screen first
+				render: function(dt)
+				{
+					
+					var camera = this.getCamera();
+					var cameraX = camera.getProperty("x") * -1;
+					var cameraY = camera.getProperty("y") * -1;
+					
 					var i, j, layer, component;
 					for(i = 0; i < this.layers.length; i++) {
 						layer = this.layers[i];
 						for(j = 0; j < layer.length; j++) {
 							component = layer[j];
 							if(!component.isVisible()) continue;
-							component.render(context, i);
+							component.render(dt, i, cameraX, cameraY);
 						}
 					}
 				}

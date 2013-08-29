@@ -19,6 +19,8 @@ define(
 		{
 			var player = new PlayerObject()
 			player.setProperty("health", 5)
+			player.setProperty("x", 0)
+			player.setProperty("y", 0)
 			
 			player.addComponent(new PlayerPhysicsComponent(world))
 			player.addComponent(new PlayerInputComponent())

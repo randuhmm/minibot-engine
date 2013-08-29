@@ -8,19 +8,21 @@ define(
 		
 		'./enum/ComponentType',
 		
-		'./factory/PlayerFactory'
+		'./factory/PlayerFactory',
+		'./factory/CameraFactory'
 	],
 	function
 	(
 		minibot,
 		
 		InputSystem,
-		DisplaySystem,
 		PhysicsSystem,
+		DisplaySystem,
 		
 		ComponentType,
 		
-		PlayerFactory
+		PlayerFactory,
+		CameraFactory
 	)
 	{
 		
@@ -32,7 +34,9 @@ define(
 				
 				player: null,
 				
-				initialize: function($super)
+				camera: null,
+				
+				initialize: function($super, scene)
 				{
 					$super();
 					
@@ -45,7 +49,11 @@ define(
 					// Add the systems
 					this.addSystem(new InputSystem());
 					this.addSystem(new PhysicsSystem());
-					this.addSystem(new DisplaySystem());
+					this.addSystem(new DisplaySystem(scene));
+					
+					// Add the camera object
+					this.camera = CameraFactory.Create();
+					this.addObject(this.camera);
 					
 					// Add the player object
 					this.player = PlayerFactory.Create();
@@ -55,7 +63,12 @@ define(
 				
 				render: function(dt)
 				{
-					
+					this.systemsByType[ComponentType.DISPLAY].render(dt);
+				},
+				
+				getCamera: function()
+				{
+					return this.camera;
 				}
 				
 			}
