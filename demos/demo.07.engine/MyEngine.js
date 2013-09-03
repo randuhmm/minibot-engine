@@ -4,7 +4,7 @@ define(
 		
 		'./system/InputSystem',
 		'./system/PhysicsSystem',
-		'./system/DisplaySystem',
+		'./system/GameDisplaySystem',
 		
 		'./enum/ComponentType',
 		

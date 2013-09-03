@@ -43,6 +43,12 @@ define(function(require) {
 	engine.EngineObject = require('minibot/engine/EngineObject');
 	engine.EngineSystem = require('minibot/engine/EngineSystem');
 	
+	engine.component = {};
+	engine.component.DisplayComponent = require('minibot/engine/component/DisplayComponent');
+	
+	engine.system = {};
+	engine.system.DisplaySystem = require('minibot/engine/system/DisplaySystem');
+	
 	/** @namespace Event namespace */
 	event = {};
 	event.EventDispatcher = require('minibot/event/EventDispatcher');

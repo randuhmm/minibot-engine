@@ -10,13 +10,11 @@ define(
 	)
 	{
 		
-		var EngineComponent = minibot.engine.EngineComponent;
+		var DisplayComponent = minibot.engine.component.DisplayComponent;
 		
 		var PlayerDisplayComponent = Class.create(
-			EngineComponent,
+			DisplayComponent,
 			{
-				
-				scene: null,
 				
 				camera: null,
 				
@@ -30,9 +28,9 @@ define(
 					
 				},
 				
-				onAddedToSystem: function()
+				onAddedToSystem: function($super)
 				{
-					this.scene = this.getSystem().getScene();
+					$super();
 					this.camera = this.getSystem().getCamera();
 				},
 				
@@ -44,11 +42,6 @@ define(
 				getLayers: function()
 				{
 					return [0];
-				},
-				
-				isVisible: function()
-				{
-					return true;
 				}
 				
 			}

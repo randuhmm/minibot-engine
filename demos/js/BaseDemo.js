@@ -41,6 +41,7 @@ define(
 				
 				run: function()
 				{
+					minibot.system.setUpdateCallback(this.update.bind(this));
 					minibot.system.setRenderCallback(this.render.bind(this));
 					minibot.system.run();
 				},
@@ -52,9 +53,14 @@ define(
 					minibot.system.setRenderCallback(null);
 				},
 				
-				render: function()
+				update: function(dt)
 				{
-					
+					// Override in subclass
+				},
+				
+				render: function(dt)
+				{
+					// Override in subclass
 				}
 				
 			}
