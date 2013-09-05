@@ -1,13 +1,14 @@
 define(
 	[
-		
+		'minibot/event/EventDispatcher'
 	],
 	function
 	(
-		
+		EventDispatcher
 	)
 	{
 		var EngineObject = Class.create(
+			EventDispatcher,
 			{
 			
 				type: null,
@@ -18,8 +19,10 @@ define(
 				
 				engine: null,
 				
-				initialize: function(type, data)
+				initialize: function($super, type, data)
 				{
+					$super();
+					
 					this.type = type;
 					this.components = {};
 					
@@ -66,8 +69,7 @@ define(
 
 				getComponent: function(type)
 				{
-					if(this.components[type] != undefined)
-					{
+					if(this.components[type] != undefined) {
 						return this.components[type];
 					}
 					return null;
@@ -98,17 +100,12 @@ define(
 				hasProperty: function(key)
 				{
 					return (this.data[key] != undefined);
-				},
-
-				sendMessage: function(message)
-				{
-					for(var c in this.components) {
-						this.components[c].receiveMessage(message);
-					}
 				}
 				
 			}
 		);
+		
 		return EngineObject;
+		
 	}
 );

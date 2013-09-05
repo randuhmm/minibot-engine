@@ -29,12 +29,12 @@ define(
 				
 				onAddedToObject: function($super)
 				{
-					$super();
+					this.addEventListener(PlayerObject.START_MOVE, this.handleStartMove.bindAsEventListener(this));
 				},
 				
 				onAddedToSystem: function()
 				{
-					this.addListener(PlayerObject.START_MOVE, this.handleStartMove.bindAsEventListener(this));
+					
 				},
 				
 				handleStartMove: function(message)

@@ -17,7 +17,7 @@ define(
 		
 		InputSystem,
 		PhysicsSystem,
-		DisplaySystem,
+		GameDisplaySystem,
 		
 		ComponentType,
 		
@@ -49,7 +49,7 @@ define(
 					// Add the systems
 					this.addSystem(new InputSystem());
 					this.addSystem(new PhysicsSystem());
-					this.addSystem(new DisplaySystem(scene));
+					this.addSystem(new GameDisplaySystem(scene));
 					
 					// Add the camera object
 					this.camera = CameraFactory.Create();

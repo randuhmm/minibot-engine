@@ -30,6 +30,13 @@ define(
 				 * @class Short description of class.
 				 * Long Description of class.
 				 * @constructs
+				 * @param {String} type
+				 * @param {Boolean} bubbles
+				 * @param {Boolean} cancelable
+				 * @param {Number} x
+				 * @param {Number} y
+				 * @param {display.DisplayObject} displayObject
+				 * @param
 				 */
 				initialize: function
 				(

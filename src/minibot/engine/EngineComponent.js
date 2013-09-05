@@ -1,10 +1,10 @@
 define(
 	[
-		
+		'minibot/event/EngineEvent'
 	],
 	function
 	(
-		
+		EngineEvent
 	)
 	{
 		var EngineComponent = Class.create(
@@ -16,30 +16,26 @@ define(
 				
 				system: null,
 				
-				listeners: null,
-				
 				initialize: function(type)
 				{
 					this.type = type;
-					
-					this.listeners = {};
 				},
 				
 				getType: function()
 				{
 					return this.type;
 				},
-
+				
 				setProperty: function(key, value)
 				{
 					this.object.setProperty(key, value);
 				},
-
+				
 				getProperty: function(key)
 				{
 					return this.object.getProperty(key);
 				},
-
+				
 				hasProperty: function(key)
 				{
 					return this.object.hasProperty(key);
@@ -69,16 +65,25 @@ define(
 				{
 					//-- OVERIDE?
 				},
-
-				sendMessage: function(message)
+				
+				buildEvent: function(type, data)
 				{
-					this.object.sendMessage(message);
+					return new EngineEvent(
+						type,
+						this.object,
+						this,
+						data
+					);
 				},
-
-				addListener: function(type, func, obj)
+				
+				dispatchEvent: function(event)
 				{
-					if(obj == null) obj = this.listeners;
-					obj[type] = func;
+					this.object.dispatchEvent(event);
+				},
+				
+				addEventListener: function(type, callback)
+				{
+					this.object.addEventListener(type, callback);
 				},
 				
 				addResource: function(type, id)
@@ -97,19 +102,7 @@ define(
 				{
 					
 				},
-
-				callListener: function(type, listeners, params)
-				{
-					var f = listeners[type];
-					if(f == null) return;
-					f(params)
-				},
-
-				receiveMessage: function(message)
-				{
-					this.callListener(message.type, this.listeners, message)
-				},
-
+				
 				update: function(dt)
 				{
 					//-- OVERRIDE

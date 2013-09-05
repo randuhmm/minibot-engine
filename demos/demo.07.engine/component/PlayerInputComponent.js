@@ -18,6 +18,8 @@ define(
 			EngineComponent,
 			{
 				
+				queue: null,
+				
 				initialize: function($super)
 				{
 					$super(ComponentType.INPUT);
@@ -26,12 +28,14 @@ define(
 				onAddedToObject: function()
 				{
 					Event.observe(document, 'keydown', function() {
-						this.sendMessage({type: PlayerObject.START_MOVE});
+						var event = this.buildEvent(PlayerObject.START_MOVE, null);
+						this.dispatchEvent(event);
 					}.bindAsEventListener(this));
 				},
 				
 				update: function(dt)
 				{
+					// dispatch the events
 				}
 				
 			}
