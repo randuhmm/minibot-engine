@@ -1,0 +1,75 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="NAME">define</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>  2</span> </span><span class="WHIT">	</span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>  3</span> </span><span class="WHIT">		</span><span class="STRN">'minibot/display/scene/SceneDisplayObject'</span><span class="WHIT">
+<span class='line'>  4</span> </span><span class="WHIT">	</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>  5</span> </span><span class="WHIT">	</span><span class="KEYW">function</span><span class="WHIT">
+<span class='line'>  6</span> </span><span class="WHIT">	</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="WHIT">		</span><span class="NAME">SceneDisplayObject</span><span class="WHIT">
+<span class='line'>  8</span> </span><span class="WHIT">	</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>  9</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 10</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Sprite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Class.create</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="WHIT">			</span><span class="NAME">SceneDisplayObject</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">			</span><span class="COMM">/** @lends display.scene.Sprite# */</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">			</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">				</span><span class="COMM">/** The sprite object.
+<span class='line'> 15</span> 				 * @type resource.SpriteResource
+<span class='line'> 16</span> 				 */</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">				</span><span class="NAME">sprite</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">				</span><span class="COMM">/** Composite object.
+<span class='line'> 19</span> 				 * @ type object
+<span class='line'> 20</span> 				 */</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">				</span><span class="NAME">composite</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="WHIT">				
+<span class='line'> 23</span> 				</span><span class="COMM">/**
+<span class='line'> 24</span> 				 * Creates a new Sprite instance.
+<span class='line'> 25</span> 				 * @class Creates a sprite to be rendered.
+<span class='line'> 26</span> 				 * @extends display.scene.SceneDisplayObject
+<span class='line'> 27</span> 				 * @constructs
+<span class='line'> 28</span> 				 * @param {resource.SpriteResource} sprite The sprite to be used.
+<span class='line'> 29</span> 				 * @param
+<span class='line'> 30</span> 				 */</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">				</span><span class="NAME">initialize</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$super</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">sprite</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">				</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">					</span><span class="NAME">$super</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">					</span><span class="NAME">this.sprite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sprite</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">					</span><span class="NAME">this.w</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sprite.w</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">					</span><span class="NAME">this.h</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sprite.h</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">				</span><span class="COMM">/** Renders the sprite.
+<span class='line'> 39</span> 				 * @param {Number} dt The change in time.
+<span class='line'> 40</span> 				 * @param {Number} x The x position to render the sprite.
+<span class='line'> 41</span> 				 * @param {Number} y The y position to render the sprite.
+<span class='line'> 42</span> 				 */</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">				</span><span class="NAME">render</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">dt</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">				</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">					</span><span class="KEYW">try</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">						</span><span class="NAME">this.scene.drawImage</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">							</span><span class="NAME">this.sprite.img</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">							</span><span class="NAME">this.sprite.x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">//sx,</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">							</span><span class="NAME">this.sprite.y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">//sy,</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">							</span><span class="NAME">this.sprite.w</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">//sw,</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">							</span><span class="NAME">this.sprite.h</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">//sh,</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">							</span><span class="NAME">this.x</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">//dx,</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">							</span><span class="NAME">this.y</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">//dy,</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">							</span><span class="NAME">this.w</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">//dw,</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">							</span><span class="NAME">this.h</span><span class="WHIT"> </span><span class="COMM">//dh</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">						</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">catch</span><span class="PUNC">(</span><span class="NAME">error</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">						</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'SpriteObject: Fatal Error'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">				
+<span class='line'> 62</span> 			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">		</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">		
+<span class='line'> 65</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Sprite</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">		
+<span class='line'> 67</span> 	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
