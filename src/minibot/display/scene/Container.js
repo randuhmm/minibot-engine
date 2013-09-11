@@ -12,20 +12,23 @@ define(
 			SceneDisplayObject,
 			/** @lends display.scene.Container# */
 			{
-				
+				/** Array containing the Container layers
+				 * @type Array
+				 */ 
 				layers: null,
-				
+				/** Boolean indicating touch events attached.
+				 * @type boolean
+				 */
 				touchChildren: true,
-				
+				/** Indicates whether or not the container is able to be resized.
+				 * @type boolean
+				 */
 				resizable: true,
 				
-				/**
-				 * Description of constructor.
-				 * @class Short description of class.
-				 * Long Description of class.
-				 * @extends display.scene.SceneDisplayObject
-				 * @constructs
-				 * @param 
+				/** Appends a child to the container.
+				 * @param {display.DisplayObject} displayObject The display object to be added.
+				 * @param {Number} layer The layer to be added.
+				 * @param {Number} The position of the layer.
 				 */
 				initialize: function($super)
 				{
@@ -56,7 +59,9 @@ define(
 						if(this.h < (displayObject.y + displayObject.h)) this.h = displayObject.y + displayObject.h;
 					}
 				},
-				
+				/** Removes a child from the container.
+				 * @param {display.DisplayObject} displayObject The object to be removed.
+				 */
 				removeChild: function(displayObject)
 				{
 					for(var l = 0; l < this.layers.length; l++) {
@@ -70,7 +75,7 @@ define(
 						}
 					}
 				},
-				
+				/** Removes all children from the container. */
 				removeAll: function()
 				{
 					var layers = this.layers;
@@ -84,7 +89,11 @@ define(
 					}
 					this.layers = new Array();
 				},
-				
+				/** Renders the objects within the container layers.
+				 * @param {Number} dt The change in time.
+				 * @param {Number} x The x position.
+				 * @param {Number} y The y position.
+				 */
 				render: function(dt, x, y)
 				{
 					if(x == undefined) x = 0;
@@ -120,7 +129,10 @@ define(
 						}
 					}
 				},
-				
+				/** Sets the child objects index within the layers.
+				 * @param {display.DisplayObject} displayObject The display object to be modified.
+				 * @param {Number} index The specified index to be set.
+				 */
 				setChildIndex: function(displayObject, index)
 				{
 					for(var l = 0; l < this.layers.length; l++) {
@@ -138,7 +150,10 @@ define(
 						}
 					}
 				},
-				
+				/** Uses the event dispatcher to handle events.
+				 * @param {event} event The specified event.
+				 * @param {}
+				 */
 				dispatchEvent: function($super, event)
 				{
 					/*
@@ -192,7 +207,9 @@ define(
 						return true;
 					}
 				},
-				
+				/** Actions to be carried out upon being attached to a scene. 
+				 * @param {}
+				 */
 				onAddedToScene: function($super)
 				{
 					$super();
@@ -213,7 +230,9 @@ define(
 						}
 					}
 				},
-				
+				/** Actions to be carried out upon being removed from a scene. 
+				 * @param {}
+				 */
 				onRemovedFromScene: function($super)
 				{
 					$super();

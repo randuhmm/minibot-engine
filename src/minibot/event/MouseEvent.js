@@ -18,26 +18,33 @@ define(
 			BaseEvent,
 			/** @lends event.MouseEvent# */
 			{
-				
+				/** The x coordinate of the MouseEvent.
+				 * @type Integer
+				 */
 				x: null,
-				
+				/** The y coordinate of the MouseEvent.
+				 * @type Integer
+				 */
 				y: null,
-				
+				/** The object upon which the mouse is displayed.
+				 * @type display.DisplayObject
+				 */ 
 				displayObject: null,
 				
 				/**
-				 * Description of constructor.
+				 * Constructs a MouseEvent instance.
 				 * @class Short description of class.
 				 * Long Description of class.
 				 * @constructs
-				 * @param {String} type
-				 * @param {Boolean} bubbles
-				 * @param {Boolean} cancelable
-				 * @param {Number} x
-				 * @param {Number} y
-				 * @param {display.DisplayObject} displayObject
+				 * @param {String} type The type of event.
+				 * @param {Boolean} bubbles Indicates a bubbling event.
+				 * @param {Boolean} cancelable Indicates whether the event action can be terminated.
+				 * @param {Number} x The x coordinate of the MouseEvent.
+				 * @param {Number} y The y coordinate of the MouseEvent.
+				 * @param {display.DisplayObject} displayObject The object upon which the mouse is displayed.
 				 * @param
 				 */
+				
 				initialize: function
 				(
 					$super,

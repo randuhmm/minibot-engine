@@ -11,18 +11,21 @@ define(
 			SceneDisplayObject,
 			/** @lends display.scene.Sprite# */
 			{
-				
+				/** The sprite object.
+				 * @type resource.SpriteResource
+				 */
 				sprite: null,
-				
+				/** Composite object.
+				 * @ type object
+				 */
 				composite: null,
 				
 				/**
-				 * Description of constructor.
-				 * @class Short description of class.
-				 * Long Description of class.
+				 * Creates a new Sprite instance.
+				 * @class Creates a sprite to be rendered.
 				 * @extends display.scene.SceneDisplayObject
 				 * @constructs
-				 * @param {resource.SpriteResource} sprite
+				 * @param {resource.SpriteResource} sprite The sprite to be used.
 				 * @param
 				 */
 				initialize: function($super, sprite)
@@ -32,7 +35,11 @@ define(
 					this.w = sprite.w;
 					this.h = sprite.h;
 				},
-				
+				/** Renders the sprite.
+				 * @param {Number} dt The change in time.
+				 * @param {Number} x The x position to render the sprite.
+				 * @param {Number} y The y position to render the sprite.
+				 */
 				render: function(dt, x, y)
 				{
 					try {

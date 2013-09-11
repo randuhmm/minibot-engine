@@ -12,20 +12,27 @@ define(
 		var EventDispatcher = Class.create(
 			/** @lends event.EventDispatcher# */
 			{
-				
+				/**
+				 * Map of eventListeners availiable.
+				 * @type json
+				 */
 				listeners: null,
 				
 				/**
-				 * Description of constructor.
-				 * @class Short description of class.
-				 * Long Description of class.
+				 * Creates a new EventDispatcher instance.
+				 * @class Relegates and dispatches events to a target.
+				 * Events can be attached to targets in order to keep the flow of processes running as intended.
 				 * @constructs
 				 */
 				initialize: function()
 				{
 					this.listeners = {};
 				},
-				
+				/**
+				 * Registers an eventListener to a target.
+				 * @param {type} type The data type of event the specified listener is looking for.
+				 * @param {object} callback The listener object that recieves the specified type.
+				 */
 				addEventListener: function(type, callback)
 				{
 					var callbacks;
@@ -37,12 +44,20 @@ define(
 					}
 					callbacks.push(callback);
 				},
-				
+				/**
+				 * Returns whether or not the EventDispatcher has an event listener for the specified type.
+				 * @param {type} type The data type of the event the specified listener is looking for.
+				 * @returns {boolean} A value indicating whether or not an event listener for the specified type is available.
+				 */
 				hasEventListener: function(type)
 				{
 					return (this.listeners[type] != undefined);
 				},
-				
+				/**
+				 * Sends the event to the EventDispatcher to be sent into the event flow.
+				 * @param {event} event The event to be sent into the event flow.
+				 * @returns {boolean} A value indicating whether or not the event was successfully dispatched.
+				 */
 				dispatchEvent: function(event)
 				{
 					var callbacks;
@@ -58,7 +73,11 @@ define(
 					}
 					return true;
 				},
-				
+				/**
+				 * Gets rid of an eventListener.
+				 * @param {type} type The type of data the specified listener is looking for.
+				 * @param {object} callback The listener object that recieves the specified type.
+				 */
 				removeEventListener: function(type, callback)
 				{
 					var callbacks;
@@ -76,7 +95,9 @@ define(
 						delete this.listeners[type];
 					}
 				},
-				
+				/**
+				 * Gets rid of all eventListeners on the map.
+				 */
 				removeAllEventListeners: function()
 				{
 					// TODO
