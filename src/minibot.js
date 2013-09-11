@@ -16,7 +16,7 @@ define(function(require) {
 	/** @namespace Display namespace */
 	display = {};
 	display.DisplayObject = require('minibot/display/DisplayObject');
-	
+	f
 	/** @namespace Display.Scene namespace */
 	display.scene = {};
 	display.scene.SceneDisplayObject = require('minibot/display/scene/SceneDisplayObject');
