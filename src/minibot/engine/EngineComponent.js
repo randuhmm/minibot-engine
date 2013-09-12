@@ -49,6 +49,11 @@ define(
 					this.object = object;
 				},
 				
+				getObject: function()
+				{
+					return this.object;
+				},
+				
 				onAddedToObject: function()
 				{
 					//-- OVERRIDE
