@@ -45,6 +45,8 @@ define(function(require) {
 	
 	engine.component = {};
 	engine.component.DisplayComponent = require('minibot/engine/component/DisplayComponent');
+	engine.component.PhysicsComponent = require('minibot/engine/component/PhysicsComponent');
+	engine.component.InputComponent = require('minibot/engine/component/InputComponent');
 	
 	engine.system = {};
 	engine.system.DisplaySystem = require('minibot/engine/system/DisplaySystem');

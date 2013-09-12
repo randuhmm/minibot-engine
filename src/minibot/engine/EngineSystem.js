@@ -70,6 +70,11 @@ define(
 				{
 					this.engine = engine;
 				},
+				
+				getEngine: function()
+				{
+					return this.engine;
+				},
 
 				onAddedToEngine: function()
 				{

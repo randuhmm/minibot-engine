@@ -66,7 +66,11 @@ define(
 					return (this.x*this.x)+(this.y*this.y);
 				},
 				
-				normalise : function () {
+				normalise : function() {
+					return this.normailize();
+				},
+				
+				normalize : function () {
 					
 					var m = this.magnitude();
 					if(m == 0) return this;
