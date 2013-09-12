@@ -11,7 +11,6 @@ define(
 	{
 		
 		var Scene = Class.create(
-			EventDispatcher,
 			/** @lends display.scene.Scene# */
 			{
 				/** The scene container.
@@ -34,10 +33,8 @@ define(
 				 * @constructs
 				 * @param 
 				 */
-				initialize: function($super)
+				initialize: function()
 				{
-					$super();
-					
 					this.container = new Container();
 					this.container.resizable = false;
 					this.container.setRoot(this.container);
@@ -171,6 +168,35 @@ define(
 				},
 		
 				// <-- Graphics Methods
+				
+				// Event Methods -->
+				
+				addEventListener: function(type, callback)
+				{
+					this.container.addEventListener(type, callback);
+				},
+				
+				hasEventListener: function(type)
+				{
+					return this.container.addEventListener(type);
+				},
+				
+				dispatchEvent: function(event)
+				{
+					return this.container.dispatchEvent(event);
+				},
+				
+				removeEventListener: function(type, callback)
+				{
+					this.container.removeEventListener(type, callback);
+				},
+				
+				removeAllEventListeners: function()
+				{
+					this.container.removeAllEventListeners();
+				}
+				
+				// <-- Event Methods
 				
 				// <-- Public Methods
 				

@@ -16,9 +16,12 @@ define(
 				
 				system: null,
 				
+				eventQueue: null,
+				
 				initialize: function(type)
 				{
 					this.type = type;
+					this.eventQueue = [];
 				},
 				
 				getType: function()
@@ -68,12 +71,19 @@ define(
 				
 				buildEvent: function(type, data)
 				{
-					return new EngineEvent(
-						type,
-						this.object,
-						this,
-						data
-					);
+					return this.object.buildEvent(type, data, this);
+				},
+				
+				queueEvent: function(event)
+				{
+					this.eventQueue.push(event);
+				},
+				
+				flushEventQueue: function()
+				{
+					while(this.eventQueue.length) {
+						this.dispatchEvent(this.eventQueue.pop());
+					}
 				},
 				
 				dispatchEvent: function(event)

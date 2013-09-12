@@ -1,10 +1,12 @@
 define(
 	[
-		'minibot/event/EventDispatcher'
+		'minibot/event/EventDispatcher',
+		'minibot/event/EngineEvent'
 	],
 	function
 	(
-		EventDispatcher
+		EventDispatcher,
+		EngineEvent
 	)
 	{
 		var EngineObject = Class.create(
@@ -54,6 +56,11 @@ define(
 				{
 					this.engine = engine;
 				},
+				
+				getEngine: function()
+				{
+					return this.engine;
+				},
 
 				onAddedToEngine: function()
 				{
@@ -100,6 +107,17 @@ define(
 				hasProperty: function(key)
 				{
 					return (this.data[key] != undefined);
+				},
+				
+				buildEvent: function(type, data, component)
+				{
+					if(component == undefined) component = null;
+					return new EngineEvent(
+						type,
+						this,
+						component,
+						data
+					);
 				}
 				
 			}

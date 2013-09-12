@@ -47,7 +47,7 @@ define(
 					]);
 					
 					// Add the systems
-					this.addSystem(new InputSystem());
+					this.addSystem(new InputSystem(scene));
 					this.addSystem(new PhysicsSystem());
 					this.addSystem(new GameDisplaySystem(scene));
 					
@@ -56,7 +56,7 @@ define(
 					this.addObject(this.camera);
 					
 					// Add the player object
-					this.player = PlayerFactory.Create();
+					this.player = PlayerFactory.Create(this.camera);
 					this.addObject(this.player);
 					
 				},

@@ -54,6 +54,10 @@ define(function(require) {
 	event.EventDispatcher = require('minibot/event/EventDispatcher');
 	event.BaseEvent = require('minibot/event/BaseEvent');
 	event.MouseEvent = require('minibot/event/MouseEvent');
+	event.KeyboardEvent = require('minibot/event/KeyboardEvent');
+	
+	event.enum = {};
+	event.enum.Keyboard = require('minibot/event/enum/Keyboard');
 	
 	/** @namespace Geom namespace */
 	geom = {};

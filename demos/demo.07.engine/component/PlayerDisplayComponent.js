@@ -1,12 +1,14 @@
 define(
 	[
 		'minibot',
-		'../enum/ComponentType'
+		'../enum/ComponentType',
+		'../object/PlayerObject'
 	],
 	function
 	(
 		minibot,
-		ComponentType
+		ComponentType,
+		PlayerObject
 	)
 	{
 		
@@ -28,6 +30,14 @@ define(
 					
 				},
 				
+				onAddedToObject: function($super)
+				{
+					this.addEventListener(
+						PlayerObject.SCREEN_SHAKE, 
+						this.handleScreenShake.bindAsEventListener(this)
+					);
+				},
+				
 				onAddedToSystem: function($super)
 				{
 					$super();
@@ -36,7 +46,12 @@ define(
 				
 				render: function(dt, layer, x, y)
 				{
-					this.scene.drawRect('', x + this.getProperty("x"), y + this.getProperty("x"), 50, 50);
+					this.scene.drawRect('', x + this.getProperty("x"), y + this.getProperty("y"), 50, 50);
+				},
+				
+				handleScreenShake: function()
+				{
+					this.camera.shakeScreen();
 				},
 				
 				getLayers: function()

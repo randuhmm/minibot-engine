@@ -2,12 +2,16 @@ define(
 	[
 		'minibot/display/scene/Scene',
 		'minibot/event/MouseEvent',
+		'minibot/event/KeyboardEvent',
+		'minibot/event/enum/Keyboard',
 		'minibot/graphics/Color'
 	],
 	function
 	(
 		Scene,
 		MouseEvent,
+		KeyboardEvent,
+		Keyboard,
 		Color
 	)
 	{
@@ -20,6 +24,12 @@ define(
 				element: null,
 				
 				context: null,
+				
+				mouseBfx: null,
+				
+				keyboardBfx: null,
+				
+				touchBfx: null,
 				
 				/**
 				 * Description of constructor.
@@ -39,9 +49,16 @@ define(
 					
 					this.context = this.element.getContext("2d");
 					
-					this.element.observe('mousedown', this.handleMouseEvent.bind(this));
-					this.element.observe('mouseup', this.handleMouseEvent.bind(this));
-					this.element.observe('mousemove', this.handleMouseEvent.bind(this));
+					// Mouse Event Handling
+					this.mouseBfx = this.handleMouseEvent.bind(this);
+					this.element.observe('mousedown', this.mouseBfx);
+					this.element.observe('mouseup', this.mouseBfx);
+					this.element.observe('mousemove', this.mouseBfx);
+					
+					// Keyboard Event Handling
+					this.keyboardBfx = this.handleKeyboardEvent.bind(this);
+					document.observe('keydown', this.keyboardBfx);
+					document.observe('keyup', this.keyboardBfx);
 					
 				},
 				
@@ -166,7 +183,46 @@ define(
 					}
 					
 					var mouseEvent = new MouseEvent(type, false, false, x, y, this.container);
-					this.container.dispatchEvent(mouseEvent);
+					this.dispatchEvent(mouseEvent);
+				},
+				
+				handleKeyboardEvent: function(event)
+				{
+					event.preventDefault();
+					
+					var type;
+					var key = this.getKeyFromKeyCode(event.keyCode);
+					if(key == undefined) return;
+					
+					switch(event.type) {
+						case 'keydown':
+							type = KeyboardEvent.KEY_DOWN;
+							break;
+						case 'keyup':
+							type = KeyboardEvent.KEY_UP;
+							break;
+					}
+					
+					var keyboardEvent = new KeyboardEvent(type, false, false, key);
+					this.dispatchEvent(keyboardEvent);
+					
+				},
+				
+				getKeyFromKeyCode: function(keyCode)
+				{
+					//console.log(keyCode);
+					switch(keyCode) {
+						case 32:
+							return Keyboard.KEY_SPACE;
+						case 37:
+							return Keyboard.KEY_LEFT;
+						case 38:
+							return Keyboard.KEY_UP;
+						case 39:
+							return Keyboard.KEY_RIGHT;
+						case 40:
+							return Keyboard.KEY_DOWN;
+					}
 				}
 				
 			}

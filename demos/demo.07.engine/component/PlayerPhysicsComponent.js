@@ -18,8 +18,6 @@ define(
 			EngineComponent,
 			{
 				
-				moving: null,
-				
 				initialize: function($super)
 				{
 					$super(ComponentType.PHYSICS);
@@ -29,7 +27,44 @@ define(
 				
 				onAddedToObject: function($super)
 				{
-					this.addEventListener(PlayerObject.START_MOVE, this.handleStartMove.bindAsEventListener(this));
+					
+					this.setProperty("vx", 0);
+					this.setProperty("vy", 0);
+					
+					this.addEventListener(
+						PlayerObject.START_MOVE_LEFT, 
+						this.handleStartMove.bindAsEventListener(this, -1, 0)
+					);
+					this.addEventListener(
+						PlayerObject.START_MOVE_UP, 
+						this.handleStartMove.bindAsEventListener(this, 0, -1)
+					);
+					this.addEventListener(
+						PlayerObject.START_MOVE_RIGHT, 
+						this.handleStartMove.bindAsEventListener(this, 1, 0)
+					);
+					this.addEventListener(
+						PlayerObject.START_MOVE_DOWN, 
+						this.handleStartMove.bindAsEventListener(this, 0, 1)
+					);
+					
+					this.addEventListener(
+						PlayerObject.STOP_MOVE_LEFT, 
+						this.handleStopMove.bindAsEventListener(this, 1, 0)
+					);
+					this.addEventListener(
+						PlayerObject.STOP_MOVE_UP, 
+						this.handleStopMove.bindAsEventListener(this, 0, 1)
+					);
+					this.addEventListener(
+						PlayerObject.STOP_MOVE_RIGHT, 
+						this.handleStopMove.bindAsEventListener(this, -1, 0)
+					);
+					this.addEventListener(
+						PlayerObject.STOP_MOVE_DOWN, 
+						this.handleStopMove.bindAsEventListener(this, 0, -1)
+					);
+					
 				},
 				
 				onAddedToSystem: function()
@@ -37,23 +72,36 @@ define(
 					
 				},
 				
-				handleStartMove: function(message)
+				handleStartMove: function(message, vx, vy)
 				{
-					this.moving = true;
+					this.setProperty("vx", this.getProperty("vx") + (vx*PlayerPhysicsComponent.VX));
+					this.setProperty("vy", this.getProperty("vy") + (vy*PlayerPhysicsComponent.VY));
+				},
+				
+				handleStopMove: function(message, vx, vy)
+				{
+					this.setProperty("vx", this.getProperty("vx") + (vx*PlayerPhysicsComponent.VX));
+					this.setProperty("vy", this.getProperty("vy") + (vy*PlayerPhysicsComponent.VY));
 				},
 				
 				update: function($super, dt)
 				{
 					$super(dt);
 					
-					if(this.moving) {
-						this.setProperty("x", this.getProperty("x") + 1);
-						this.setProperty("y", this.getProperty("y") + 1);
+					var dx = this.getProperty("vx") * dt / 1000
+					var dy = this.getProperty("vy") * dt / 1000
+					
+					if(dx != 0 || dy != 0) {
+						this.setProperty("x", this.getProperty("x") + dx);
+						this.setProperty("y", this.getProperty("y") + dy);
 					}
 				}
 				
 			}
 		);
+		
+		PlayerPhysicsComponent.VX = 200;
+		PlayerPhysicsComponent.VY = 200;
 		
 		return PlayerPhysicsComponent;
 		

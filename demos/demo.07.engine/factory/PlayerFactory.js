@@ -17,16 +17,16 @@ define(
 		
 		PlayerFactory.Create = function(world)
 		{
-			var player = new PlayerObject()
-			player.setProperty("health", 5)
-			player.setProperty("x", 0)
-			player.setProperty("y", 0)
+			var player = new PlayerObject();
+			player.setProperty("health", 5);
+			player.setProperty("x", 0);
+			player.setProperty("y", 0);
 			
-			player.addComponent(new PlayerPhysicsComponent(world))
-			player.addComponent(new PlayerInputComponent())
-			player.addComponent(new PlayerDisplayComponent())
+			player.addComponent(new PlayerPhysicsComponent(world));
+			player.addComponent(new PlayerInputComponent());
+			player.addComponent(new PlayerDisplayComponent());
 			
-			return player
+			return player;
 		};
 		
 		return PlayerFactory;

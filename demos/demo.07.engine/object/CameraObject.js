@@ -19,13 +19,15 @@ define(
 				initialize: function($super)
 				{
 					$super(ObjectType.CAMERA);
+				},
+				
+				shakeScreen: function()
+				{
+					
 				}
 				
 			}
 		);
-		
-		//Camera.START_MOVE = 1;
-		//Camera.STOP_MOVE = 2;
 		
 		return Camera;
 		
