@@ -41,28 +41,30 @@ define(
 				 * @extends display.html.HtmlElement
 				 * @constructs
 				 */
-				initialize: function($super, element)
+				initialize: function($super, element, enableEvents)
 				{
 					$super();
 					
 					this.element = ((element == undefined)?(new Element('canvas')):(element));
+					this.enableEvents = ((enableEvents == undefined)?(true):(enableEvents));
 					
 					this.setWidth(this.element.width);
 					this.setHeight(this.element.height);
 					
 					this.context = this.element.getContext("2d");
 					
-					// Mouse Event Handling
-					this.mouseBfx = this.handleMouseEvent.bind(this);
-					this.element.observe('mousedown', this.mouseBfx);
-					this.element.observe('mouseup', this.mouseBfx);
-					this.element.observe('mousemove', this.mouseBfx);
-					
-					// Keyboard Event Handling
-					this.keyboardBfx = this.handleKeyboardEvent.bind(this);
-					document.observe('keydown', this.keyboardBfx);
-					document.observe('keyup', this.keyboardBfx);
-					
+					if(this.enableEvents) {
+						// Mouse Event Handling
+						this.mouseBfx = this.handleMouseEvent.bind(this);
+						this.element.observe('mousedown', this.mouseBfx);
+						this.element.observe('mouseup', this.mouseBfx);
+						this.element.observe('mousemove', this.mouseBfx);
+						
+						// Keyboard Event Handling
+						this.keyboardBfx = this.handleKeyboardEvent.bind(this);
+						document.observe('keydown', this.keyboardBfx);
+						document.observe('keyup', this.keyboardBfx);
+					}
 				},
 				
 				setWidth: function($super, width)
