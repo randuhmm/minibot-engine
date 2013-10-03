@@ -30,13 +30,14 @@ define(
 					var tempScene = this.scene;
 					var tempRoot = this.root;
 					
-					this.setRoot(this);
-					this.setScene(this.bufferScene);
+					this.root = this;
+					this.scene = this.bufferScene;
+					this.onAddedToScene();
 					
-					//Container.prototype.render(0, x, y)
+					Container.prototype.render.call(this, 0, x, y)
 					
-					this.setRoot(tempRoot);
-					this.setScene(tempScene);
+					this.root = tempRoot;
+					this.scene = tempScene;
 				},
 				
 				render: function()
@@ -47,7 +48,7 @@ define(
 			}
 		);
 		
-		return Container;
+		return Buffer;
 		
 	}
 );

@@ -5,7 +5,7 @@ define(
 		'minibot/event/KeyboardEvent',
 		'minibot/event/enum/Keyboard',
 		'minibot/graphics/Color',
-		'minibot/display/html'
+		'minibot/display/html/CanvasBuffer'
 	],
 	function
 	(
@@ -139,7 +139,8 @@ define(
 				
 				createBuffer: function()
 				{
-					var buffer = new CanvasBuffer();
+					var scene = new CanvasScene();
+					var buffer = new CanvasBuffer(scene);
 					return buffer;
 				},
 				

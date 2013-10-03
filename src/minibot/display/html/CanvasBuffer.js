@@ -1,17 +1,12 @@
 define(
 	[
-		'minibot/display/scene/Buffer',
-		'./CanvasScene'
+		'minibot/display/scene/Buffer'
 	],
 	function
 	(
-		Buffer,
-		CanvasScene
+		Buffer
 	)
 	{
-		
-		// For circular dependency resolution
-		CanvasScene = require('./CanvasScene');
 		
 		var CanvasBuffer = Class.create(
 			Buffer,
@@ -25,29 +20,27 @@ define(
 				 * @extends display.html.HtmlElement
 				 * @constructs
 				 */
-				initialize: function($super, element)
+				initialize: function($super, scene)
 				{
-					
-					var scene = new CanvasScene(element);
-					
 					$super(scene);
 				},
 				
 				setWidth: function($super, width)
 				{
 					$super(width);
-					this.scene.setWidth(width);
+					this.bufferScene.setWidth(width);
 				},
 				
 				setHeight: function($super, height)
 				{
 					$super(height);
-					this.scene.setHeight(height);
+					this.bufferScene.setHeight(height);
 				},
 				
 				render: function(dt, x, y)
 				{
-					
+					var element = this.bufferScene.getElement();
+					this.scene.drawImage(element, x*-1, y*-1, this.scene.width, this.scene.height, 0, 0, this.scene.width, this.scene.height);
 				}
 				
 			}
