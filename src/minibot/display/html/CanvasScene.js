@@ -4,7 +4,8 @@ define(
 		'minibot/event/MouseEvent',
 		'minibot/event/KeyboardEvent',
 		'minibot/event/enum/Keyboard',
-		'minibot/graphics/Color'
+		'minibot/graphics/Color',
+		'minibot/display/html'
 	],
 	function
 	(
@@ -12,7 +13,8 @@ define(
 		MouseEvent,
 		KeyboardEvent,
 		Keyboard,
-		Color
+		Color,
+		CanvasBuffer
 	)
 	{
 		
@@ -30,6 +32,7 @@ define(
 				keyboardBfx: null,
 				
 				touchBfx: null,
+				
 				
 				/**
 				 * Description of constructor.
@@ -130,6 +133,17 @@ define(
 					}
 					
 					this.context.fillText(text, x, y);
+				},
+				
+				createBuffer: function()
+				{
+					var buffer = new CanvasBuffer();
+					return buffer;
+				},
+				
+				drawBuffer: function(buffer)
+				{
+					// draws a buffer object to the scene
 				},
 				
 				setFillColor: function(color)

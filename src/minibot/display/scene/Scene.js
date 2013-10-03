@@ -26,6 +26,7 @@ define(
 				 */
 				height: null,
 				
+				
 				/**
 				 * Constructs a new scene instance.
 				 * @class Creates a new scene within a specified container.
@@ -39,9 +40,16 @@ define(
 					this.container.resizable = false;
 					this.container.setRoot(this.container);
 					this.container.setScene(this);
+					
 				},
 				
 				// Public Methods -->
+				
+				getBuffer: function()
+				{
+		
+				},
+				
 				/** Set the width of the scene.
 				 * @param {Number} width The width desired.
 				 */
@@ -102,6 +110,13 @@ define(
 				},
 				
 				// Graphics Methods -->
+				
+				drawBuffer: function()
+				{
+					
+				},
+				
+				
 				/** Draws an image.
 				 * @param {resource.ImageResource} image The image to be drawn.
 				 * @param {Number} sx The starting x position of the image.
