@@ -41,16 +41,16 @@ define(
 				
 				run: function()
 				{
-					minibot.system.setUpdateCallback(this.update.bind(this));
-					minibot.system.setRenderCallback(this.render.bind(this));
-					minibot.system.run();
+					minibot.system.SetUpdateCallback(this.update.bind(this));
+					minibot.system.SetRenderCallback(this.render.bind(this));
+					minibot.system.Run();
 				},
 				
 				destroy: function()
 				{
 					this.canvasElement.remove();
-					minibot.system.stop();
-					minibot.system.setRenderCallback(null);
+					minibot.system.Stop();
+					minibot.system.SetRenderCallback(null);
 				},
 				
 				update: function(dt)

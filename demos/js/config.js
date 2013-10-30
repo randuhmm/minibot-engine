@@ -1,7 +1,7 @@
 
 requirejs.config({
 	paths: {
-		'minibot': '../../bin/js/minibot',
+		'minibot': '../../bin/js/minibot.web',
 		'prototype': '../../lib/prototype'
 	}
 });
