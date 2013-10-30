@@ -10,7 +10,16 @@
 	
 	include: ["minibot"],
 	
+	paths: {
+        "minibot/system": "minibot/system/web"
+	},
+	
 	optimize: "none",
+	
+	pragmas: {
+		BROWSER: true,
+		WINDOWS: false
+	},
 	
 	wrap: {
 		startFile:	"start.frag",
@@ -18,6 +27,6 @@
 	},
 	
 	// build file destination, relative to the build file itself
-	out: "../../bin/js/minibot.js"
+	out: "../../bin/js/minibot.web.js"
 	
 })

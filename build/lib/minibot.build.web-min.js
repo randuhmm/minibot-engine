@@ -16,6 +16,6 @@
 	},
 	
 	// build file destination, relative to the build file itself
-	out: "../../bin/js/minibot-min.js"
+	out: "../../bin/js/minibot.web-min.js"
 	
 })
