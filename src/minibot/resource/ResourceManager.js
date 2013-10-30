@@ -6,12 +6,10 @@
  */
 define(
 	[
-		'minibot/utils',
 		'minibot/core/Manager'
 	],
 	function
 	(
-		utils,
 		Manager
 	)
 	{
