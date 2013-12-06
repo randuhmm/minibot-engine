@@ -368,8 +368,8 @@ define(
 					);
 					this.scene.addChild(button);
 					
-					minibot.system.setRenderCallback(this.scene.render.bind(this.scene));
-					minibot.system.run();
+					minibot.system.SetRenderCallback(this.scene.render.bind(this.scene));
+					minibot.system.Run();
 				},
 				
 				toggleAnimation: function(event)

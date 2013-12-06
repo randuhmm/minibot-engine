@@ -1,7 +1,7 @@
 
 requirejs.config({
 	paths: {
-		'minibot': '../minibot'
+		'minibot': '../minibot.web'
 	}
 });
 

@@ -55,17 +55,17 @@ define(function(require) {
 		
 		system.Stop = function()
 		{
-			// We can't stop the system if it isnt running
+			// We can't stop the system if it isn't running
 			if(!system.isRunning) return;
 			
 			window.cancelAnimationFrame(system.animationFrameId);
 			system.isRunning = false;
-		}
+		};
 		
 		system.CreateScene = function(width, height)
 		{
 			var scene = new CanvasScene();
-		}
+		};
 		
 		// <-- Public System Methods
 		
