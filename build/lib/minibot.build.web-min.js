@@ -10,9 +10,23 @@
 	
 	include: ["minibot"],
 	
+	paths: {
+        "minibot/system": "minibot/system/web"
+	},
+	
+	pragmas: {
+		BROWSER: true,
+		WINDOWS: false
+	},
+	
 	wrap: {
 		startFile:	"start.frag",
 		endFile:	"end.frag"
+	},
+	
+	// allow super variables in minified code 
+	uglify: {
+		except: ["$super"]
 	},
 	
 	// build file destination, relative to the build file itself

@@ -107,8 +107,6 @@ define(
 							
 						} else if(event.type == MouseEvent.MOUSE_MOVE) {
 							
-							
-							
 							this.currentState = this.overState;
 							
 							if(!this.mouseMoveCallback) {

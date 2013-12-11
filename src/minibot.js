@@ -4,7 +4,7 @@ define(function(require) {
 	/** @namespace Namespace description. */
 	var minibot = {};
 	
-	var core, display, engine, event, geom, graphics, resource;
+	var core, display, engine, event, geom, graphics, resource, system;
 	
 	//minibot.utils = require('minibot/utils');
 	minibot.system = require('minibot/system');
@@ -77,6 +77,10 @@ define(function(require) {
 	resource.ImageResource = require('minibot/resource/ImageResource');
 	resource.SpriteResource = require('minibot/resource/SpriteResource');
 	
+	/** @namespace System namespace */
+	system = {};
+	system = require('minibot/system');
+	
 	minibot.core = core;
 	minibot.display = display;
 	minibot.engine = engine;
@@ -84,6 +88,7 @@ define(function(require) {
 	minibot.geom = geom;
 	minibot.graphics = graphics;
 	minibot.resource = resource;
+	minibot.system = system;
 	
 	return minibot;
 

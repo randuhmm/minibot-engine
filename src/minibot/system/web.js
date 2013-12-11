@@ -1,14 +1,20 @@
 
-define(function(require) {
+define(
+	[
+		'minibot/display/html/CanvasScene'
+	],
+	function(
+		CanvasScene
+	)
+	{
 
-	function decorate(object, traits) {
-		for (var accessor in traits) {
-			object[accessor]= traits[accessor];
+		function decorate(object, traits) {
+			for (var accessor in traits) {
+				object[accessor]= traits[accessor];
+			}
+			return object;
 		}
-		return object;
-	}
-	
-
+		
 		var system = {};
 		
 		system.onUpdate = null;
@@ -62,9 +68,10 @@ define(function(require) {
 			system.isRunning = false;
 		};
 		
-		system.CreateScene = function(width, height)
+		system.CreateScene = function(options)
 		{
-			var scene = new CanvasScene();
+			var scene = new CanvasScene(options);
+			return scene;
 		};
 		
 		// <-- Public System Methods

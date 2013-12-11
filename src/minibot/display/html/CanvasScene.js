@@ -41,15 +41,15 @@ define(
 				 * @extends display.html.HtmlElement
 				 * @constructs
 				 */
-				initialize: function($super, element, enableEvents)
+				initialize: function($super, options)
 				{
-					$super();
+					$super(options);
 					
-					this.element = ((element == undefined)?(new Element('canvas')):(element));
-					this.enableEvents = ((enableEvents == undefined)?(true):(enableEvents));
+					this.element = ((this.hasOption('element'))?(this.getOption('element')):(new Element('canvas')));
+					this.enableEvents = ((this.hasOption('enableEvents'))?(this.getOption('enableEvents')):(true));
 					
-					this.setWidth(this.element.width);
-					this.setHeight(this.element.height);
+					this.setWidth((this.hasOption('width')?(this.getOption('width')):(this.element.width)));
+					this.setHeight((this.hasOption('height')?(this.getOption('height')):(this.element.height)));
 					
 					this.context = this.element.getContext("2d");
 					
@@ -132,6 +132,7 @@ define(
 					if(style != null) {
 						this.context.font = style.getSize() + "pt " + style.getFamily();
 						this.setFillColor(style.getColor());
+						this.context.textAlign = style.getAlign(); 
 					}
 					
 					this.context.fillText(text, x, y);

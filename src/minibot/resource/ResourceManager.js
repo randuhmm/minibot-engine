@@ -101,9 +101,16 @@ define(
 					var type = this.typeOrder[this.typeIndex];
 					var resources;
 					var id;
+					var count = 0;
 					resources = this.resourceMap[type];
+					
 					for(id in resources) {
 						this.loadResource(type, id);
+						count++;
+					}
+					
+					if(count == 0) {
+						this.loadNextType();
 					}
 				},
 				

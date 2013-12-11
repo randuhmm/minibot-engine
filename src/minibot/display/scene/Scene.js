@@ -25,7 +25,10 @@ define(
 				 * @type Number
 				 */
 				height: null,
-				
+				/** The scene options
+				 * @type Object
+				 */
+				options: null,
 				
 				/**
 				 * Constructs a new scene instance.
@@ -34,8 +37,11 @@ define(
 				 * @constructs
 				 * @param 
 				 */
-				initialize: function()
+				initialize: function(options)
 				{
+					
+					this.options = options;
+					
 					this.container = new Container();
 					this.container.resizable = false;
 					this.container.setRoot(this.container);
@@ -44,6 +50,16 @@ define(
 				},
 				
 				// Public Methods -->
+				
+				hasOption: function(key)
+				{
+					return this.options[key] != undefined;
+				},
+				
+				getOption: function(key)
+				{
+					return this.options[key];
+				},
 				
 				getBuffer: function()
 				{
@@ -58,6 +74,7 @@ define(
 					this.width = width;
 					this.container.setWidth(width);
 				},
+				
 				/** Returns the width of the scene.
 				 * @returns {Number}
 				 */
@@ -65,6 +82,7 @@ define(
 				{
 					return this.width;
 				},
+				
 				/** Set the height of the scene.
 				 * @param {Number} height The height desired.
 				 */
@@ -73,6 +91,7 @@ define(
 					this.height = height;
 					this.container.setHeight(height);
 				},
+				
 				/** Returns the height of the scene.
 				 * @returns {Number}
 				 */
@@ -80,6 +99,7 @@ define(
 				{
 					return this.height;
 				},
+				
 				/** Appends a child to the specified container.
 			     @param {display.DisplayObject} displayObject The displayObject to add.
 				 @param {layer} layer The layer to be added to.
@@ -89,6 +109,7 @@ define(
 					if(layer == undefined || layer == null) layer = 0;
 					this.container.addChild(displayObject, layer);
 				},
+				
 				/** Removes a child from the specified container.
 			     @param {display.DisplayObject} displayObject The displayObject to remove.
 				 *//** Removes all children from the specified container. */
@@ -96,17 +117,24 @@ define(
 				{
 					this.container.removeChild(displayObject);
 				},
+				
 				/** Removes all children from the specified container. */
 				removeAllChildren: function()
 				{
 					this.container.removeAll();
 				},
+				
 				/** Renders the scene
 				 * @param {Number} dt The change in time.
 				 */
 				render: function(dt)
 				{
 					this.container.render(dt);
+				},
+				
+				clear: function()
+				{
+					// overload in subclass
 				},
 				
 				// Graphics Methods -->

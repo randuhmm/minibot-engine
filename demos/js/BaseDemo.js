@@ -34,7 +34,7 @@ define(
 							'<b>Error:</b> You are using a browser that does not support the <i>&lt;canvas&gt;</i> tag.' +
 							'Please view this page using a browser that supports this feature. Thanks!' +
 						'</p>';
-					this.scene = new CanvasScene(this.canvasElement);
+					this.scene = new CanvasScene({'element': this.canvasElement});
 					this.element.insert(this.canvasElement);
 					
 				},
