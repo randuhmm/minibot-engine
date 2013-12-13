@@ -90,6 +90,9 @@ define(
 			}
 		);
 		
+		DisplayObject.ALIGN_HORZ_CENTER = 1;
+		DisplayObject.ALIGN_VERT_CENTER = 2;
+		
 		return DisplayObject;
 		
 	}

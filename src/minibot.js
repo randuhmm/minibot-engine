@@ -64,6 +64,7 @@ define(function(require) {
 	/** @namespace Geom namespace */
 	geom = {};
 	geom.Vector2 = require('minibot/geom/Vector2');
+	geom.Rectangle = require('minibot/geom/Rectangle');
 	
 	/** @namespace Graphics namespace */
 	graphics = {};

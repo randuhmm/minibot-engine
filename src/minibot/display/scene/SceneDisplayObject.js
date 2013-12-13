@@ -79,6 +79,27 @@ define(
 				/** Retrieves the scene's X field.
 				 * @returns display.scene
 				 */
+				getScene: function()
+				{
+					return this.scene;
+				},
+				/** Retrieves the scene object's width.
+				 * @returns display.scene
+				 */
+				getWidth: function()
+				{
+					return this.w;
+				},
+				/** Retrieves the scene object's height.
+				 * @returns display.scene
+				 */
+				getHeight: function()
+				{
+					return this.h;
+				},
+				/** Retrieves the scene's X field.
+				 * @returns display.scene
+				 */
 				getSceneX: function()
 				{
 					var sceneX = 0;
@@ -137,7 +158,33 @@ define(
 				show: function()
 				{
 					this.isVisible = true;
-				}
+				},
+				
+				setAlign: function(align, objects, recursive)
+				{
+					if(!(objects instanceof Array)) objects = [ objects ];
+					if(recursive == undefined) recursive = false;
+					
+					var object, t, o;
+					switch(align) {
+						case DisplayObject.ALIGN_HORZ_CENTER:
+							var t = this.getSceneX() + (this.getWidth()/2);
+							for(var i = 0; i < objects.length; i++) {
+								object = objects[i];
+								o = object.getSceneX() + (object.getWidth()/2);
+								object.x += t - o;
+							}
+							break;
+						case DisplayObject.ALIGN_VERT_CENTER:
+							var t = this.getSceneY() + (this.getHeight()/2);
+							for(var i = 0; i < objects.length; i++) {
+								object = objects[i];
+								o = object.getSceneY() + (object.getHeight()/2);
+								object.y += t - o;
+							}
+							break
+					}
+				},
 				
 			}
 		);

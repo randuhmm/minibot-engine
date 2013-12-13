@@ -25,6 +25,10 @@ define(
 				 */
 				resizable: true,
 				
+				scalable: true,
+				
+				scale: 1,
+				
 				/** Appends a child to the container.
 				 * @param {display.DisplayObject} displayObject The display object to be added.
 				 * @param {Number} layer The layer to be added.
@@ -45,6 +49,13 @@ define(
 					
 					//this.layers[layer].push(displayObject);
 					this.layers[layer].splice(position, 0, displayObject);
+					
+					if(this.scalable && this.scale != 1) {
+						displayObject.w *= this.scale;
+						displayObject.h *= this.scale;
+						displayObject.x *= this.scale;
+						displayObject.y *= this.scale;
+					}
 					
 					if(this.root != null) {
 						displayObject.root = this.root;
@@ -244,8 +255,53 @@ define(
 						this.layers[l] = null;
 					}
 					this.layers = new Array();
+				},
+				
+				// Updated this function to scale internal components if it is scalable
+				setScale: function(scale)
+				{
+					if(!this.scalable) return;
+					
+					var s = scale / this.scale;
+					
+					for(l = 0; l < this.layers.length; l++) {
+						layer = this.layers[l];
+						for(d = 0; d < layer.length; d++) {
+							displayObject = layer[d];
+							displayObject.w *= s;
+							displayObject.h *= s;
+							displayObject.x *= s;
+							displayObject.y *= s;
+						}
+					}
+					this.w *= s;
+					this.h *= s;
+					
+					this.scale = scale;
 				}
 				
+				/*
+				,
+				
+				align: function(align, objects, recursive)
+				{
+					if(!(objects instanceof Array)) objects = [ objects ];
+					if(recursive == undefined) recursive = false;
+					
+					var cx = this.getSceneX() + (this.getWidth()/2);
+					var cy = this.getSceneY() + (this.getHeight()/2);
+					var object, ox, oy;
+					
+					for(var i = 0; i < objects.length; i++) {
+						object = objects[i];
+						ox = object.getSceneX() + (object.getWidth()/2);
+						oy = object.getSceneY() + (object.getHeight()/2);
+						object.x += cx - ox;
+						object.y += cy - oy;
+					}
+					
+				}
+				*/
 			}
 		);
 		
