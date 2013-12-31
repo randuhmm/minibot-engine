@@ -1,12 +1,16 @@
 define(
 	[
 		'./SceneDisplayObject',
-		'minibot/event/MouseEvent'
+		'minibot/event/MouseEvent',
+		'minibot/event/TouchEvent',
+		'minibot/event/ButtonEvent'
 	],
 	function
 	(
 		SceneDisplayObject,
-		MouseEvent
+		MouseEvent,
+		TouchEvent,
+		ButtonEvent
 	)
 	{
 		
@@ -27,6 +31,9 @@ define(
 				
 				mouseMoveCallback: null,
 				mouseUpCallback: null,
+
+				touchMoveCallback: null,
+				touchEndCallback: null,
 				
 				/**
 				 * Description of constructor.
@@ -105,13 +112,42 @@ define(
 								this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
 							}
 							
-						} else if(event.type == MouseEvent.MOUSE_MOVE) {
+						} else if(event.type == TouchEvent.TOUCH_START) {
+							this.currentState = this.downState;
+							this.isDown = true;
+
+							if(!this.touchMoveCallback) {
+								this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
+								this.root.addEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+							}
 							
+							if(!this.touchEndCallback) {
+								this.touchEndCallback = this.handleTouchEnd.bindAsEventListener(this);
+								this.root.addEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
+							}
+							
+						} else if(event.type == MouseEvent.MOUSE_MOVE) {
 							this.currentState = this.overState;
 							
 							if(!this.mouseMoveCallback) {
 								this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
 								this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							}
+							
+						} else if(event.type == TouchEvent.TOUCH_MOVE) {
+							this.currentState = this.overState;
+							
+							if(!this.touchMoveCallback) {
+								this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
+								this.root.addEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+							}
+							
+						} else if(event.type == TouchEvent.TOUCH_END) {
+							this.currentState = this.upState;
+							
+							if(this.touchMoveCallback) {
+								this.root.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+								this.touchMoveCallback = null;
 							}
 							
 						}
@@ -131,7 +167,23 @@ define(
 							
 							this.currentState = this.upState;
 							
-							this.sendClick.bind(this).defer(event);
+							this.select.bind(this).defer(event);
+						} else if(event.type == TouchEvent.TOUCH_END) {
+							this.isDown = false;
+							
+							if(this.touchMoveCallback) {
+								this.root.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+								this.touchMoveCallback = null;
+							}
+							
+							if(this.touchUpCallback) {
+								this.root.removeEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
+								this.touchEndCallback = null;
+							}
+							
+							this.currentState = this.upState;
+							
+							this.select.bind(this).defer(event);
 						}
 					}
 					return $super(event);
@@ -157,6 +209,31 @@ define(
 						if(this.mouseMoveCallback) {
 							this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 							this.mouseMoveCallback = null;
+						}
+					}
+					
+				},
+				
+				/** 
+				 * Function description.
+				 * @access private
+				 */
+				handleTouchMove: function(event)
+				{
+					
+					this.isOver = this.isEventOver(event);
+					
+					if(this.isOver && this.isDown) {
+						this.currentState = this.downState;
+					} else if(this.isOver) {
+						this.currentState = this.overState;
+					} else if(this.isDown) {
+						this.currentState = this.upState;
+					} else {
+						this.currentState = this.upState;
+						if(this.touchMoveCallback) {
+							this.root.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+							this.touchMoveCallback = null;
 						}
 					}
 					
@@ -198,14 +275,34 @@ define(
 				 * Function description.
 				 * @access private
 				 */
-				sendClick: function(event)
+				handleTouchEnd: function(event)
+				{
+					this.currentState = this.upState;
+					this.isDown = false;
+					
+					if(this.touchMoveCallback) {
+						this.root.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+						this.touchMoveCallback = null;
+					}
+					
+					if(this.touchUpCallback) {
+						this.root.removeEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
+						this.touchEndCallback = null;
+					}
+				},
+				
+				/** 
+				 * Function description.
+				 * @access private
+				 */
+				select: function(event)
 				{
 					var x = event.x;
 					var y = event.y;
-					var type = MouseEvent.CLICK;
+					var type = ButtonEvent.SELECT;
 					
-					var mouseEvent = new MouseEvent(type, false, false, x, y, this);
-					this.dispatchEvent(mouseEvent);
+					var buttonEvent = new ButtonEvent(type, false, false, this);
+					this.dispatchEvent(buttonEvent);
 				}
 				
 			}

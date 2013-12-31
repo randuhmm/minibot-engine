@@ -14,7 +14,7 @@ define(
 	)
 	{
 		
-		var MouseEvent = Class.create(
+		var TouchEvent = Class.create(
 			BaseEvent,
 			/** @lends event.MouseEvent# */
 			{
@@ -62,12 +62,11 @@ define(
 			}
 		);
 		
-		MouseEvent.CLICK			= "mouseClick";
-		MouseEvent.MOUSE_DOWN		= "mouseDown";
-		MouseEvent.MOUSE_UP			= "mouseUp";
-		MouseEvent.MOUSE_MOVE		= "mouseMove";
+		TouchEvent.TOUCH_START		= "touchStart";
+		TouchEvent.TOUCH_END		= "touchEnd";
+		TouchEvent.TOUCH_MOVE		= "touchMove";
 		
-		return MouseEvent;
+		return TouchEvent;
 	
 	}
 );

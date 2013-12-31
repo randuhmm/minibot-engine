@@ -247,6 +247,10 @@ define(
 			}
 		);
 		
+		Scene.MOUSE_EVENTS = 1;
+		Scene.KEYBOARD_EVENTS = 2;
+		Scene.TOUCH_EVENTS = 4;
+
 		return Scene;
 		
 	}

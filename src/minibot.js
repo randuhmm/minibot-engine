@@ -27,6 +27,7 @@ define(function(require) {
 	display.scene.Rect = require('minibot/display/scene/Rect');
 	//display.scene.RoundedRect = require('minibot/display/scene/RoundedRect');
 	display.scene.Sprite = require('minibot/display/scene/Sprite');
+	display.scene.Scene = require('minibot/display/scene/Scene');
 	display.scene.Text = require('minibot/display/scene/Text');
 	display.scene.TextStyle = require('minibot/display/scene/TextStyle');
 	
@@ -56,6 +57,9 @@ define(function(require) {
 	event.EventDispatcher = require('minibot/event/EventDispatcher');
 	event.BaseEvent = require('minibot/event/BaseEvent');
 	event.MouseEvent = require('minibot/event/MouseEvent');
+	event.TouchEvent = require('minibot/event/TouchEvent');
+	event.ButtonEvent = require('minibot/event/ButtonEvent');
+	event.EngineEvent = require('minibot/event/EngineEvent');
 	event.KeyboardEvent = require('minibot/event/KeyboardEvent');
 	
 	event.enum = {};

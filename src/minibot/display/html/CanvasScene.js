@@ -2,6 +2,7 @@ define(
 	[
 		'minibot/display/scene/Scene',
 		'minibot/event/MouseEvent',
+		'minibot/event/TouchEvent',
 		'minibot/event/KeyboardEvent',
 		'minibot/event/enum/Keyboard',
 		'minibot/graphics/Color',
@@ -11,6 +12,7 @@ define(
 	(
 		Scene,
 		MouseEvent,
+		TouchEvent,
 		KeyboardEvent,
 		Keyboard,
 		Color,
@@ -27,13 +29,22 @@ define(
 				
 				context: null,
 				
+				ratio: null,
+
+				enableEvents: null,
+
+				eventTypes: null,
+				
 				mouseBfx: null,
 				
 				keyboardBfx: null,
 				
 				touchBfx: null,
 				
-				
+				maxTouches: null,
+				touchMap: null,
+				touchCount: null,
+
 				/**
 				 * Description of constructor.
 				 * @class Short description of class.
@@ -47,23 +58,51 @@ define(
 					
 					this.element = ((this.hasOption('element'))?(this.getOption('element')):(new Element('canvas')));
 					this.enableEvents = ((this.hasOption('enableEvents'))?(this.getOption('enableEvents')):(true));
+					this.eventTypes = ((this.hasOption('eventTypes'))?(this.getOption('eventTypes')):(Scene.MOUSE_EVENTS));
+					this.maxTouches = ((this.hasOption('maxTouches'))?(this.getOption('maxTouches')):(1));
 					
 					this.setWidth((this.hasOption('width')?(this.getOption('width')):(this.element.width)));
 					this.setHeight((this.hasOption('height')?(this.getOption('height')):(this.element.height)));
+
+					this.ratio = 1;
+					if(this.hasOption('ratio')) {
+						this.ratio = this.getOption('ratio');
+						if(this.ratio != 1) {
+							this.element.style.width = this.element.width/this.ratio + "px";
+							this.element.style.height = this.element.height/this.ratio + "px";
+						}
+					}
 					
 					this.context = this.element.getContext("2d");
+
+					this.touchMap = {};
+					this.touchCount = 0;
 					
 					if(this.enableEvents) {
-						// Mouse Event Handling
-						this.mouseBfx = this.handleMouseEvent.bind(this);
-						this.element.observe('mousedown', this.mouseBfx);
-						this.element.observe('mouseup', this.mouseBfx);
-						this.element.observe('mousemove', this.mouseBfx);
+
+						if(this.eventTypes & Scene.MOUSE_EVENTS) {
+							// Mouse Event Handling
+							this.mouseBfx = this.handleMouseEvent.bind(this);
+							this.element.observe('mousedown', this.mouseBfx);
+							this.element.observe('mouseup', this.mouseBfx);
+							this.element.observe('mousemove', this.mouseBfx);
+						}
+
+						if(this.eventTypes & Scene.TOUCH_EVENTS) {
+							// Mouse Event Handling
+							this.touchBfx = this.handleTouchEvent.bind(this);
+							this.element.observe('touchstart', this.touchBfx);
+							this.element.observe('touchend', this.touchBfx);
+							this.element.observe('touchmove', this.touchBfx);
+						}
 						
-						// Keyboard Event Handling
-						this.keyboardBfx = this.handleKeyboardEvent.bind(this);
-						document.observe('keydown', this.keyboardBfx);
-						document.observe('keyup', this.keyboardBfx);
+						if(this.eventTypes & Scene.KEYBOARD_EVENTS) {
+							// Keyboard Event Handling
+							this.keyboardBfx = this.handleKeyboardEvent.bind(this);
+							document.observe('keydown', this.keyboardBfx);
+							document.observe('keyup', this.keyboardBfx);
+						}
+
 					}
 				},
 				
@@ -180,11 +219,8 @@ define(
 					var y = (event.currentTarget.offsetTop * -1) + (event.currentTarget.offsetParent.offsetTop * -1);
 					var type;
 					
-					x += event.clientX;
-					y += event.clientY;
-					
-					//x = x * this.scale;
-					//y = y * this.scale;
+					x =  (x + event.clientX) * this.ratio;
+					y =  (y + event.clientY) * this.ratio;
 					
 					switch(event.type) {
 						case 'mousedown':
@@ -202,6 +238,58 @@ define(
 					
 					var mouseEvent = new MouseEvent(type, false, false, x, y, this.container);
 					this.dispatchEvent(mouseEvent);
+				},
+
+
+				handleTouchEvent: function(event)
+				{
+					event.preventDefault();
+					
+					// get the touch
+					var touch = event.changedTouches[0];
+					
+					// If type is touch start see if we can add identifier to touches
+					if(event.type == 'touchstart') {
+						if(this.touchCount >= this.maxTouches) {
+							return;
+						} else {
+							this.touchCount += 1;
+							this.touchMap[touch.identifier] = true;
+						}
+					} else if(event.type == 'touchend') {
+						if(this.touchMap[touch.identifier] != undefined) {
+							delete this.touchMap[touch.identifier];
+							this.touchCount -= 1;
+						} else {
+							return;
+						}
+					} else {
+						if(this.touchMap[touch.identifier] == undefined)  return;
+					}
+					
+					var x = (event.currentTarget.offsetLeft * -1) + (event.currentTarget.offsetParent.offsetLeft * -1);
+					var y = (event.currentTarget.offsetTop * -1) + (event.currentTarget.offsetParent.offsetTop * -1);
+					var type;
+					
+					x =  (x + touch.clientX) * this.ratio;
+					y =  (y + touch.clientY) * this.ratio;
+					
+					switch(event.type) {
+						case 'touchstart':
+							type = TouchEvent.TOUCH_START;
+							break;
+						case 'touchmove':
+							type = TouchEvent.TOUCH_MOVE;
+							break;
+						case 'touchend':
+							type = TouchEvent.TOUCH_END;
+							break;
+						default:
+							return;
+					}
+					
+					var touchEvent = new TouchEvent(type, false, false, x, y, this.container);
+					this.dispatchEvent(touchEvent);
 				},
 				
 				handleKeyboardEvent: function(event)
