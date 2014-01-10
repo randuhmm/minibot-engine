@@ -144,7 +144,6 @@ define(
 					
 				},
 				
-				
 				/** Draws an image.
 				 * @param {resource.ImageResource} image The image to be drawn.
 				 * @param {Number} sx The starting x position of the image.
@@ -160,6 +159,7 @@ define(
 				{
 				
 				},
+
 				/** Draws a line.
 				 * @param {Number} x1 The starting x coordinate.
 				 * @param {Number} x2 The ending x coordinate.
@@ -170,6 +170,7 @@ define(
 				{
 					
 				},
+
 				/** Draws a Rectangle.
 				 * @param {Number} Mode Represents whether or not to fill the rectangle.
 				 * @param {Number} x The starting x coordinate.
@@ -179,8 +180,9 @@ define(
 				 */
 				drawRect: function(mode, x, y, w, h)
 				{
-					
+
 				},
+
 				/** Sets the fill color.
 				 * @param {graphics.Color} color The color to be used.
 				 */
@@ -188,6 +190,7 @@ define(
 				{
 					
 				},
+
 				/** Sets the line color.
 				 * @param {graphics.Color} color The color to be used.
 				 */
@@ -195,6 +198,7 @@ define(
 				{
 					
 				},
+
 				/** Sets the line style.
 				 * @param {object} style The style to be used.
 				 */
@@ -202,12 +206,44 @@ define(
 				{
 				
 				},
+
 				/** Sets the line width.
 				 * @param {Number} width The width to be used.
 				 */
 				setLineWidth: function(width)
 				{
 				
+				},
+
+				/** Save
+				 */
+				save: function()
+				{
+
+				},
+				
+				/** Restore
+				 */
+				restore: function()
+				{
+
+				},
+				
+				/** Translate
+				 * @param {Number} x 
+				 * @param {Number} y 
+				 */
+				translate: function(x, y)
+				{
+
+				},
+				
+				/** Rotate
+				 * @param {Number} a 
+				 */
+				rotate: function(a)
+				{
+
 				},
 		
 				// <-- Graphics Methods

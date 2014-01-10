@@ -208,6 +208,26 @@ define(
 				{
 				
 				},
+
+				save: function()
+				{
+					this.context.save();
+				},
+				
+				restore: function()
+				{
+					this.context.restore();
+				},
+				
+				translate: function(x, y)
+				{
+					this.context.translate(x, y);
+				},
+				
+				rotate: function(a)
+				{
+					this.context.rotate(a);
+				},
 				
 				// <-- Public Methods
 				
