@@ -19,6 +19,8 @@ define(
 				align: null,
 				
 				color: null,
+
+				weight: null,
 				
 				/**
 				 * Description of constructor.
@@ -31,13 +33,14 @@ define(
 				 * @param {String} align
 				 * @param 
 				 */
-				initialize: function(family, size, color, align)
+				initialize: function(family, size, color, align, weight)
 				{
 					
 					this.family = family;
 					this.size = size;
 					this.color = color;
 					this.align = align;
+					this.weight = (weight)?(weight):('');
 					
 				},
 				
@@ -59,6 +62,11 @@ define(
 				getAlign: function()
 				{
 					return this.align;
+				},
+				
+				getWeight: function()
+				{
+					return this.weight;
 				}
 				
 			}

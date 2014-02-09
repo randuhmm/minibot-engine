@@ -49,11 +49,13 @@ define(
 					*/
 				},
 				
-				setStyle: function(context)
+				setStyle: function()
 				{
+					/*
 					if(this.font != null) context.font = this.font;
 					if(this.textAlign != null) context.textAlign = this.textAlign;
 					if(this.fillStyle != null) context.fillStyle = this.fillStyle;
+					*/
 				},
 				
 				getText: function()

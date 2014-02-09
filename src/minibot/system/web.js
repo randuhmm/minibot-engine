@@ -53,17 +53,22 @@ define(
 		
 		system.isRunning = false;
 		
+		system.isRendering = false;
+		
 		system.animationFrameId = null;
 		
 		system.handleAnimationFrame = function(time)
 		{
 			if(!system.isRunning) return;
+			if(system.isRendering) return;
+			system.isRendering = true;
 			system.animationFrameId = window.requestAnimationFrame(system.handleAnimationFrame.bind(this));
 			var dt = 0;
 			if(system.lastTime != null) dt = time - system.lastTime;
 			if(system.onUpdate != null) system.onUpdate(dt);
 			if(system.onRender != null) system.onRender(dt);
 			system.lastTime = time;
+			system.isRendering = false;
 		};
 		
 		// --> Public System Methods

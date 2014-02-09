@@ -169,9 +169,11 @@ define(
 				drawText: function(mode, text, style, x, y)
 				{
 					if(style != null) {
-						this.context.font = style.getSize() + "pt " + style.getFamily();
-						this.setFillColor(style.getColor());
-						this.context.textAlign = style.getAlign(); 
+						this.context.font = style.getWeight() + " " + style.getSize() + "pt " + style.getFamily();
+						var color = style.getColor();
+						if(color) this.setFillColor(color);
+						var align = style.getAlign();
+						if(align) this.context.textAlign = align; 
 					}
 					
 					this.context.fillText(text, x, y);
