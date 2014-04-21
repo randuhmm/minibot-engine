@@ -38,6 +38,7 @@ define(
 				 */
 				initialize: function(mode, v1, v2, v3, a)
 				{
+					this.type = Color.TYPE;
 					this.setColor(mode, v1, v2, v3, a);
 				},
 				
@@ -138,6 +139,9 @@ define(
 		
 		Color.RGB = "rgb";
 		Color.HSL = "hsl";
+
+		
+		Color.TYPE = 'color';
 		
 		return Color;
 		

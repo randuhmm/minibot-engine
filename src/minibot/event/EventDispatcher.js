@@ -100,7 +100,7 @@ define(
 				 */
 				removeAllEventListeners: function()
 				{
-					// TODO
+					this.listeners = {};
 				}
 				
 			}

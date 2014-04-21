@@ -84,7 +84,7 @@ define(
 				{
 					$super();
 					this.states.each(function(displayObject) {
-						displayObject.root = this.root;
+						displayObject.root = this.parent;
 						displayObject.parent = this;
 						displayObject.scene = this.scene;
 						displayObject.onAddedToScene();
@@ -104,12 +104,12 @@ define(
 							
 							if(!this.mouseMoveCallback) {
 								this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
-								this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+								this.parent.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 							}
 							
 							if(!this.mouseUpCallback) {
 								this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
-								this.root.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+								this.parent.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
 							}
 							
 						} else if(event.type == TouchEvent.TOUCH_START) {
@@ -118,12 +118,12 @@ define(
 
 							if(!this.touchMoveCallback) {
 								this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
-								this.root.addEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+								this.parent.addEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
 							}
 							
 							if(!this.touchEndCallback) {
 								this.touchEndCallback = this.handleTouchEnd.bindAsEventListener(this);
-								this.root.addEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
+								this.parent.addEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
 							}
 							
 						} else if(event.type == MouseEvent.MOUSE_MOVE) {
@@ -131,7 +131,7 @@ define(
 							
 							if(!this.mouseMoveCallback) {
 								this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
-								this.root.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+								this.parent.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 							}
 							
 						} else if(event.type == TouchEvent.TOUCH_MOVE) {
@@ -139,14 +139,14 @@ define(
 							
 							if(!this.touchMoveCallback) {
 								this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
-								this.root.addEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+								this.parent.addEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
 							}
 							
 						} else if(event.type == TouchEvent.TOUCH_END) {
 							this.currentState = this.upState;
 							
 							if(this.touchMoveCallback) {
-								this.root.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+								this.parent.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
 								this.touchMoveCallback = null;
 							}
 							
@@ -156,12 +156,12 @@ define(
 							this.isDown = false;
 							
 							if(this.mouseMoveCallback) {
-								this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+								this.parent.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 								this.mouseMoveCallback = null;
 							}
 							
 							if(this.mouseUpCallback) {
-								this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+								this.parent.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
 								this.mouseUpCallback = null;
 							}
 							
@@ -172,12 +172,12 @@ define(
 							this.isDown = false;
 							
 							if(this.touchMoveCallback) {
-								this.root.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+								this.parent.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
 								this.touchMoveCallback = null;
 							}
 							
 							if(this.touchUpCallback) {
-								this.root.removeEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
+								this.parent.removeEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
 								this.touchEndCallback = null;
 							}
 							
@@ -207,7 +207,7 @@ define(
 					} else {
 						this.currentState = this.upState;
 						if(this.mouseMoveCallback) {
-							this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+							this.parent.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 							this.mouseMoveCallback = null;
 						}
 					}
@@ -232,7 +232,7 @@ define(
 					} else {
 						this.currentState = this.upState;
 						if(this.touchMoveCallback) {
-							this.root.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+							this.parent.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
 							this.touchMoveCallback = null;
 						}
 					}
@@ -261,12 +261,12 @@ define(
 					this.isDown = false;
 					
 					if(this.mouseMoveCallback) {
-						this.root.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
+						this.parent.removeEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
 						this.mouseMoveCallback = null;
 					}
 					
 					if(this.mouseUpCallback) {
-						this.root.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
+						this.parent.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
 						this.mouseUpCallback = null;
 					}
 				},
@@ -281,12 +281,12 @@ define(
 					this.isDown = false;
 					
 					if(this.touchMoveCallback) {
-						this.root.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
+						this.parent.removeEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
 						this.touchMoveCallback = null;
 					}
 					
 					if(this.touchUpCallback) {
-						this.root.removeEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
+						this.parent.removeEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
 						this.touchEndCallback = null;
 					}
 				},

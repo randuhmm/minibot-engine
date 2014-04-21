@@ -73,6 +73,7 @@ define(function(require) {
 	/** @namespace Graphics namespace */
 	graphics = {};
 	graphics.Color = require('minibot/graphics/Color');
+	graphics.Pattern = require('minibot/graphics/Pattern');
 	
 	/** @namespace Resource namespace */
 	resource = {};

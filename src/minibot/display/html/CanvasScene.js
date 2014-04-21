@@ -54,6 +54,8 @@ define(
 				 */
 				initialize: function($super, options)
 				{
+					if(options == undefined) options = {};
+
 					$super(options);
 					
 					this.element = ((this.hasOption('element'))?(this.getOption('element')):(new Element('canvas')));
@@ -194,6 +196,30 @@ define(
 				setFillColor: function(color)
 				{
 					this.context.fillStyle = 'rgba('+color.getAsString(Color.RGB)+')';
+				},
+				
+				setFillPattern: function(pattern)
+				{
+					if(!pattern.hasPattern()) {
+						var ps = pattern.sprite;
+						var scene = new CanvasScene();
+						scene.setWidth(ps.w);
+						scene.setHeight(ps.h);
+						scene.drawImage(
+							ps.sprite.img,
+							ps.sprite.x, //sx,
+							ps.sprite.y, //sy,
+							ps.sprite.w, //sw,
+							ps.sprite.h, //sh,
+							ps.x, //dx,
+							ps.y, //dy,
+							ps.w, //dw,
+							ps.h //dh
+						);
+
+						pattern.setPattern(this.context.createPattern(scene.getElement(), pattern.repeat));
+					}
+					this.context.fillStyle = pattern.getPattern();
 				},
 				
 				setLineColor: function(color)

@@ -36,7 +36,7 @@ define(
 				 * @type object
 				 */
 				currentPhase: null,
-				
+
 				/**
 				 * Constructs a new BaseEvent instance.
 				 * @class An event class that can process specific events.

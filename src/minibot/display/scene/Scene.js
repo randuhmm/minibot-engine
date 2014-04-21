@@ -191,6 +191,14 @@ define(
 					
 				},
 
+				/** Sets the fill pattern.
+				 * @param {graphics.Pattern} pattern The pattern to be used.
+				 */
+				setFillPattern: function(pattern)
+				{
+					
+				},
+
 				/** Sets the line color.
 				 * @param {graphics.Color} color The color to be used.
 				 */

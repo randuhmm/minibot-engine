@@ -1,10 +1,14 @@
 define(
 	[
-		'./SceneDisplayObject'
+		'./SceneDisplayObject',
+		'minibot/graphics/Color',
+		'minibot/graphics/Pattern'
 	],
 	function
 	(
-		SceneDisplayObject
+		SceneDisplayObject,
+		Color,
+		Pattern
 	)
 	{
 		
@@ -16,6 +20,7 @@ define(
 				mode: null,
 				
 				fillColor: null,
+				fillPattern: null,
 				strokeColor: null,
 				
 				/**
@@ -27,7 +32,7 @@ define(
 				 * @param
 				 * @param {int} width The width of the rectangle.
 				 */
-				initialize: function($super, width, height, mode, fillColor, strokeColor)
+				initialize: function($super, width, height, mode, fill, strokeColor)
 				{
 					$super();
 					
@@ -36,7 +41,13 @@ define(
 					
 					this.mode = mode;
 					
-					if(fillColor != undefined) this.fillColor = fillColor;
+					if(fill != undefined) {
+						if(fill.type == Color.TYPE) {
+							this.fillColor = fill;
+						} else if(fill.type = Pattern.TYPE) {
+							this.fillPattern = fill;
+						}
+					}
 					if(strokeColor != undefined) this.strokeColor = strokeColor;
 					
 				},
@@ -44,6 +55,7 @@ define(
 				render: function(dt, x, y)
 				{
 					if(this.fillColor != null) this.scene.setFillColor(this.fillColor);
+					if(this.fillPattern != null) this.scene.setFillPattern(this.fillPattern);
 					
 					this.scene.drawRect(this.mode, this.x + x, this.y + y, this.w, this.h);
 				}
