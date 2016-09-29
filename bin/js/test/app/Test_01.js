@@ -7,7 +7,7 @@ define(
 		minibot
 	)
 	{
-		
+
 		var	ResourceManager = minibot.resource.ResourceManager
 		,	ImageResource = minibot.resource.ImageResource
 		,	SpriteResource = minibot.resource.SpriteResource
@@ -18,15 +18,15 @@ define(
 		,	Animation = minibot.display.scene.Animation
 		,	MouseEvent = minibot.event.MouseEvent
 		;
-		
+
 		var Test_01 = Class.create(
 			{
 
 				resourceManager: null,
-				
+
 				initialize: function()
 				{
-					
+
 					this.resourceManager = new ResourceManager();
 					this.resourceManager.addType(
 						ImageResource.TYPE,
@@ -40,7 +40,7 @@ define(
 						AnimationResource.TYPE,
 						AnimationResource
 					);
-					
+
 					this.resourceManager.addResource(
 						ImageResource.TYPE,
 						'sonic',
@@ -49,7 +49,7 @@ define(
 							src: 'img/sonic.png'
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'run_01',
@@ -62,7 +62,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'run_02',
@@ -75,7 +75,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'run_03',
@@ -88,7 +88,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'run_04',
@@ -101,7 +101,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'run_05',
@@ -114,7 +114,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'run_06',
@@ -127,7 +127,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'sprint_01',
@@ -140,7 +140,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'sprint_02',
@@ -153,7 +153,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'sprint_03',
@@ -166,7 +166,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'sprint_04',
@@ -179,7 +179,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'zoom_01',
@@ -192,7 +192,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'zoom_02',
@@ -205,7 +205,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'zoom_03',
@@ -218,7 +218,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					this.resourceManager.addResource(
 						SpriteResource.TYPE,
 						'zoom_04',
@@ -231,7 +231,7 @@ define(
 							h: 48
 						}
 					);
-					
+
 					var sonic_run_delay = 92;
 					this.resourceManager.addResource(
 						AnimationResource.TYPE,
@@ -266,7 +266,7 @@ define(
 							]
 						}
 					);
-					
+
 					var sonic_sprint_delay = 64;
 					this.resourceManager.addResource(
 						AnimationResource.TYPE,
@@ -293,7 +293,7 @@ define(
 							]
 						}
 					);
-					
+
 					var sonic_zoom_delay = 64;
 					this.resourceManager.addResource(
 						AnimationResource.TYPE,
@@ -320,7 +320,7 @@ define(
 							]
 						}
 					);
-					
+
 					this.resourceManager.loadAll(
 						function(progress) {
 							console.log('progressCallback - ' + progress);
@@ -331,47 +331,47 @@ define(
 						}.bind(this)
 					);
 				},
-				
+
 				handleResourcesLoaded: function()
 				{
-					
+
 					this.scene = new CanvasScene();
 					this.scene.setWidth(400);
 					this.scene.setHeight(400);
 					$$('body')[0].insert(this.scene.getElement());
-					
+
 					var sonic_run = new Animation(
 						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_run')
 					);
 					//this.scene.addChild(sonic_run);
 					//sonic_run.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
-					
+
 					var sonic_sprint = new Animation(
 						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_sprint')
 					);
 					//this.scene.addChild(sonic_sprint);
 					//sonic_sprint.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
 					//sonic_sprint.x = 50;
-					
+
 					var sonic_zoom = new Animation(
 						this.resourceManager.getResource(AnimationResource.TYPE, 'sonic_zoom')
 					);
 					//this.scene.addChild(sonic_zoom);
 					//sonic_zoom.addEventListener(MouseEvent.MOUSE_DOWN, this.toggleAnimation.bindAsEventListener(this));
 					//sonic_zoom.x = 100;
-					
-					
+
+
 					var button = new Button(
 						sonic_run,
-						sonic_sprint,
-						sonic_zoom
+						sonic_zoom,
+						sonic_sprint
 					);
 					this.scene.addChild(button);
-					
+
 					minibot.system.SetRenderCallback(this.scene.render.bind(this.scene));
 					minibot.system.Run();
 				},
-				
+
 				toggleAnimation: function(event)
 				{
 					if(event.target.isPlaying()) {
@@ -380,10 +380,10 @@ define(
 						event.target.play();
 					}
 				}
-				
+
 			}
 		);
-		
+
 		return Test_01;
 
 	}
