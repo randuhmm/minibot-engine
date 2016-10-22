@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>MiniBot Library: Demos</title>
+  <meta charset="utf-8">
+  <script src="../dist/minibot.js"></script>
+  <script src="../requirejs/require.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/default.css">
+    <script type="text/javascript">
+      (function() {
+        var main = function()
+        {
+          console.log('main');
+          var minibot = require('minibot');
+          console.log(minibot);
+        }
+        window.onload = main;
+      }());
+  </script>
+</head>
+<body>
+  <div id="wrapper">
+    <h1>MiniBot Library: Demos</h1>
+    <div id="demoButtons">
+      <input id="demo.01.graphics" value="Graphics" type="button" />
+      <input id="demo.02.text" value="Text" type="button" />
+      <input id="demo.03.events" value="Events" type="button" />
+      <input id="demo.04.animations" value="Animations" type="button" />
+      <input id="demo.05.resources" value="Resources" type="button" />
+      <input id="demo.06.application" value="Application" type="button" />
+      <input id="demo.07.engine" value="Engine" type="button" />
+      <input id="demo.08.isometric" value="Isometric" type="button" />
+    </div>
+    <div style="clear:both;float:none"></div>
+    <div id="demoScene"></div>
+  </div>
+</body>
+</html>

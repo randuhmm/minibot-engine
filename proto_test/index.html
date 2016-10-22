@@ -1,0 +1,27 @@
+<html>
+<head>
+  <title>Test</title>
+  <meta charset="utf-8">
+    <script src="main.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      (function() {
+
+        function main() {
+          var b = new MyBase('Jonny');
+          b.say();
+
+          var c = new MyChild();
+          c.say();
+
+          var d = new MyOtherChild();
+          d.say();
+        }
+
+        window.onload = main;
+
+      }());
+  </script>
+</head>
+<body>
+</body>
+</html>

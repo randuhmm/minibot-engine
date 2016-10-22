@@ -1,129 +1,119 @@
-define(
-	[
-		'minibot/event/EventDispatcher',
-		'minibot/event/EngineEvent'
-	],
-	function
-	(
-		EventDispatcher,
-		EngineEvent
-	)
-	{
-		var EngineObject = Class.create(
-			EventDispatcher,
-			{
-			
-				type: null,
-				
-				components: null,
-				
-				data: null,
-				
-				engine: null,
-				
-				initialize: function($super, type, data)
-				{
-					$super();
-					
-					this.type = type;
-					this.components = {};
-					
-					if(data == undefined) data = {};
-					this.data = data;
-				},
-				
-				getType: function()
-				{
-					return this.type;
-				},
 
-				addComponent: function(component)
-				{
-					var type = component.getType()
-					if(this.components[type] == undefined) {
-						this.components[type] = component;
-						component.setObject(this);
-						component.onAddedToObject();
-					}
-				},
+import EventDispatcher from 'minibot/event/EventDispatcher';
+import EngineEvent from 'minibot/event/EngineEvent';
 
-				removeComponent: function(component)
-				{
+class EngineObject extends EventDispatcher
+{
 
-				},
-				
-				setEngine: function(engine)
-				{
-					this.engine = engine;
-				},
-				
-				getEngine: function()
-				{
-					return this.engine;
-				},
+  // type: null,
+  
+  // components: null,
+  
+  // data: null,
+  
+  // engine: null,
+  
+  constructor(type, data)
+  {
+    $super();
+    
+    this.type = type;
+    this.components = {};
+    
+    if(data == undefined) data = {};
+    this.data = data;
+  }
+  
+  getType()
+  {
+    return this.type;
+  }
 
-				onAddedToEngine: function()
-				{
-					//-- OVERRIDE
-				},
-				
-				onResourcesLoaded: function()
-				{
-					for(var c in this.components) {
-						this.components[c].onResourcesLoaded();
-					}
-				},
+  addComponent(component)
+  {
+    var type = component.getType()
+    if(this.components[type] == undefined) {
+      this.components[type] = component;
+      component.setObject(this);
+      component.onAddedToObject();
+    }
+  }
 
-				getComponent: function(type)
-				{
-					if(this.components[type] != undefined) {
-						return this.components[type];
-					}
-					return null;
-				},
+  removeComponent(component)
+  {
 
-				hasComponent: function(type)
-				{
-					return (this.components[type] != undefined)
-				},
+  }
+  
+  setEngine(engine)
+  {
+    this.engine = engine;
+  }
+  
+  getEngine()
+  {
+    return this.engine;
+  }
 
-				update: function(dt)
-				{
-					for(var c in this.components) {
-						this.components[c].update(dt);
-					}
-				},
+  onAddedToEngine()
+  {
+    //-- OVERRIDE
+  }
+  
+  onResourcesLoaded()
+  {
+    for(var c in this.components) {
+      this.components[c].onResourcesLoaded();
+    }
+  }
 
-				setProperty: function(key, value)
-				{
-					this.data[key] = value;
-				},
+  getComponent(type)
+  {
+    if(this.components[type] != undefined) {
+      return this.components[type];
+    }
+    return null;
+  }
 
-				getProperty: function(key)
-				{
-					return this.data[key];
-				},
+  hasComponent(type)
+  {
+    return (this.components[type] != undefined)
+  }
 
-				hasProperty: function(key)
-				{
-					return (this.data[key] != undefined);
-				},
-				
-				buildEvent: function(type, data, component)
-				{
-					if(component == undefined) component = null;
-					return new EngineEvent(
-						type,
-						this,
-						component,
-						data
-					);
-				}
-				
-			}
-		);
-		
-		return EngineObject;
-		
-	}
-);
+  update(dt)
+  {
+    for(var c in this.components) {
+      this.components[c].update(dt);
+    }
+  }
+
+  setProperty(key, value)
+  {
+    this.data[key] = value;
+  }
+
+  getProperty(key)
+  {
+    return this.data[key];
+  }
+
+  hasProperty(key)
+  {
+    return (this.data[key] != undefined);
+  }
+  
+  buildEvent(type, data, component)
+  {
+    if(component == undefined) component = null;
+    return new EngineEvent(
+      type,
+      this,
+      component,
+      data
+    );
+  }
+  
+}
+
+export default EngineObject
+
+

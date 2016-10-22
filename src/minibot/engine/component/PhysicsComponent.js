@@ -1,24 +1,12 @@
-define(
-	[
-		'minibot/engine/EngineComponent'
-	],
-	function
-	(
-		EngineComponent
-	)
-	{
-		
-		var PhysicsComponent = Class.create(
-			EngineComponent,
-			{
-				
-				
-			}
-		);
-		
-		return PhysicsComponent;
-		
-	}
-	
-);
+
+import EngineComponent from 'minibot/engine/EngineComponent';
+
+class PhysicsComponent extends EngineComponent
+{
+  
+  
+}
+
+export default PhysicsComponent
+
 
