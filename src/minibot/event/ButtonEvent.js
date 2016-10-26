@@ -23,21 +23,13 @@ class ButtonEvent extends BaseEvent
    * @param {display.DisplayObject} displayObject The object upon which the mouse is displayed.
    * @param
    */
-  constructor(
-    type,
-    bubbles,
-    cancelable,
-    displayObject
-  )
-  {
+  constructor(type, bubbles, cancelable, displayObject) {
     super(type, bubbles, cancelable);
     this.displayObject = displayObject;
   }
 
 }
 
-ButtonEvent.SELECT      = "buttonSelect";
+ButtonEvent.SELECT = "buttonSelect";
 
 export default ButtonEvent
-
-

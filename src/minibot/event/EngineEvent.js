@@ -29,7 +29,6 @@ class EngineEvent extends BaseEvent
    * @param
    */
   constructor(
-    $super,
     type,
     object,
     component,

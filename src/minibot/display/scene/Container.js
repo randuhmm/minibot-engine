@@ -162,7 +162,7 @@ class Container extends SceneDisplayObject
     /*
     if(event.isTouchEvent()) {
       if(!this.touchEnabled) return false;
-      if(!this.touchChildren) return $super(event);
+      if(!this.touchChildren) return super(event);
     }
     */
 

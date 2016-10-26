@@ -1565,7 +1565,7 @@ var Container = function (_SceneDisplayObject) {
       /*
       if(event.isTouchEvent()) {
         if(!this.touchEnabled) return false;
-        if(!this.touchChildren) return $super(event);
+        if(!this.touchChildren) return super(event);
       }
       */
 
@@ -2131,35 +2131,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var SceneDisplayObject = function (_DisplayObject) {
   _inherits(SceneDisplayObject, _DisplayObject);
-
-  /** The x position of the SceneDisplayObject.
-   * @type Number
-   */
-  // x: 0,
-  /** The y position of the SceneDisplayObject.
-   * @type Number
-   */
-  // y: 0,
-  /** The width of the SceneDisplayObject.
-   * @type Number
-   */
-  // w: 0,
-  /** The height position of the SceneDisplayObject.
-   * @type Number
-   */
-  // h: 0,
-  /** The root directory.
-   * @type String
-   */
-  // root: null,
-  /** The current scene.
-   * @type display.scene
-   */
-  // scene: null,
-  /** Indicates whether or not the SceneDisplayObject is able to be seen.
-   * @type boolean
-   */
-  // isVisible: true,
 
   /**
    * Creates a new SceneDisplayObject instance.
@@ -2792,7 +2763,7 @@ var EngineEvent = function (_BaseEvent) {
    * @param {object} data Description of data.
    * @param
    */
-  function EngineEvent($super, type, object, component, data) {
+  function EngineEvent(type, object, component, data) {
     _classCallCheck(this, EngineEvent);
 
     var _this = _possibleConstructorReturn(this, (EngineEvent.__proto__ || Object.getPrototypeOf(EngineEvent)).call(this, type, false, false));
@@ -2824,11 +2795,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var EventDispatcher
 /** @lends event.EventDispatcher# */
 = function () {
-  /**
-   * Map of eventListeners availiable.
-   * @type json
-   */
-  // listeners: null,
 
   /**
    * Creates a new EventDispatcher instance.
@@ -3703,6 +3669,495 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Resource2 = require('minibot/resource/Resource');
+
+var _Resource3 = _interopRequireDefault(_Resource2);
+
+var _SpriteResource = require('minibot/resource/SpriteResource');
+
+var _SpriteResource2 = _interopRequireDefault(_SpriteResource);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AnimationResource = function (_Resource) {
+  _inherits(AnimationResource, _Resource);
+
+  /**
+   * Description of constructor.
+   * @class Short description of class.
+   * Long Description of class.
+   * @extends resource.Resource
+   * @constructs
+   * @param {String} id The id of the Resource.
+   * @param {Object} data The data associated with the Resource.
+   * @param
+   */
+  function AnimationResource(id, data) {
+    _classCallCheck(this, AnimationResource);
+
+    var _this = _possibleConstructorReturn(this, (AnimationResource.__proto__ || Object.getPrototypeOf(AnimationResource)).call(this, id));
+
+    _this.spriteIds = [];
+    _this.delays = [];
+    if (data.frames != undefined) {
+      for (var i = 0; i < data.frames.length; i++) {
+        _this.spriteIds.push(data.frames[i].sprite_id);
+        _this.delays.push(data.frames[i].delay);
+      }
+    }
+
+    _this.numberOfFrames = _this.spriteIds.length;
+
+    _this.sprites = [];
+    return _this;
+  }
+
+  _createClass(AnimationResource, [{
+    key: 'load',
+    value: function load(manager, callback) {
+      for (var i = 0; i < this.spriteIds.length; i++) {
+        var sprite = manager.getResource(_SpriteResource2.default.TYPE, this.spriteIds[i]);
+        this.sprites.push(sprite);
+      }
+
+      this.loaded = true;
+      callback();
+    }
+  }, {
+    key: 'addFrame',
+    value: function addFrame(sprite, delay) {
+      this.sprites.push_back(sprite);
+      this.delays.push_back(delay);
+      this.numberOfFrames++;
+    }
+  }, {
+    key: 'getSprite',
+    value: function getSprite(index) {
+      return this.sprites[index];
+    }
+  }, {
+    key: 'getDelay',
+    value: function getDelay(index) {
+      return this.delays[index];
+    }
+  }, {
+    key: 'nextFrame',
+    value: function nextFrame(index) {
+      return (index + 1) % this.numberOfFrames;
+    }
+  }, {
+    key: 'atEnd',
+    value: function atEnd(index) {
+      return index + 1 == this.numberOfFrames;
+    }
+  }]);
+
+  return AnimationResource;
+}(_Resource3.default
+/** @lends resource.AnimationResource# */
+);
+
+exports.default = AnimationResource;
+
+},{"minibot/resource/Resource":32,"minibot/resource/SpriteResource":34}],31:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Resource2 = require("minibot/resource/Resource");
+
+var _Resource3 = _interopRequireDefault(_Resource2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ImageResource = function (_Resource) {
+  _inherits(ImageResource, _Resource);
+
+  /**
+   * Create a new ImageResource object.
+   * @class The base ImageResource object.
+   * It is intended to be used as an Interface, although such types are not
+   * @extends resource.Resource
+   * @constructs
+   * @param {String} id The id of the Resource.
+   * @param {Object} data The data associated with the Resource.
+   * @param
+   */
+  function ImageResource(id, data) {
+    _classCallCheck(this, ImageResource);
+
+    var _this = _possibleConstructorReturn(this, (ImageResource.__proto__ || Object.getPrototypeOf(ImageResource)).call(this, id));
+
+    _this.src = null;
+    _this.img = null;
+    if (data.src != undefined) _this.src = data.src;
+    return _this;
+  }
+
+  _createClass(ImageResource, [{
+    key: "load",
+    value: function load(manager, callback) {
+      this.loaded = true;
+      if (this.src != null) {
+        this.img = new Image();
+        this.img.addEventListener("load", this.handleLoadImageSuccess.bindAsEventListener(this, callback), false);
+        this.img.addEventListener("error", this.handleLoadImageFailure.bindAsEventListener(this, callback), false);
+        this.img.src = this.src;
+      } else {
+        callback();
+      }
+    }
+  }, {
+    key: "handleLoadImageSuccess",
+    value: function handleLoadImageSuccess(event, callback) {
+      callback();
+    }
+  }, {
+    key: "handleLoadImageFailure",
+    value: function handleLoadImageFailure(event, callback) {
+      // TODO: Adjust error reporting
+      console.log('ImageResource: Failed to load image.');
+      callback();
+    }
+  }]);
+
+  return ImageResource;
+}(_Resource3.default
+/** @lends resource.ImageResource# */
+);
+
+exports.default = ImageResource;
+
+},{"minibot/resource/Resource":32}],32:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Utils = require('minibot/core/Utils');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Resource
+/** @lends resource.Resource# */
+= function () {
+
+  /**
+   * Create a new Resource object.
+   * @class This is the basic Resource class.
+   * It is intended to be used as an Interface, although such types are not
+   * enforced in JavaScript.
+   * @constructs
+   * @param {String} id The id of the Resource.
+   */
+  function Resource(id) {
+    _classCallCheck(this, Resource);
+
+    this.id = id;
+    this.loaded = false;
+  }
+
+  /**
+   * Load the Resource
+   * @param {ResourceManager} manager The ResourceManager instance.
+   * @param {Function} callback The callback function to call once loaded.
+   */
+
+
+  _createClass(Resource, [{
+    key: 'load',
+    value: function load(manager, callback) {
+      // Overload this function in the base class
+      this.loaded = true;
+      (0, _Utils.Defer)(callback, this);
+    }
+
+    /**
+     * Returns if the Resource has been loaded or not.
+     * @type bool
+     */
+
+  }, {
+    key: 'isLoaded',
+    value: function isLoaded() {
+      return this.loaded;
+    }
+  }]);
+
+  return Resource;
+}();
+
+exports.default = Resource;
+
+},{"minibot/core/Utils":2}],33:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Manager2 = require('minibot/core/Manager');
+
+var _Manager3 = _interopRequireDefault(_Manager2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ResourceManager = function (_Manager) {
+  _inherits(ResourceManager, _Manager);
+
+  /**
+   * Description of constructor.
+   * @class Short description of class.
+   * Long Description of class.
+   * @extends core.Manager
+   * @constructs
+   * @param {String} key The instance key.
+   * @param
+   */
+  function ResourceManager(key) {
+    _classCallCheck(this, ResourceManager);
+
+    var _this = _possibleConstructorReturn(this, (ResourceManager.__proto__ || Object.getPrototypeOf(ResourceManager)).call(this, key));
+
+    _this.resourceCount = 0;
+    _this.loadedCount = 0;
+    _this.typeIndex = null;
+    _this.typeLoadedCount = 0;
+
+    _this.typeOrder = [];
+    _this.typeCount = [];
+    _this.typeMap = {};
+    _this.resourceMap = {};
+    return _this;
+  }
+
+  _createClass(ResourceManager, [{
+    key: 'addType',
+    value: function addType(type, className) {
+      this.typeOrder.push(type);
+      this.typeCount.push(0);
+      this.typeMap[type] = className;
+      this.resourceMap[type] = {};
+    }
+  }, {
+    key: 'addResource',
+    value: function addResource(type, id, data) {
+      if (this.typeMap[type] == undefined) return;
+      var className = this.typeMap[type];
+      var resource = new className(id, data);
+      this.resourceMap[type][id] = resource;
+      this.resourceCount += 1;
+
+      for (var i = 0; i < this.typeOrder.length; i++) {
+        if (type == this.typeOrder[i]) {
+          this.typeCount[i] += 1;
+          break;
+        }
+      }
+    }
+  }, {
+    key: 'loadAll',
+    value: function loadAll(progressCallback, completeCallback) {
+      this.progressCallback = progressCallback;
+      this.completeCallback = completeCallback;
+
+      this.typeIndex = null;
+      this.loadNextType();
+    }
+  }, {
+    key: 'loadNextType',
+    value: function loadNextType() {
+      if (this.typeIndex == null) {
+        this.typeIndex = 0;
+      } else {
+        this.typeIndex += 1;
+      }
+
+      if (this.typeIndex >= this.typeOrder.length) {
+        this.completeCallback.bind(this).defer();
+        return;
+      }
+
+      this.typeLoadedCount = 0;
+
+      var type = this.typeOrder[this.typeIndex];
+      var resources;
+      var id;
+      var count = 0;
+      resources = this.resourceMap[type];
+
+      for (id in resources) {
+        this.loadResource(type, id);
+        count++;
+      }
+
+      if (count == 0) {
+        this.loadNextType();
+      }
+    }
+  }, {
+    key: 'loadResource',
+    value: function loadResource(type, id) {
+      var resource = this.resourceMap[type][id];
+      if (resource.isLoaded()) {
+        this.handleResourceLoaded();
+      } else {
+        resource.load(this, this.handleResourceLoaded.bind(this));
+      }
+    }
+  }, {
+    key: 'handleResourceLoaded',
+    value: function handleResourceLoaded() {
+      this.typeLoadedCount += 1;
+      var progress = Number(1 / this.resourceCount);
+      this.progressCallback(progress);
+
+      if (this.typeLoadedCount >= this.typeCount[this.typeIndex]) {
+        this.loadNextType.bind(this).defer();
+      }
+    }
+  }, {
+    key: 'getResource',
+    value: function getResource(type, id) {
+      if (this.resourceMap[type] == undefined) return null;
+      if (this.resourceMap[type][id] == undefined) return null;
+
+      return this.resourceMap[type][id];
+    }
+  }]);
+
+  return ResourceManager;
+}(_Manager3.default
+/** @lends resource.ResourceManager# */
+);
+
+exports.default = ResourceManager;
+
+},{"minibot/core/Manager":1}],34:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Resource2 = require('minibot/resource/Resource');
+
+var _Resource3 = _interopRequireDefault(_Resource2);
+
+var _ImageResource = require('minibot/resource/ImageResource');
+
+var _ImageResource2 = _interopRequireDefault(_ImageResource);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SpriteResource = function (_Resource) {
+  _inherits(SpriteResource, _Resource);
+
+  /**
+   * Description of constructor.
+   * @class Short description of class.
+   * Long Description of class.
+   * @extends resource.Resource
+   * @constructs
+   * @param {String} id The id of the Resource.
+   * @param {Object} data The data associated with the Resource.
+   * @param
+   */
+  function SpriteResource(id, data) {
+    _classCallCheck(this, SpriteResource);
+
+    var _this = _possibleConstructorReturn(this, (SpriteResource.__proto__ || Object.getPrototypeOf(SpriteResource)).call(this, id));
+
+    _this.imageId = null;
+    _this.imageResource = null;
+    _this.img = null;
+    _this.x = 0;
+    _this.y = 0;
+    _this.w = -1;
+    _this.h = -1;
+
+    if (data != undefined) {
+      if (data.image_id != undefined) _this.imageId = data.image_id;else if (data.imageId != undefined) _this.imageId = data.imageId;
+
+      if (data.x != undefined) _this.x = data.x;
+      if (data.y != undefined) _this.y = data.y;
+      if (data.w != undefined) _this.w = data.w;
+      if (data.h != undefined) _this.h = data.h;
+    }
+    return _this;
+  }
+
+  _createClass(SpriteResource, [{
+    key: 'load',
+    value: function load(manager, callback) {
+      try {
+        this.imageResource = manager.getResource(_ImageResource2.default.TYPE, this.imageId);
+
+        this.img = this.imageResource.img;
+
+        if (this.w == -1) this.w = this.img.width;
+        if (this.h == -1) this.h = this.img.height;
+
+        this.loaded = true;
+      } catch (e) {
+        console.log("ERROR");
+      }
+
+      callback();
+    }
+  }]);
+
+  return SpriteResource;
+}(_Resource3.default
+/** @lends resource.SpriteResource# */
+);
+
+exports.default = SpriteResource;
+
+},{"minibot/resource/ImageResource":31,"minibot/resource/Resource":32}],35:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _CanvasScene = require('minibot/display/html/CanvasScene');
 
 var _CanvasScene2 = _interopRequireDefault(_CanvasScene);
@@ -3947,12 +4402,12 @@ graphics.Color = require('minibot/graphics/Color').default;
 graphics.Pattern = require('minibot/graphics/Pattern').default;
 
 // /** @namespace Resource namespace */
-// resource = {};
-// resource.Resource = require('minibot/resource/Resource').default;
-// resource.ResourceManager = require('minibot/resource/ResourceManager').default;
-// resource.AnimationResource = require('minibot/resource/AnimationResource').default;
-// resource.ImageResource = require('minibot/resource/ImageResource').default;
-// resource.SpriteResource = require('minibot/resource/SpriteResource').default;
+exports.resource = resource = {};
+resource.Resource = require('minibot/resource/Resource').default;
+resource.ResourceManager = require('minibot/resource/ResourceManager').default;
+resource.AnimationResource = require('minibot/resource/AnimationResource').default;
+resource.ImageResource = require('minibot/resource/ImageResource').default;
+resource.SpriteResource = require('minibot/resource/SpriteResource').default;
 
 /** @namespace System namespace */
 exports.system = system = require('minibot/system/web').default;
@@ -3966,4 +4421,4 @@ exports.graphics = graphics;
 exports.resource = resource;
 exports.system = system;
 
-},{"minibot/core/Manager":1,"minibot/core/Utils":2,"minibot/display/DisplayObject":3,"minibot/display/html/CanvasScene":5,"minibot/display/html/HtmlElement":6,"minibot/display/scene/Animation":7,"minibot/display/scene/Button":9,"minibot/display/scene/Container":10,"minibot/display/scene/Rect":11,"minibot/display/scene/Scene":12,"minibot/display/scene/SceneDisplayObject":13,"minibot/display/scene/Sprite":14,"minibot/display/scene/Text":15,"minibot/display/scene/TextStyle":16,"minibot/event/BaseEvent":17,"minibot/event/ButtonEvent":18,"minibot/event/EngineEvent":19,"minibot/event/EventDispatcher":20,"minibot/event/KeyboardEvent":22,"minibot/event/MouseEvent":23,"minibot/event/TouchEvent":24,"minibot/event/enum/Keyboard":25,"minibot/geom/Rectangle":26,"minibot/geom/Vector2":27,"minibot/graphics/Color":28,"minibot/graphics/Pattern":29,"minibot/system/web":30}]},{},[]);
+},{"minibot/core/Manager":1,"minibot/core/Utils":2,"minibot/display/DisplayObject":3,"minibot/display/html/CanvasScene":5,"minibot/display/html/HtmlElement":6,"minibot/display/scene/Animation":7,"minibot/display/scene/Button":9,"minibot/display/scene/Container":10,"minibot/display/scene/Rect":11,"minibot/display/scene/Scene":12,"minibot/display/scene/SceneDisplayObject":13,"minibot/display/scene/Sprite":14,"minibot/display/scene/Text":15,"minibot/display/scene/TextStyle":16,"minibot/event/BaseEvent":17,"minibot/event/ButtonEvent":18,"minibot/event/EngineEvent":19,"minibot/event/EventDispatcher":20,"minibot/event/KeyboardEvent":22,"minibot/event/MouseEvent":23,"minibot/event/TouchEvent":24,"minibot/event/enum/Keyboard":25,"minibot/geom/Rectangle":26,"minibot/geom/Vector2":27,"minibot/graphics/Color":28,"minibot/graphics/Pattern":29,"minibot/resource/AnimationResource":30,"minibot/resource/ImageResource":31,"minibot/resource/Resource":32,"minibot/resource/ResourceManager":33,"minibot/resource/SpriteResource":34,"minibot/system/web":35}]},{},[]);

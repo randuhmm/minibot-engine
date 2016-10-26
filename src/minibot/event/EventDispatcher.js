@@ -3,12 +3,7 @@
 class EventDispatcher
 /** @lends event.EventDispatcher# */
 {
-  /**
-   * Map of eventListeners availiable.
-   * @type json
-   */
-  // listeners: null,
-  
+
   /**
    * Creates a new EventDispatcher instance.
    * @class Relegates and dispatches events to a target.
@@ -80,7 +75,7 @@ class EventDispatcher
     var i = callbacks.indexOf(callback);
     if(i == -1) return;
     callbacks.splice(i, 1);
-    
+
     // Remove the callbacks array from the map if empty
     if(callbacks.length == 0) {
       delete this.listeners[type];
@@ -93,7 +88,7 @@ class EventDispatcher
   {
     this.listeners = {};
   }
-  
+
 }
 
 export default EventDispatcher

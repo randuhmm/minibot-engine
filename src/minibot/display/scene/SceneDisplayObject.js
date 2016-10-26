@@ -4,34 +4,6 @@ import DisplayObject from 'minibot/display/DisplayObject';
 class SceneDisplayObject extends DisplayObject
 /** @lends display.scene.SceneDisplayObject# */
 {
-  /** The x position of the SceneDisplayObject.
-   * @type Number
-   */
-  // x: 0,
-  /** The y position of the SceneDisplayObject.
-   * @type Number
-   */
-  // y: 0,
-  /** The width of the SceneDisplayObject.
-   * @type Number
-   */
-  // w: 0,
-  /** The height position of the SceneDisplayObject.
-   * @type Number
-   */
-  // h: 0,
-  /** The root directory.
-   * @type String
-   */
-  // root: null,
-  /** The current scene.
-   * @type display.scene
-   */
-  // scene: null,
-  /** Indicates whether or not the SceneDisplayObject is able to be seen.
-   * @type boolean
-   */
-  // isVisible: true,
 
   /**
    * Creates a new SceneDisplayObject instance.

@@ -6,24 +6,24 @@ class EngineObject extends EventDispatcher
 {
 
   // type: null,
-  
+
   // components: null,
-  
+
   // data: null,
-  
+
   // engine: null,
-  
+
   constructor(type, data)
   {
-    $super();
-    
+    super();
+
     this.type = type;
     this.components = {};
-    
+
     if(data == undefined) data = {};
     this.data = data;
   }
-  
+
   getType()
   {
     return this.type;
@@ -43,12 +43,12 @@ class EngineObject extends EventDispatcher
   {
 
   }
-  
+
   setEngine(engine)
   {
     this.engine = engine;
   }
-  
+
   getEngine()
   {
     return this.engine;
@@ -58,7 +58,7 @@ class EngineObject extends EventDispatcher
   {
     //-- OVERRIDE
   }
-  
+
   onResourcesLoaded()
   {
     for(var c in this.components) {
@@ -100,7 +100,7 @@ class EngineObject extends EventDispatcher
   {
     return (this.data[key] != undefined);
   }
-  
+
   buildEvent(type, data, component)
   {
     if(component == undefined) component = null;
@@ -111,7 +111,7 @@ class EngineObject extends EventDispatcher
       data
     );
   }
-  
+
 }
 
 export default EngineObject

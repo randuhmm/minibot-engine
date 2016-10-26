@@ -69,12 +69,12 @@ graphics.Color = require('minibot/graphics/Color').default;
 graphics.Pattern = require('minibot/graphics/Pattern').default;
 
 // /** @namespace Resource namespace */
-// resource = {};
-// resource.Resource = require('minibot/resource/Resource').default;
-// resource.ResourceManager = require('minibot/resource/ResourceManager').default;
-// resource.AnimationResource = require('minibot/resource/AnimationResource').default;
-// resource.ImageResource = require('minibot/resource/ImageResource').default;
-// resource.SpriteResource = require('minibot/resource/SpriteResource').default;
+resource = {};
+resource.Resource = require('minibot/resource/Resource').default;
+resource.ResourceManager = require('minibot/resource/ResourceManager').default;
+resource.AnimationResource = require('minibot/resource/AnimationResource').default;
+resource.ImageResource = require('minibot/resource/ImageResource').default;
+resource.SpriteResource = require('minibot/resource/SpriteResource').default;
 
 /** @namespace System namespace */
 system = require('minibot/system/web').default;

@@ -4,35 +4,25 @@ import Resource from 'minibot/resource/Resource';
 class ImageResource extends Resource
 /** @lends resource.ImageResource# */
 {
-  
+
   /**
-   * The src URL.
-   * @type String
-   */
-  // src: null,
-  
-  /**
-   * The Image object.
-   * @type Image
-   */
-  // img: null,
-  
-  /**
-   * Create a new ImageResource object. 
+   * Create a new ImageResource object.
    * @class The base ImageResource object.
    * It is intended to be used as an Interface, although such types are not
    * @extends resource.Resource
    * @constructs
    * @param {String} id The id of the Resource.
    * @param {Object} data The data associated with the Resource.
-   * @param 
+   * @param
    */
   constructor(id, data)
   {
-    $super(id);
+    super(id);
+    this.src = null;
+    this.img = null;
     if(data.src != undefined) this.src = data.src;
   }
-  
+
   load(manager, callback)
   {
     this.loaded = true;
@@ -45,21 +35,19 @@ class ImageResource extends Resource
       callback();
     }
   }
-  
+
   handleLoadImageSuccess(event, callback)
   {
     callback();
   }
-  
+
   handleLoadImageFailure(event, callback)
   {
     // TODO: Adjust error reporting
     console.log('ImageResource: Failed to load image.');
     callback();
   }
-  
+
 }
 
 export default ImageResource
-
-
