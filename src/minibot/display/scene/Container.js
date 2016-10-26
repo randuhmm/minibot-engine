@@ -4,22 +4,6 @@ import SceneDisplayObject from './SceneDisplayObject';
 class Container extends SceneDisplayObject
 /** @lends display.scene.Container# */
 {
-  /** Array containing the Container layers
-   * @type Array
-   */
-  // layers: null,
-  /** Boolean indicating touch events attached.
-   * @type boolean
-   */
-  // touchChildren: true,
-  /** Indicates whether or not the container is able to be resized.
-   * @type boolean
-   */
-  // resizable: true,
-
-  // scalable: true,
-
-  // scale: 1,
 
   /** Appends a child to the container.
    * @param {display.DisplayObject} displayObject The display object to be added.
@@ -30,7 +14,22 @@ class Container extends SceneDisplayObject
   {
     super();
 
+    /** Array containing the Container layers
+     * @type Array
+     */
     this.layers = new Array();
+    /** Boolean indicating touch events attached.
+     * @type boolean
+     */
+    this.touchChildren = true;
+    /** Indicates whether or not the container is able to be resized.
+     * @type boolean
+     */
+    this.resizable = true;
+
+    this.scalable = true;
+
+    this.scale = 1;
   }
 
   addChild(displayObject, layer, position)

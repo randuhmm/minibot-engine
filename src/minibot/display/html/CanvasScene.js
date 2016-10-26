@@ -1,11 +1,13 @@
 
 import Scene from 'minibot/display/scene/Scene';
+import {Bind} from 'minibot/core/Utils';
 import MouseEvent from 'minibot/event/MouseEvent';
 import TouchEvent from 'minibot/event/TouchEvent';
 import KeyboardEvent from 'minibot/event/KeyboardEvent';
 import Keyboard from 'minibot/event/enum/Keyboard';
 import Color from 'minibot/graphics/Color';
 import CanvasBuffer from 'minibot/display/html/CanvasBuffer';
+
 
 class CanvasScene extends Scene
 /** @lends display.html.CanvasScene# */
@@ -70,25 +72,25 @@ class CanvasScene extends Scene
 
       if(this.eventTypes & Scene.MOUSE_EVENTS) {
         // Mouse Event Handling
-        this.mouseBfx = this.handleMouseEvent.bind(this);
-        this.element.observe('mousedown', this.mouseBfx);
-        this.element.observe('mouseup', this.mouseBfx);
-        this.element.observe('mousemove', this.mouseBfx);
+        this.mouseBfx = Bind(this.handleMouseEvent, this);
+        this.element.onmousedown = this.mouseBfx;
+        this.element.onmouseup = this.mouseBfx;
+        this.element.onmousemove  = this.mouseBfx;
       }
 
       if(this.eventTypes & Scene.TOUCH_EVENTS) {
         // Mouse Event Handling
-        this.touchBfx = this.handleTouchEvent.bind(this);
-        this.element.observe('touchstart', this.touchBfx);
-        this.element.observe('touchend', this.touchBfx);
-        this.element.observe('touchmove', this.touchBfx);
+        this.touchBfx = Bind(this.handleTouchEvent, this);
+        this.element.ontouchstart = this.touchBfx;
+        this.element.ontouchend = this.touchBfx;
+        this.element.ontouchmove = this.touchBfx;
       }
 
       if(this.eventTypes & Scene.KEYBOARD_EVENTS) {
         // Keyboard Event Handling
-        this.keyboardBfx = this.handleKeyboardEvent.bind(this);
-        document.observe('keydown', this.keyboardBfx);
-        document.observe('keyup', this.keyboardBfx);
+        this.keyboardBfx = Bind(this.handleKeyboardEvent, this);
+        document.onkeydown = this.keyboardBfx;
+        document.onkeyup = this.keyboardBfx;
       }
 
     }

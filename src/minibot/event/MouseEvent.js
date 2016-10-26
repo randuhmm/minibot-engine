@@ -48,6 +48,11 @@ class MouseEvent extends BaseEvent
 
 }
 
+MouseEvent.CLICK        = "mouseClick";
+MouseEvent.MOUSE_DOWN   = "mouseDown";
+MouseEvent.MOUSE_UP     = "mouseUp";
+MouseEvent.MOUSE_MOVE   = "mouseMove";
+
 export default MouseEvent
 
 

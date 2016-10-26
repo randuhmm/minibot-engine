@@ -44,6 +44,13 @@ class SceneDisplayObject extends DisplayObject
   constructor()
   {
     super();
+    this.x = 0;
+    this.y = 0;
+    this.w = 0;
+    this.h = 0;
+    this.root = null;
+    this.scene = null;
+    this.isVisible = true;
   }
   /** Renders the SceneDisplayObject and its components.
    * @param {Number} dt The change in time.

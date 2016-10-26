@@ -21,43 +21,43 @@ class Scene
    * @type Object
    */
   // options: null,
-  
+
   /**
    * Constructs a new scene instance.
    * @class Creates a new scene within a specified container.
    * @extends display.canvas.CanvasDisplayObject
    * @constructs
-   * @param 
+   * @param
    */
   constructor(options)
   {
-    
+
     this.options = options;
-    
+
     this.container = new Container();
     this.container.resizable = false;
     this.container.setRoot(this.container);
     this.container.setScene(this);
-    
+
   }
-  
+
   // Public Methods -->
-  
+
   hasOption(key)
   {
     return this.options[key] != undefined;
   }
-  
+
   getOption(key)
   {
     return this.options[key];
   }
-  
+
   getBuffer()
   {
 
   }
-  
+
   /** Set the width of the scene.
    * @param {Number} width The width desired.
    */
@@ -66,7 +66,7 @@ class Scene
     this.width = width;
     this.container.setWidth(width);
   }
-  
+
   /** Returns the width of the scene.
    * @returns {Number}
    */
@@ -74,7 +74,7 @@ class Scene
   {
     return this.width;
   }
-  
+
   /** Set the height of the scene.
    * @param {Number} height The height desired.
    */
@@ -83,7 +83,7 @@ class Scene
     this.height = height;
     this.container.setHeight(height);
   }
-  
+
   /** Returns the height of the scene.
    * @returns {Number}
    */
@@ -91,7 +91,7 @@ class Scene
   {
     return this.height;
   }
-  
+
   /** Appends a child to the specified container.
      @param {display.DisplayObject} displayObject The displayObject to add.
    @param {layer} layer The layer to be added to.
@@ -101,7 +101,7 @@ class Scene
     if(layer == undefined || layer == null) layer = 0;
     this.container.addChild(displayObject, layer);
   }
-  
+
   /** Removes a child from the specified container.
      @param {display.DisplayObject} displayObject The displayObject to remove.
    *//** Removes all children from the specified container. */
@@ -109,13 +109,13 @@ class Scene
   {
     this.container.removeChild(displayObject);
   }
-  
+
   /** Removes all children from the specified container. */
   removeAllChildren()
   {
     this.container.removeAll();
   }
-  
+
   /** Renders the scene
    * @param {Number} dt The change in time.
    */
@@ -123,19 +123,19 @@ class Scene
   {
     this.container.render(dt);
   }
-  
+
   clear()
   {
     // overload in subclass
   }
-  
+
   // Graphics Methods -->
-  
+
   drawBuffer()
   {
-    
+
   }
-  
+
   /** Draws an image.
    * @param {resource.ImageResource} image The image to be drawn.
    * @param {Number} sx The starting x position of the image.
@@ -149,7 +149,7 @@ class Scene
    */
   drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh)
   {
-  
+
   }
 
   /** Draws a line.
@@ -160,7 +160,7 @@ class Scene
    */
   drawLine(x1, y1, x2, y2)
   {
-    
+
   }
 
   /** Draws a Rectangle.
@@ -180,7 +180,7 @@ class Scene
    */
   setFillColor(color)
   {
-    
+
   }
 
   /** Sets the fill pattern.
@@ -188,7 +188,7 @@ class Scene
    */
   setFillPattern(pattern)
   {
-    
+
   }
 
   /** Sets the line color.
@@ -196,7 +196,7 @@ class Scene
    */
   setLineColor(color)
   {
-    
+
   }
 
   /** Sets the line style.
@@ -204,7 +204,7 @@ class Scene
    */
   setLineStyle(style)
   {
-  
+
   }
 
   /** Sets the line width.
@@ -212,7 +212,7 @@ class Scene
    */
   setLineWidth(width)
   {
-  
+
   }
 
   /** Save
@@ -221,25 +221,25 @@ class Scene
   {
 
   }
-  
+
   /** Restore
    */
   restore()
   {
 
   }
-  
+
   /** Translate
-   * @param {Number} x 
-   * @param {Number} y 
+   * @param {Number} x
+   * @param {Number} y
    */
   translate(x, y)
   {
 
   }
-  
+
   /** Rotate
-   * @param {Number} a 
+   * @param {Number} a
    */
   rotate(a)
   {
@@ -247,41 +247,44 @@ class Scene
   }
 
   // <-- Graphics Methods
-  
+
   // Event Methods -->
-  
+
   addEventListener(type, callback)
   {
     this.container.addEventListener(type, callback);
   }
-  
+
   hasEventListener(type)
   {
     return this.container.addEventListener(type);
   }
-  
+
   dispatchEvent(event)
   {
     return this.container.dispatchEvent(event);
   }
-  
+
   removeEventListener(type, callback)
   {
     this.container.removeEventListener(type, callback);
   }
-  
+
   removeAllEventListeners()
   {
     this.container.removeAllEventListeners();
   }
-  
+
   // <-- Event Methods
-  
+
   // <-- Public Methods
-  
-  
+
+
 }
 
-export default Scene
+Scene.MOUSE_EVENTS = 1;
+Scene.KEYBOARD_EVENTS = 2;
+Scene.TOUCH_EVENTS = 4;
 
+export default Scene
 

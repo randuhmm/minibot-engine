@@ -33,5 +33,8 @@ class KeyboardEvent extends BaseEvent
 
 }
 
+KeyboardEvent.KEY_DOWN      = "keyDown";
+KeyboardEvent.KEY_UP      = "keyUp";
+
 export default KeyboardEvent
 

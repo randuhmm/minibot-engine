@@ -1,4 +1,5 @@
 
+import {Bind, BindAsEventListener} from 'minibot/core/Utils';
 import DisplayObject from 'minibot/display/DisplayObject';
 import HtmlEvent from 'minibot/event/HtmlEvent';
 
@@ -43,10 +44,10 @@ class HtmlElement extends DisplayObject
     this.children = new Array();
 
     // Wrapping element functions
-    this.writeAttribute   = this.element.writeAttribute.bind(this.element);
-    this.readAttribute     = this.element.readAttribute.bind(this.element);
-    this.hide         = this.element.hide.bind(this.element);
-    this.show         = this.element.show.bind(this.element);
+    this.writeAttribute   = Bind(this.element.writeAttribute, this.element);
+    this.readAttribute     = Bind(this.element.readAttribute, this.element);
+    this.hide         = Bind(this.element.hide, this.element);
+    this.show         = Bind(this.element.show, this.element);
 
   }
 
@@ -148,7 +149,7 @@ class HtmlElement extends DisplayObject
         }
 
       if(htmlType != null) {
-        this.htmlListeners[type] = this.handleHtmlEvent.bindAsEventListener(this, type);
+        this.htmlListeners[type] = BindAsEventListener(this.handleHtmlEvent, this, type);
         this.element.observe(htmlType, this.htmlListeners[type]);
       }
     }

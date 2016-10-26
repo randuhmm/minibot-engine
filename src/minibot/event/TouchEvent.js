@@ -41,5 +41,9 @@ class TouchEvent extends BaseEvent
 
 }
 
+TouchEvent.TOUCH_START    = "touchStart";
+TouchEvent.TOUCH_END    = "touchEnd";
+TouchEvent.TOUCH_MOVE   = "touchMove";
+
 export default TouchEvent
 

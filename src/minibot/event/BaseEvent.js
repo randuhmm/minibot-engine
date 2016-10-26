@@ -3,30 +3,6 @@
 class BaseEvent
 /** @lends event.BaseEvent# */
 {
-  /** The type of event. 
-   * @type string
-   */
-  // type: null,
-  /** The event target.
-   * @type object
-   */
-  // target: null,
-  /** The object that is actively uses an eventListener on the Event object.
-   * @type object
-   */
-  // currentTarget: null,
-  /** Indictes a bubbling event.
-   * @type bool
-   */
-  // bubbles: null,
-  /** Indicates if the action associated with an event can be terminated.
-   * @type bool
-   */
-  // cancelable: null,
-  /** The current phase of the event flow.
-   * @type object
-   */
-  // currentPhase: null,
 
   /**
    * Constructs a new BaseEvent instance.
@@ -39,21 +15,42 @@ class BaseEvent
    */
   constructor(type, bubbles, cancelable)
   {
+    /** The type of event.
+     * @type string
+     */
     this.type = type;
-    
+    /** The event target.
+     * @type object
+     */
+    this.target = null;
+    /** The object that is actively uses an eventListener on the Event object.
+     * @type object
+     */
+    this.currentTarget = null;
+    /** Indictes a bubbling event.
+     * @type bool
+     */
     this.bubbles = ((bubbles == undefined)?(false):(bubbles));
+    /** Indicates if the action associated with an event can be terminated.
+     * @type bool
+     */
     this.cancelable = ((cancelable == undefined)?(false):(cancelable));
+    /** The current phase of the event flow.
+     * @type object
+     */
+    this.currentPhase = null;
   }
-  
+
   /**
    * Stops the default action of the event from being carried out.
    */
   preventDefault()
   {
-    
+
   }
-  
+
 }
+
 
 export default BaseEvent
 

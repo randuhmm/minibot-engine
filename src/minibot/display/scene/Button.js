@@ -1,5 +1,6 @@
 
 import SceneDisplayObject from './SceneDisplayObject';
+import {Defer, Bind, BindAsEventListener} from 'minibot/core/Utils';
 import MouseEvent from 'minibot/event/MouseEvent';
 import TouchEvent from 'minibot/event/TouchEvent';
 import ButtonEvent from 'minibot/event/ButtonEvent';
@@ -7,22 +8,6 @@ import ButtonEvent from 'minibot/event/ButtonEvent';
 class Button extends SceneDisplayObject
 /** @lends display.scene.Button# */
 {
-
-  // upState: null,
-  // downState: null,
-  // overState: null,
-  // currentState: null,
-
-  // states: null,
-
-  // isDown: false,
-  // isOver: false,
-
-  // mouseMoveCallback: null,
-  // mouseUpCallback: null,
-
-  // touchMoveCallback: null,
-  // touchEndCallback: null,
 
   /**
    * Description of constructor.
@@ -38,6 +23,19 @@ class Button extends SceneDisplayObject
   constructor(upState, downState, overState)
   {
     super();
+
+    this.upState = null;
+    this.downState = null;
+    this.overState = null;
+    this.currentState = null;
+    this.states = null;
+    this.isDown = false;
+    this.isOver = false;
+    this.mouseMoveCallback = null;
+    this.mouseUpCallback = null;
+    this.touchMoveCallback = null;
+    this.touchEndCallback = null;
+
     if(upState != undefined) this.upState = upState;
     if(downState != undefined) this.downState = downState;
     if(overState != undefined) this.overState = overState;
@@ -52,8 +50,8 @@ class Button extends SceneDisplayObject
     if(this.downState != null) this.states.push(this.downState);
     if(this.overState != null) this.states.push(this.overState);
 
-    //this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
-    //this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
+    //this.mouseMoveCallback = BindAsEventListener(this.handleMouseMove, this);
+    //this.mouseUpCallback = BindAsEventListener(this.handleMouseUp, this);
   }
 
   /**
@@ -72,12 +70,13 @@ class Button extends SceneDisplayObject
   onAddedToScene()
   {
     super.onAddedToScene();
-    this.states.each(function(displayObject) {
+    for (var i = this.states.length - 1; i >= 0; i--) {
+      var displayObject = this.states[i];
       displayObject.root = this.parent;
       displayObject.parent = this;
       displayObject.scene = this.scene;
       displayObject.onAddedToScene();
-    }.bind(this));
+    }
   }
 
   /**
@@ -92,12 +91,12 @@ class Button extends SceneDisplayObject
         this.isDown = true;
 
         if(!this.mouseMoveCallback) {
-          this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+          this.mouseMoveCallback = BindAsEventListener(this.handleMouseMove, this);
           this.parent.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
         }
 
         if(!this.mouseUpCallback) {
-          this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
+          this.mouseUpCallback = BindAsEventListener(this.handleMouseUp, this);
           this.parent.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpCallback);
         }
 
@@ -106,12 +105,12 @@ class Button extends SceneDisplayObject
         this.isDown = true;
 
         if(!this.touchMoveCallback) {
-          this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
+          this.touchMoveCallback = BindAsEventListener(this.handleTouchMove, this);
           this.parent.addEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
         }
 
         if(!this.touchEndCallback) {
-          this.touchEndCallback = this.handleTouchEnd.bindAsEventListener(this);
+          this.touchEndCallback = BindAsEventListener(this.handleTouchEnd, this);
           this.parent.addEventListener(TouchEvent.TOUCH_END, this.touchEndCallback);
         }
 
@@ -119,7 +118,7 @@ class Button extends SceneDisplayObject
         this.currentState = this.overState;
 
         if(!this.mouseMoveCallback) {
-          this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+          this.mouseMoveCallback = BindAsEventListener(this.handleMouseMove, this);
           this.parent.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMoveCallback);
         }
 
@@ -127,7 +126,7 @@ class Button extends SceneDisplayObject
         this.currentState = this.overState;
 
         if(!this.touchMoveCallback) {
-          this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
+          this.touchMoveCallback = BindAsEventListener(this.handleTouchMove, this);
           this.parent.addEventListener(TouchEvent.TOUCH_MOVE, this.touchMoveCallback);
         }
 
@@ -156,7 +155,7 @@ class Button extends SceneDisplayObject
 
         this.currentState = this.upState;
 
-        this.select.bind(this).defer(event);
+        Defer(this.select, this, event);
       } else if(event.type == TouchEvent.TOUCH_END) {
         this.isDown = false;
 
@@ -172,7 +171,7 @@ class Button extends SceneDisplayObject
 
         this.currentState = this.upState;
 
-        this.select.bind(this).defer(event);
+        Defer(this.select, this, event);
       }
     }
     return super.dispatchEvent(event);

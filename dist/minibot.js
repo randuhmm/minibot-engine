@@ -30,6 +30,42 @@ function Manager(key) {
 exports.default = Manager;
 
 },{}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+
+var BindAsEventListener = function BindAsEventListener(fx, ctx) {
+  var args = Array.prototype.slice.call(arguments, 2);
+  return function (event) {
+    var a = [event];
+    for (var i = args.length - 1; i >= 0; i--) {
+      a[1 + i] = args[i];
+    }
+    fx.apply(ctx, a);
+  };
+};
+
+var Bind = function Bind(fx, ctx) {
+  return function () {
+    fx.apply(ctx, arguments);
+  };
+};
+
+var Defer = function Defer(fx, ctx) {
+  var args = Array.prototype.slice.call(arguments, 2);
+  setTimeout(function () {
+    fx.apply(ctx, args);
+  }, 0);
+};
+
+exports.Bind = Bind;
+exports.BindAsEventListener = BindAsEventListener;
+exports.Defer = Defer;
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -114,7 +150,7 @@ DisplayObject.ALIGN_VERT_CENTER = 2;
 
 exports.default = DisplayObject;
 
-},{"minibot/event/EventDispatcher":19}],3:[function(require,module,exports){
+},{"minibot/event/EventDispatcher":20}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -180,7 +216,7 @@ var CanvasBuffer = function (_Buffer) {
 
 exports.default = CanvasBuffer;
 
-},{"minibot/display/scene/Buffer":7}],4:[function(require,module,exports){
+},{"minibot/display/scene/Buffer":8}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -194,6 +230,8 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 var _Scene2 = require('minibot/display/scene/Scene');
 
 var _Scene3 = _interopRequireDefault(_Scene2);
+
+var _Utils = require('minibot/core/Utils');
 
 var _MouseEvent = require('minibot/event/MouseEvent');
 
@@ -292,25 +330,25 @@ var CanvasScene = function (_Scene) {
 
       if (_this.eventTypes & _Scene3.default.MOUSE_EVENTS) {
         // Mouse Event Handling
-        _this.mouseBfx = _this.handleMouseEvent.bind(_this);
-        _this.element.observe('mousedown', _this.mouseBfx);
-        _this.element.observe('mouseup', _this.mouseBfx);
-        _this.element.observe('mousemove', _this.mouseBfx);
+        _this.mouseBfx = (0, _Utils.Bind)(_this.handleMouseEvent, _this);
+        _this.element.onmousedown = _this.mouseBfx;
+        _this.element.onmouseup = _this.mouseBfx;
+        _this.element.onmousemove = _this.mouseBfx;
       }
 
       if (_this.eventTypes & _Scene3.default.TOUCH_EVENTS) {
         // Mouse Event Handling
-        _this.touchBfx = _this.handleTouchEvent.bind(_this);
-        _this.element.observe('touchstart', _this.touchBfx);
-        _this.element.observe('touchend', _this.touchBfx);
-        _this.element.observe('touchmove', _this.touchBfx);
+        _this.touchBfx = (0, _Utils.Bind)(_this.handleTouchEvent, _this);
+        _this.element.ontouchstart = _this.touchBfx;
+        _this.element.ontouchend = _this.touchBfx;
+        _this.element.ontouchmove = _this.touchBfx;
       }
 
       if (_this.eventTypes & _Scene3.default.KEYBOARD_EVENTS) {
         // Keyboard Event Handling
-        _this.keyboardBfx = _this.handleKeyboardEvent.bind(_this);
-        document.observe('keydown', _this.keyboardBfx);
-        document.observe('keyup', _this.keyboardBfx);
+        _this.keyboardBfx = (0, _Utils.Bind)(_this.handleKeyboardEvent, _this);
+        document.onkeydown = _this.keyboardBfx;
+        document.onkeyup = _this.keyboardBfx;
       }
     }
     return _this;
@@ -575,7 +613,7 @@ var CanvasScene = function (_Scene) {
 
 exports.default = CanvasScene;
 
-},{"minibot/display/html/CanvasBuffer":3,"minibot/display/scene/Scene":11,"minibot/event/KeyboardEvent":21,"minibot/event/MouseEvent":22,"minibot/event/TouchEvent":23,"minibot/event/enum/Keyboard":24,"minibot/graphics/Color":25}],5:[function(require,module,exports){
+},{"minibot/core/Utils":2,"minibot/display/html/CanvasBuffer":4,"minibot/display/scene/Scene":12,"minibot/event/KeyboardEvent":22,"minibot/event/MouseEvent":23,"minibot/event/TouchEvent":24,"minibot/event/enum/Keyboard":25,"minibot/graphics/Color":28}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -585,6 +623,8 @@ Object.defineProperty(exports, "__esModule", {
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _Utils = require('minibot/core/Utils');
 
 var _DisplayObject2 = require('minibot/display/DisplayObject');
 
@@ -643,10 +683,10 @@ var HtmlElement = function (_DisplayObject) {
     _this.children = new Array();
 
     // Wrapping element functions
-    _this.writeAttribute = _this.element.writeAttribute.bind(_this.element);
-    _this.readAttribute = _this.element.readAttribute.bind(_this.element);
-    _this.hide = _this.element.hide.bind(_this.element);
-    _this.show = _this.element.show.bind(_this.element);
+    _this.writeAttribute = (0, _Utils.Bind)(_this.element.writeAttribute, _this.element);
+    _this.readAttribute = (0, _Utils.Bind)(_this.element.readAttribute, _this.element);
+    _this.hide = (0, _Utils.Bind)(_this.element.hide, _this.element);
+    _this.show = (0, _Utils.Bind)(_this.element.show, _this.element);
 
     return _this;
   }
@@ -752,7 +792,7 @@ var HtmlElement = function (_DisplayObject) {
         }
 
         if (htmlType != null) {
-          this.htmlListeners[type] = this.handleHtmlEvent.bindAsEventListener(this, type);
+          this.htmlListeners[type] = (0, _Utils.BindAsEventListener)(this.handleHtmlEvent, this, type);
           this.element.observe(htmlType, this.htmlListeners[type]);
         }
       }
@@ -772,7 +812,7 @@ var HtmlElement = function (_DisplayObject) {
 
 exports.default = HtmlElement;
 
-},{"minibot/display/DisplayObject":2,"minibot/event/HtmlEvent":20}],6:[function(require,module,exports){
+},{"minibot/core/Utils":2,"minibot/display/DisplayObject":3,"minibot/event/HtmlEvent":21}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -933,7 +973,7 @@ var Animation = function (_SceneDisplayObject) {
 
 exports.default = Animation;
 
-},{"minibot/display/scene/SceneDisplayObject":12}],7:[function(require,module,exports){
+},{"minibot/display/scene/SceneDisplayObject":13}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -999,7 +1039,7 @@ var Buffer = function (_Container) {
 
 exports.default = Buffer;
 
-},{"./Container":9}],8:[function(require,module,exports){
+},{"./Container":10}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1013,6 +1053,8 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 var _SceneDisplayObject2 = require('./SceneDisplayObject');
 
 var _SceneDisplayObject3 = _interopRequireDefault(_SceneDisplayObject2);
+
+var _Utils = require('minibot/core/Utils');
 
 var _MouseEvent = require('minibot/event/MouseEvent');
 
@@ -1037,22 +1079,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Button = function (_SceneDisplayObject) {
   _inherits(Button, _SceneDisplayObject);
 
-  // upState: null,
-  // downState: null,
-  // overState: null,
-  // currentState: null,
-
-  // states: null,
-
-  // isDown: false,
-  // isOver: false,
-
-  // mouseMoveCallback: null,
-  // mouseUpCallback: null,
-
-  // touchMoveCallback: null,
-  // touchEndCallback: null,
-
   /**
    * Description of constructor.
    * @class Short description of class.
@@ -1069,6 +1095,18 @@ var Button = function (_SceneDisplayObject) {
 
     var _this = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this));
 
+    _this.upState = null;
+    _this.downState = null;
+    _this.overState = null;
+    _this.currentState = null;
+    _this.states = null;
+    _this.isDown = false;
+    _this.isOver = false;
+    _this.mouseMoveCallback = null;
+    _this.mouseUpCallback = null;
+    _this.touchMoveCallback = null;
+    _this.touchEndCallback = null;
+
     if (upState != undefined) _this.upState = upState;
     if (downState != undefined) _this.downState = downState;
     if (overState != undefined) _this.overState = overState;
@@ -1083,8 +1121,8 @@ var Button = function (_SceneDisplayObject) {
     if (_this.downState != null) _this.states.push(_this.downState);
     if (_this.overState != null) _this.states.push(_this.overState);
 
-    //this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
-    //this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
+    //this.mouseMoveCallback = BindAsEventListener(this.handleMouseMove, this);
+    //this.mouseUpCallback = BindAsEventListener(this.handleMouseUp, this);
     return _this;
   }
 
@@ -1109,12 +1147,13 @@ var Button = function (_SceneDisplayObject) {
     key: 'onAddedToScene',
     value: function onAddedToScene() {
       _get(Button.prototype.__proto__ || Object.getPrototypeOf(Button.prototype), 'onAddedToScene', this).call(this);
-      this.states.each(function (displayObject) {
+      for (var i = this.states.length - 1; i >= 0; i--) {
+        var displayObject = this.states[i];
         displayObject.root = this.parent;
         displayObject.parent = this;
         displayObject.scene = this.scene;
         displayObject.onAddedToScene();
-      }.bind(this));
+      }
     }
 
     /**
@@ -1131,12 +1170,12 @@ var Button = function (_SceneDisplayObject) {
           this.isDown = true;
 
           if (!this.mouseMoveCallback) {
-            this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+            this.mouseMoveCallback = (0, _Utils.BindAsEventListener)(this.handleMouseMove, this);
             this.parent.addEventListener(_MouseEvent2.default.MOUSE_MOVE, this.mouseMoveCallback);
           }
 
           if (!this.mouseUpCallback) {
-            this.mouseUpCallback = this.handleMouseUp.bindAsEventListener(this);
+            this.mouseUpCallback = (0, _Utils.BindAsEventListener)(this.handleMouseUp, this);
             this.parent.addEventListener(_MouseEvent2.default.MOUSE_UP, this.mouseUpCallback);
           }
         } else if (event.type == _TouchEvent2.default.TOUCH_START) {
@@ -1144,26 +1183,26 @@ var Button = function (_SceneDisplayObject) {
           this.isDown = true;
 
           if (!this.touchMoveCallback) {
-            this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
+            this.touchMoveCallback = (0, _Utils.BindAsEventListener)(this.handleTouchMove, this);
             this.parent.addEventListener(_TouchEvent2.default.TOUCH_MOVE, this.touchMoveCallback);
           }
 
           if (!this.touchEndCallback) {
-            this.touchEndCallback = this.handleTouchEnd.bindAsEventListener(this);
+            this.touchEndCallback = (0, _Utils.BindAsEventListener)(this.handleTouchEnd, this);
             this.parent.addEventListener(_TouchEvent2.default.TOUCH_END, this.touchEndCallback);
           }
         } else if (event.type == _MouseEvent2.default.MOUSE_MOVE) {
           this.currentState = this.overState;
 
           if (!this.mouseMoveCallback) {
-            this.mouseMoveCallback = this.handleMouseMove.bindAsEventListener(this);
+            this.mouseMoveCallback = (0, _Utils.BindAsEventListener)(this.handleMouseMove, this);
             this.parent.addEventListener(_MouseEvent2.default.MOUSE_MOVE, this.mouseMoveCallback);
           }
         } else if (event.type == _TouchEvent2.default.TOUCH_MOVE) {
           this.currentState = this.overState;
 
           if (!this.touchMoveCallback) {
-            this.touchMoveCallback = this.handleTouchMove.bindAsEventListener(this);
+            this.touchMoveCallback = (0, _Utils.BindAsEventListener)(this.handleTouchMove, this);
             this.parent.addEventListener(_TouchEvent2.default.TOUCH_MOVE, this.touchMoveCallback);
           }
         } else if (event.type == _TouchEvent2.default.TOUCH_END) {
@@ -1190,7 +1229,7 @@ var Button = function (_SceneDisplayObject) {
 
           this.currentState = this.upState;
 
-          this.select.bind(this).defer(event);
+          (0, _Utils.Defer)(this.select, this, event);
         } else if (event.type == _TouchEvent2.default.TOUCH_END) {
           this.isDown = false;
 
@@ -1206,7 +1245,7 @@ var Button = function (_SceneDisplayObject) {
 
           this.currentState = this.upState;
 
-          this.select.bind(this).defer(event);
+          (0, _Utils.Defer)(this.select, this, event);
         }
       }
       return _get(Button.prototype.__proto__ || Object.getPrototypeOf(Button.prototype), 'dispatchEvent', this).call(this, event);
@@ -1339,7 +1378,7 @@ var Button = function (_SceneDisplayObject) {
 
 exports.default = Button;
 
-},{"./SceneDisplayObject":12,"minibot/event/ButtonEvent":17,"minibot/event/MouseEvent":22,"minibot/event/TouchEvent":23}],9:[function(require,module,exports){
+},{"./SceneDisplayObject":13,"minibot/core/Utils":2,"minibot/event/ButtonEvent":18,"minibot/event/MouseEvent":23,"minibot/event/TouchEvent":24}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1365,23 +1404,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Container = function (_SceneDisplayObject) {
   _inherits(Container, _SceneDisplayObject);
 
-  /** Array containing the Container layers
-   * @type Array
-   */
-  // layers: null,
-  /** Boolean indicating touch events attached.
-   * @type boolean
-   */
-  // touchChildren: true,
-  /** Indicates whether or not the container is able to be resized.
-   * @type boolean
-   */
-  // resizable: true,
-
-  // scalable: true,
-
-  // scale: 1,
-
   /** Appends a child to the container.
    * @param {display.DisplayObject} displayObject The display object to be added.
    * @param {Number} layer The layer to be added.
@@ -1390,9 +1412,24 @@ var Container = function (_SceneDisplayObject) {
   function Container() {
     _classCallCheck(this, Container);
 
+    /** Array containing the Container layers
+     * @type Array
+     */
     var _this = _possibleConstructorReturn(this, (Container.__proto__ || Object.getPrototypeOf(Container)).call(this));
 
     _this.layers = new Array();
+    /** Boolean indicating touch events attached.
+     * @type boolean
+     */
+    _this.touchChildren = true;
+    /** Indicates whether or not the container is able to be resized.
+     * @type boolean
+     */
+    _this.resizable = true;
+
+    _this.scalable = true;
+
+    _this.scale = 1;
     return _this;
   }
 
@@ -1661,7 +1698,7 @@ var Container = function (_SceneDisplayObject) {
 
 exports.default = Container;
 
-},{"./SceneDisplayObject":12}],10:[function(require,module,exports){
+},{"./SceneDisplayObject":13}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1747,7 +1784,7 @@ var Rect = function (_SceneDisplayObject) {
 
 exports.default = Rect;
 
-},{"./SceneDisplayObject":12,"minibot/graphics/Color":25,"minibot/graphics/Pattern":26}],11:[function(require,module,exports){
+},{"./SceneDisplayObject":13,"minibot/graphics/Color":28,"minibot/graphics/Pattern":29}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1793,7 +1830,7 @@ var Scene
    * @class Creates a new scene within a specified container.
    * @extends display.canvas.CanvasDisplayObject
    * @constructs
-   * @param 
+   * @param
    */
   function Scene(options) {
     _classCallCheck(this, Scene);
@@ -2009,8 +2046,8 @@ var Scene
     value: function restore() {}
 
     /** Translate
-     * @param {Number} x 
-     * @param {Number} y 
+     * @param {Number} x
+     * @param {Number} y
      */
 
   }, {
@@ -2018,7 +2055,7 @@ var Scene
     value: function translate(x, y) {}
 
     /** Rotate
-     * @param {Number} a 
+     * @param {Number} a
      */
 
   }, {
@@ -2065,9 +2102,13 @@ var Scene
   return Scene;
 }();
 
+Scene.MOUSE_EVENTS = 1;
+Scene.KEYBOARD_EVENTS = 2;
+Scene.TOUCH_EVENTS = 4;
+
 exports.default = Scene;
 
-},{"./Container":9,"minibot/event/EventDispatcher":19}],12:[function(require,module,exports){
+},{"./Container":10,"minibot/event/EventDispatcher":20}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2131,7 +2172,16 @@ var SceneDisplayObject = function (_DisplayObject) {
   function SceneDisplayObject() {
     _classCallCheck(this, SceneDisplayObject);
 
-    return _possibleConstructorReturn(this, (SceneDisplayObject.__proto__ || Object.getPrototypeOf(SceneDisplayObject)).call(this));
+    var _this = _possibleConstructorReturn(this, (SceneDisplayObject.__proto__ || Object.getPrototypeOf(SceneDisplayObject)).call(this));
+
+    _this.x = 0;
+    _this.y = 0;
+    _this.w = 0;
+    _this.h = 0;
+    _this.root = null;
+    _this.scene = null;
+    _this.isVisible = true;
+    return _this;
   }
   /** Renders the SceneDisplayObject and its components.
    * @param {Number} dt The change in time.
@@ -2303,7 +2353,7 @@ var SceneDisplayObject = function (_DisplayObject) {
 
 exports.default = SceneDisplayObject;
 
-},{"minibot/display/DisplayObject":2}],13:[function(require,module,exports){
+},{"minibot/display/DisplayObject":3}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2387,7 +2437,7 @@ var Sprite = function (_SceneDisplayObject) {
 
 exports.default = Sprite;
 
-},{"minibot/display/scene/SceneDisplayObject":12}],14:[function(require,module,exports){
+},{"minibot/display/scene/SceneDisplayObject":13}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2486,7 +2536,7 @@ var Text = function (_SceneDisplayObject) {
 
 exports.default = Text;
 
-},{"minibot/display/scene/SceneDisplayObject":12}],15:[function(require,module,exports){
+},{"minibot/display/scene/SceneDisplayObject":13}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2570,7 +2620,7 @@ var TextStyle
 
 exports.default = TextStyle;
 
-},{"minibot/graphics/Color":25}],16:[function(require,module,exports){
+},{"minibot/graphics/Color":28}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2584,30 +2634,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var BaseEvent
 /** @lends event.BaseEvent# */
 = function () {
-  /** The type of event. 
-   * @type string
-   */
-  // type: null,
-  /** The event target.
-   * @type object
-   */
-  // target: null,
-  /** The object that is actively uses an eventListener on the Event object.
-   * @type object
-   */
-  // currentTarget: null,
-  /** Indictes a bubbling event.
-   * @type bool
-   */
-  // bubbles: null,
-  /** Indicates if the action associated with an event can be terminated.
-   * @type bool
-   */
-  // cancelable: null,
-  /** The current phase of the event flow.
-   * @type object
-   */
-  // currentPhase: null,
 
   /**
    * Constructs a new BaseEvent instance.
@@ -2621,10 +2647,30 @@ var BaseEvent
   function BaseEvent(type, bubbles, cancelable) {
     _classCallCheck(this, BaseEvent);
 
+    /** The type of event.
+     * @type string
+     */
     this.type = type;
-
+    /** The event target.
+     * @type object
+     */
+    this.target = null;
+    /** The object that is actively uses an eventListener on the Event object.
+     * @type object
+     */
+    this.currentTarget = null;
+    /** Indictes a bubbling event.
+     * @type bool
+     */
     this.bubbles = bubbles == undefined ? false : bubbles;
+    /** Indicates if the action associated with an event can be terminated.
+     * @type bool
+     */
     this.cancelable = cancelable == undefined ? false : cancelable;
+    /** The current phase of the event flow.
+     * @type object
+     */
+    this.currentPhase = null;
   }
 
   /**
@@ -2642,14 +2688,14 @@ var BaseEvent
 
 exports.default = BaseEvent;
 
-},{}],17:[function(require,module,exports){
-'use strict';
+},{}],18:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _BaseEvent2 = require('./BaseEvent');
+var _BaseEvent2 = require("./BaseEvent");
 
 var _BaseEvent3 = _interopRequireDefault(_BaseEvent2);
 
@@ -2682,7 +2728,7 @@ var ButtonEvent = function (_BaseEvent) {
    * @param {display.DisplayObject} displayObject The object upon which the mouse is displayed.
    * @param
    */
-  function ButtonEvent($super, type, bubbles, cancelable, displayObject) {
+  function ButtonEvent(type, bubbles, cancelable, displayObject) {
     _classCallCheck(this, ButtonEvent);
 
     var _this = _possibleConstructorReturn(this, (ButtonEvent.__proto__ || Object.getPrototypeOf(ButtonEvent)).call(this, type, bubbles, cancelable));
@@ -2696,9 +2742,11 @@ var ButtonEvent = function (_BaseEvent) {
 /** @lends event.MouseEvent# */
 );
 
+ButtonEvent.SELECT = "buttonSelect";
+
 exports.default = ButtonEvent;
 
-},{"./BaseEvent":16}],18:[function(require,module,exports){
+},{"./BaseEvent":17}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2762,7 +2810,7 @@ var EngineEvent = function (_BaseEvent) {
 
 exports.default = EngineEvent;
 
-},{"./BaseEvent":16}],19:[function(require,module,exports){
+},{"./BaseEvent":17}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2885,17 +2933,17 @@ var EventDispatcher
 
 exports.default = EventDispatcher;
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
-},{}],21:[function(require,module,exports){
-'use strict';
+},{}],22:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _BaseEvent2 = require('./BaseEvent');
+var _BaseEvent2 = require("./BaseEvent");
 
 var _BaseEvent3 = _interopRequireDefault(_BaseEvent2);
 
@@ -2939,16 +2987,19 @@ var KeyboardEvent = function (_BaseEvent) {
 /** @lends event.MouseEvent# */
 );
 
+KeyboardEvent.KEY_DOWN = "keyDown";
+KeyboardEvent.KEY_UP = "keyUp";
+
 exports.default = KeyboardEvent;
 
-},{"./BaseEvent":16}],22:[function(require,module,exports){
-'use strict';
+},{"./BaseEvent":17}],23:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _BaseEvent2 = require('./BaseEvent');
+var _BaseEvent2 = require("./BaseEvent");
 
 var _BaseEvent3 = _interopRequireDefault(_BaseEvent2);
 
@@ -3006,16 +3057,21 @@ var MouseEvent = function (_BaseEvent) {
 /** @lends event.MouseEvent# */
 );
 
+MouseEvent.CLICK = "mouseClick";
+MouseEvent.MOUSE_DOWN = "mouseDown";
+MouseEvent.MOUSE_UP = "mouseUp";
+MouseEvent.MOUSE_MOVE = "mouseMove";
+
 exports.default = MouseEvent;
 
-},{"./BaseEvent":16}],23:[function(require,module,exports){
-'use strict';
+},{"./BaseEvent":17}],24:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _BaseEvent2 = require('./BaseEvent');
+var _BaseEvent2 = require("./BaseEvent");
 
 var _BaseEvent3 = _interopRequireDefault(_BaseEvent2);
 
@@ -3065,9 +3121,13 @@ var TouchEvent = function (_BaseEvent) {
 /** @lends event.MouseEvent# */
 );
 
+TouchEvent.TOUCH_START = "touchStart";
+TouchEvent.TOUCH_END = "touchEnd";
+TouchEvent.TOUCH_MOVE = "touchMove";
+
 exports.default = TouchEvent;
 
-},{"./BaseEvent":16}],24:[function(require,module,exports){
+},{"./BaseEvent":17}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3121,7 +3181,308 @@ exports.default = {
 
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Rectangle
+/** @lends geom.Rectangle# */
+=
+
+// x: 0,
+// y: 0,
+// w: 0,
+// h: 0,
+
+/**
+ * Description of constructor.
+ * @class Short description of class.
+ * Long Description of class.
+ * @constructs
+ */
+function Rectangle(x, y, w, h) {
+  _classCallCheck(this, Rectangle);
+
+  this.x = x;
+  this.y = y;
+  this.w = w;
+  this.h = h;
+};
+
+exports.default = Rectangle;
+
+},{}],27:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Vector2
+/** @lends geom.Vector2# */
+= function () {
+
+  // x: 0,
+  // y: 0,
+
+  /**
+   * Description of constructor.
+   * @class Short description of class.
+   * Long Description of class.
+   * @constructs
+   */
+  function Vector2(x, y) {
+    _classCallCheck(this, Vector2);
+
+    this.x = x || 0;
+    this.y = y || 0;
+  }
+
+  _createClass(Vector2, [{
+    key: "reset",
+    value: function reset(x, y) {
+      this.x = x;
+      this.y = y;
+      return this;
+    }
+  }, {
+    key: "toString",
+    value: function toString(decPlaces) {
+      decPlaces = decPlaces || 3;
+      var scalar = Math.pow(10, decPlaces);
+      return "[" + Math.round(this.x * scalar) / scalar + ", " + Math.round(this.y * scalar) / scalar + "]";
+    }
+  }, {
+    key: "clone",
+    value: function clone() {
+      return new Vector2(this.x, this.y);
+    }
+  }, {
+    key: "copyTo",
+    value: function copyTo(v) {
+      v.x = this.x;
+      v.y = this.y;
+    }
+  }, {
+    key: "copyFrom",
+    value: function copyFrom(v) {
+      this.x = v.x;
+      this.y = v.y;
+    }
+  }, {
+    key: "magnitude",
+    value: function magnitude() {
+      return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+  }, {
+    key: "magnitudeSquared",
+    value: function magnitudeSquared() {
+      return this.x * this.x + this.y * this.y;
+    }
+  }, {
+    key: "normalise",
+    value: function normalise() {
+      return this.normailize();
+    }
+  }, {
+    key: "normalize",
+    value: function normalize() {
+
+      var m = this.magnitude();
+      if (m == 0) return this;
+
+      this.x = this.x / m;
+      this.y = this.y / m;
+
+      return this;
+    }
+  }, {
+    key: "reverse",
+    value: function reverse() {
+      this.x = -this.x;
+      this.y = -this.y;
+
+      return this;
+    }
+  }, {
+    key: "plusEq",
+    value: function plusEq(v) {
+      this.x += v.x;
+      this.y += v.y;
+
+      return this;
+    }
+  }, {
+    key: "plusNew",
+    value: function plusNew(v) {
+      return new Vector2(this.x + v.x, this.y + v.y);
+    }
+  }, {
+    key: "minusEq",
+    value: function minusEq(v) {
+      this.x -= v.x;
+      this.y -= v.y;
+
+      return this;
+    }
+  }, {
+    key: "minusNew",
+    value: function minusNew(v) {
+      return new Vector2(this.x - v.x, this.y - v.y);
+    }
+  }, {
+    key: "multiplyEq",
+    value: function multiplyEq(scalar) {
+      this.x *= scalar;
+      this.y *= scalar;
+
+      return this;
+    }
+  }, {
+    key: "multiplyNew",
+    value: function multiplyNew(scalar) {
+      var returnvec = this.clone();
+      return returnvec.multiplyEq(scalar);
+    }
+  }, {
+    key: "divideEq",
+    value: function divideEq(scalar) {
+      this.x /= scalar;
+      this.y /= scalar;
+      return this;
+    }
+  }, {
+    key: "divideNew",
+    value: function divideNew(scalar) {
+      var returnvec = this.clone();
+      return returnvec.divideEq(scalar);
+    }
+  }, {
+    key: "dot",
+    value: function dot(v) {
+      return this.x * v.x + this.y * v.y;
+    }
+  }, {
+    key: "angle",
+    value: function angle(useRadians) {
+      return Math.atan2(this.y, this.x) * (useRadians ? 1 : Vector2.TO_DEGREES);
+    }
+  }, {
+    key: "rotate",
+    value: function rotate(angle, useRadians) {
+      var cosRY = Math.cos(angle * (useRadians ? 1 : Vector2.TO_RADIANS));
+      var sinRY = Math.sin(angle * (useRadians ? 1 : Vector2.TO_RADIANS));
+
+      Vector2.temp.copyFrom(this);
+
+      this.x = Vector2.temp.x * cosRY - Vector2.temp.y * sinRY;
+      this.y = Vector2.temp.x * sinRY + Vector2.temp.y * cosRY;
+
+      return this;
+    }
+  }, {
+    key: "equals",
+    value: function equals(v) {
+      return this.x == v.x && this.y == v.x;
+    }
+  }, {
+    key: "isCloseTo",
+    value: function isCloseTo(v, tolerance) {
+      if (this.equals(v)) return true;
+
+      Vector2.temp.copyFrom(this);
+      Vector2.temp.minusEq(v);
+
+      return Vector2.temp.magnitudeSquared() < tolerance * tolerance;
+    }
+  }, {
+    key: "rotateAroundPoint",
+    value: function rotateAroundPoint(point, angle, useRadians) {
+      Vector2.temp.copyFrom(this);
+      //trace("rotate around point "+t+" "+point+" " +angle);
+      Vector2.temp.minusEq(point);
+      //trace("after subtract "+t);
+      Vector2.temp.rotate(angle, useRadians);
+      //trace("after rotate "+t);
+      Vector2.temp.plusEq(point);
+      //trace("after add "+t);
+      this.copyFrom(Vector2.temp);
+    }
+  }, {
+    key: "isMagLessThan",
+    value: function isMagLessThan(distance) {
+      return this.magnitudeSquared() < distance * distance;
+    }
+  }, {
+    key: "isMagGreaterThan",
+    value: function isMagGreaterThan(distance) {
+      return this.magnitudeSquared() > distance * distance;
+    }
+
+    // still AS3 to convert :
+    // public function projectOnto(v:Vector2) : Vector2
+    // {
+    // var dp:Number = dot(v);
+    //
+    // var f:Number = dp / ( v.x*v.x + v.y*v.y );
+    //
+    // return new Vector2( f*v.x , f*v.y);
+    // }
+    //
+    //
+    // public function convertToNormal():void
+    // {
+    // var tempx:Number = x;
+    // x = -y;
+    // y = tempx;
+    //
+    //
+    // }
+    // public function getNormal():Vector2
+    // {
+    //
+    // return new Vector2(-y,x);
+    //
+    // }
+    //
+    //
+    //
+    // public function getClosestPointOnLine ( vectorposition : Point, targetpoint : Point ) : Point
+    // {
+    // var m1 : Number = y / x ;
+    // var m2 : Number = x / -y ;
+    //
+    // var b1 : Number = vectorposition.y - ( m1 * vectorposition.x ) ;
+    // var b2 : Number = targetpoint.y - ( m2 * targetpoint.x ) ;
+    //
+    // var cx : Number = ( b2 - b1 ) / ( m1 - m2 ) ;
+    // var cy : Number = m1 * cx + b1 ;
+    //
+    // return new Point ( cx, cy ) ;
+    // }
+    //
+
+  }]);
+
+  return Vector2;
+}();
+
+Vector2.TO_DEGREES = 180 / Math.PI;
+Vector2.TO_RADIANS = Math.PI / 180;
+Vector2.temp = new Vector2();
+
+exports.default = Vector2;
+
+},{}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3158,7 +3519,7 @@ var Color
    * Long Description of class.
    * @extends display.canvas.CanvasDisplayObject
    * @constructs
-   * @param 
+   * @param
    */
   function Color(mode, v1, v2, v3, a) {
     _classCallCheck(this, Color);
@@ -3216,9 +3577,64 @@ var Color
   return Color;
 }();
 
+Color.RgbToHsl = function (r, g, b) {};
+
+Color.HslToRgb = function (h, s, l) {
+  if (s <= 0) {
+    return [l, l, l];
+  }
+  h = h / 256 * 6;
+  s = s / 255;
+  l = l / 255;
+  var c = (1 - Math.abs(2 * l - 1)) * s,
+      x = (1 - Math.abs(h % 2 - 1)) * c,
+      m = l - 0.5 * c,
+      r = 0,
+      g = 0,
+      b = 0;
+
+  if (h < 1) {
+    r = c;g = x;b = 0;
+  } else if (h < 2) {
+    r = x;g = c;b = 0;
+  } else if (h < 3) {
+    r = 0;g = c;b = x;
+  } else if (h < 4) {
+    r = 0;g = x;b = c;
+  } else if (h < 5) {
+    r = x;g = 0;b = c;
+  } else {
+    r = c;g = 0;b = x;
+  }
+
+  return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
+};
+
+Color.FromHex = function (hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (result) {
+    return new Color(Color.RGB, parseInt(result[1], 16), // r
+    parseInt(result[2], 16), // g
+    parseInt(result[3], 16) // b
+    );
+  } else {
+    return null;
+  }
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+};
+
+Color.RGB = "rgb";
+Color.HSL = "hsl";
+
+Color.TYPE = 'color';
+
 exports.default = Color;
 
-},{}],26:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3280,7 +3696,7 @@ var Pattern
 
 exports.default = Pattern;
 
-},{}],27:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3454,7 +3870,7 @@ system.PlatformName = {
 
 exports.default = system;
 
-},{"minibot/display/html/CanvasScene":4}],"minibot":[function(require,module,exports){
+},{"minibot/display/html/CanvasScene":5}],"minibot":[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3466,6 +3882,7 @@ var core, display, engine, event, geom, graphics, resource, system;
 /** @namespace Core namespace */
 exports.core = core = {};
 core.Manager = require('minibot/core/Manager').default;
+core.Utils = require('minibot/core/Utils');
 
 /** @namespace Display namespace */
 exports.display = display = {};
@@ -3519,15 +3936,15 @@ event.KeyboardEvent = require('minibot/event/KeyboardEvent').default;
 event.enum = {};
 event.enum.Keyboard = require('minibot/event/enum/Keyboard').default;
 
-// /** @namespace Geom namespace */
-// geom = {};
-// geom.Vector2 = require('minibot/geom/Vector2').default;
-// geom.Rectangle = require('minibot/geom/Rectangle').default;
+/** @namespace Geom namespace */
+exports.geom = geom = {};
+geom.Vector2 = require('minibot/geom/Vector2').default;
+geom.Rectangle = require('minibot/geom/Rectangle').default;
 
-// /** @namespace Graphics namespace */
-// graphics = {};
-// graphics.Color = require('minibot/graphics/Color').default;
-// graphics.Pattern = require('minibot/graphics/Pattern').default;
+/** @namespace Graphics namespace */
+exports.graphics = graphics = {};
+graphics.Color = require('minibot/graphics/Color').default;
+graphics.Pattern = require('minibot/graphics/Pattern').default;
 
 // /** @namespace Resource namespace */
 // resource = {};
@@ -3549,4 +3966,4 @@ exports.graphics = graphics;
 exports.resource = resource;
 exports.system = system;
 
-},{"minibot/core/Manager":1,"minibot/display/DisplayObject":2,"minibot/display/html/CanvasScene":4,"minibot/display/html/HtmlElement":5,"minibot/display/scene/Animation":6,"minibot/display/scene/Button":8,"minibot/display/scene/Container":9,"minibot/display/scene/Rect":10,"minibot/display/scene/Scene":11,"minibot/display/scene/SceneDisplayObject":12,"minibot/display/scene/Sprite":13,"minibot/display/scene/Text":14,"minibot/display/scene/TextStyle":15,"minibot/event/BaseEvent":16,"minibot/event/ButtonEvent":17,"minibot/event/EngineEvent":18,"minibot/event/EventDispatcher":19,"minibot/event/KeyboardEvent":21,"minibot/event/MouseEvent":22,"minibot/event/TouchEvent":23,"minibot/event/enum/Keyboard":24,"minibot/system/web":27}]},{},[]);
+},{"minibot/core/Manager":1,"minibot/core/Utils":2,"minibot/display/DisplayObject":3,"minibot/display/html/CanvasScene":5,"minibot/display/html/HtmlElement":6,"minibot/display/scene/Animation":7,"minibot/display/scene/Button":9,"minibot/display/scene/Container":10,"minibot/display/scene/Rect":11,"minibot/display/scene/Scene":12,"minibot/display/scene/SceneDisplayObject":13,"minibot/display/scene/Sprite":14,"minibot/display/scene/Text":15,"minibot/display/scene/TextStyle":16,"minibot/event/BaseEvent":17,"minibot/event/ButtonEvent":18,"minibot/event/EngineEvent":19,"minibot/event/EventDispatcher":20,"minibot/event/KeyboardEvent":22,"minibot/event/MouseEvent":23,"minibot/event/TouchEvent":24,"minibot/event/enum/Keyboard":25,"minibot/geom/Rectangle":26,"minibot/geom/Vector2":27,"minibot/graphics/Color":28,"minibot/graphics/Pattern":29,"minibot/system/web":30}]},{},[]);

@@ -24,7 +24,6 @@ class ButtonEvent extends BaseEvent
    * @param
    */
   constructor(
-    $super,
     type,
     bubbles,
     cancelable,
@@ -36,6 +35,8 @@ class ButtonEvent extends BaseEvent
   }
 
 }
+
+ButtonEvent.SELECT      = "buttonSelect";
 
 export default ButtonEvent
 

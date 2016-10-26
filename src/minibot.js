@@ -4,6 +4,7 @@ var core, display, engine, event, geom, graphics, resource, system;
 /** @namespace Core namespace */
 core = {};
 core.Manager = require('minibot/core/Manager').default;
+core.Utils = require('minibot/core/Utils');
 
 /** @namespace Display namespace */
 display = {};
@@ -57,15 +58,15 @@ event.KeyboardEvent = require('minibot/event/KeyboardEvent').default;
 event.enum = {};
 event.enum.Keyboard = require('minibot/event/enum/Keyboard').default;
 
-// /** @namespace Geom namespace */
-// geom = {};
-// geom.Vector2 = require('minibot/geom/Vector2').default;
-// geom.Rectangle = require('minibot/geom/Rectangle').default;
+/** @namespace Geom namespace */
+geom = {};
+geom.Vector2 = require('minibot/geom/Vector2').default;
+geom.Rectangle = require('minibot/geom/Rectangle').default;
 
-// /** @namespace Graphics namespace */
-// graphics = {};
-// graphics.Color = require('minibot/graphics/Color').default;
-// graphics.Pattern = require('minibot/graphics/Pattern').default;
+/** @namespace Graphics namespace */
+graphics = {};
+graphics.Color = require('minibot/graphics/Color').default;
+graphics.Pattern = require('minibot/graphics/Pattern').default;
 
 // /** @namespace Resource namespace */
 // resource = {};
