@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var minibot = require('minibot');
 var CanvasScene = minibot.display.html.CanvasScene;
+var Bind = minibot.core.Utils.Bind;
 
 var BaseDemo = function BaseDemo(element, options) {
   if (options === null || options === undefined) {
@@ -23,8 +24,8 @@ var BaseDemo = function BaseDemo(element, options) {
 };
 
 BaseDemo.prototype.run = function () {
-  minibot.system.SetUpdateCallback(this.update.bind(this));
-  minibot.system.SetRenderCallback(this.render.bind(this));
+  minibot.system.SetUpdateCallback(Bind(this.update, this));
+  minibot.system.SetRenderCallback(Bind(this.render, this));
   minibot.system.Run();
 };
 

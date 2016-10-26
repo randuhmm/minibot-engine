@@ -30,20 +30,20 @@ display.html.HtmlElement = require('minibot/display/html/HtmlElement').default;
 display.html.CanvasScene = require('minibot/display/html/CanvasScene').default;
 
 // /** @namespace Engine namespace */
-// engine = {};
-// engine.Engine = require('minibot/engine/Engine').default;
-// engine.EngineComponent = require('minibot/engine/EngineComponent').default;
-// engine.EngineFactory = require('minibot/engine/EngineFactory').default;
-// engine.EngineObject = require('minibot/engine/EngineObject').default;
-// engine.EngineSystem = require('minibot/engine/EngineSystem').default;
+engine = {};
+engine.Engine = require('minibot/engine/Engine').default;
+engine.EngineComponent = require('minibot/engine/EngineComponent').default;
+engine.EngineFactory = require('minibot/engine/EngineFactory').default;
+engine.EngineObject = require('minibot/engine/EngineObject').default;
+engine.EngineSystem = require('minibot/engine/EngineSystem').default;
 
-// engine.component = {};
-// engine.component.DisplayComponent = require('minibot/engine/component/DisplayComponent').default;
-// engine.component.PhysicsComponent = require('minibot/engine/component/PhysicsComponent').default;
-// engine.component.InputComponent = require('minibot/engine/component/InputComponent').default;
+engine.component = {};
+engine.component.DisplayComponent = require('minibot/engine/component/DisplayComponent').default;
+engine.component.PhysicsComponent = require('minibot/engine/component/PhysicsComponent').default;
+engine.component.InputComponent = require('minibot/engine/component/InputComponent').default;
 
-// engine.system = {};
-// engine.system.DisplaySystem = require('minibot/engine/system/DisplaySystem').default;
+engine.system = {};
+engine.system.DisplaySystem = require('minibot/engine/system/DisplaySystem').default;
 
 /** @namespace Event namespace */
 event = {};

@@ -25,11 +25,14 @@ def convert_file(file_path):
             file_data = file.read()
 
             m_import = re.match(IMPORT, file_data, re.S)
-            import_list = list(s.strip() for s in m_import.groups()[0].split(','))
+            import_list = list(s.strip() for s in
+                               m_import.groups()[0].split(','))
             m_from = re.match(FROM, file_data, re.S)
-            from_list = list(s.strip() for s in m_from.groups()[0].split(','))
+            from_list = list(s.strip() for s in
+                             m_from.groups()[0].split(','))
             class_name = re.match(CLASS_NAME, file_data, re.S).groups()[0]
-            body_lines = re.match(BODY, file_data, re.S).groups()[0].split('\n')
+            body_lines = re.match(BODY, file_data,
+                                  re.S).groups()[0].split('\n')
             extends = ''
             new_lines = []
             for idx, line in enumerate(body_lines):
