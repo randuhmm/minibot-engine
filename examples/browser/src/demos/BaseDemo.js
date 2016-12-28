@@ -1,5 +1,5 @@
 
-var minibot = require('minibot');
+import minibot from 'minibot';
 var CanvasScene = minibot.display.html.CanvasScene;
 var Bind = minibot.core.Utils.Bind;
 

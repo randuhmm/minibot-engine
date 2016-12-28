@@ -1,5 +1,6 @@
 
 import Resource from 'minibot/resource/Resource';
+import * as Utils from 'minibot/core/Utils';
 
 class ImageResource extends Resource
 /** @lends resource.ImageResource# */
@@ -28,8 +29,8 @@ class ImageResource extends Resource
     this.loaded = true;
     if(this.src != null) {
       this.img = new Image();
-      this.img.addEventListener("load", this.handleLoadImageSuccess.bindAsEventListener(this, callback), false);
-      this.img.addEventListener("error", this.handleLoadImageFailure.bindAsEventListener(this, callback), false);
+      this.img.addEventListener("load", Utils.BindAsEventListener(this.handleLoadImageSuccess, this, callback), false);
+      this.img.addEventListener("error", Utils.BindAsEventListener(this.handleLoadImageFailure, this, callback), false);
       this.img.src = this.src;
     } else {
       callback();
@@ -49,5 +50,7 @@ class ImageResource extends Resource
   }
 
 }
+
+ImageResource.TYPE = 1;
 
 export default ImageResource

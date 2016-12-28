@@ -1,6 +1,6 @@
 
 import Scene from 'minibot/display/scene/Scene';
-import {Bind} from 'minibot/core/Utils';
+import {Bind, BindAsEventListener} from 'minibot/core/Utils';
 import MouseEvent from 'minibot/event/MouseEvent';
 import TouchEvent from 'minibot/event/TouchEvent';
 import KeyboardEvent from 'minibot/event/KeyboardEvent';
@@ -72,7 +72,7 @@ class CanvasScene extends Scene
 
       if(this.eventTypes & Scene.MOUSE_EVENTS) {
         // Mouse Event Handling
-        this.mouseBfx = Bind(this.handleMouseEvent, this);
+        this.mouseBfx = BindAsEventListener(this.handleMouseEvent, this);
         this.element.onmousedown = this.mouseBfx;
         this.element.onmouseup = this.mouseBfx;
         this.element.onmousemove  = this.mouseBfx;
@@ -80,7 +80,7 @@ class CanvasScene extends Scene
 
       if(this.eventTypes & Scene.TOUCH_EVENTS) {
         // Mouse Event Handling
-        this.touchBfx = Bind(this.handleTouchEvent, this);
+        this.touchBfx = BindAsEventListener(this.handleTouchEvent, this);
         this.element.ontouchstart = this.touchBfx;
         this.element.ontouchend = this.touchBfx;
         this.element.ontouchmove = this.touchBfx;
@@ -88,7 +88,7 @@ class CanvasScene extends Scene
 
       if(this.eventTypes & Scene.KEYBOARD_EVENTS) {
         // Keyboard Event Handling
-        this.keyboardBfx = Bind(this.handleKeyboardEvent, this);
+        this.keyboardBfx = BindAsEventListener(this.handleKeyboardEvent, this);
         document.onkeydown = this.keyboardBfx;
         document.onkeyup = this.keyboardBfx;
       }

@@ -61,6 +61,8 @@ class SpriteResource extends Resource
   }
 }
 
+SpriteResource.TYPE = 2;
+
 export default SpriteResource
 
 

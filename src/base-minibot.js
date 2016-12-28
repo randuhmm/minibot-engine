@@ -1,5 +1,5 @@
 
-var core, display, engine, event, geom, graphics, resource, system;
+var core, display, engine, event, geom, graphics, network, resource;
 
 /** @namespace Core namespace */
 core = {};
@@ -68,6 +68,10 @@ graphics = {};
 graphics.Color = require('minibot/graphics/Color').default;
 graphics.Pattern = require('minibot/graphics/Pattern').default;
 
+
+network = {};
+network.Ajax = require('minibot/network/Ajax').default;
+
 // /** @namespace Resource namespace */
 resource = {};
 resource.Resource = require('minibot/resource/Resource').default;
@@ -76,16 +80,13 @@ resource.AnimationResource = require('minibot/resource/AnimationResource').defau
 resource.ImageResource = require('minibot/resource/ImageResource').default;
 resource.SpriteResource = require('minibot/resource/SpriteResource').default;
 
-/** @namespace System namespace */
-system = require('minibot/system/web').default;
-
-export {
+export default {
   core,
   display,
   engine,
   event,
   geom,
   graphics,
-  resource,
-  system
+  network,
+  resource
 };

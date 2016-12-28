@@ -77,4 +77,6 @@ class AnimationResource extends Resource
 
 }
 
-export default AnimationResource
+AnimationResource.TYPE = 3;
+
+export default AnimationResource;

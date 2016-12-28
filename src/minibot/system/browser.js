@@ -1,4 +1,5 @@
-import CanvasScene from 'minibot/display/html/CanvasScene'
+
+import CanvasScene from 'minibot/display/html/CanvasScene';
 
 (function() {
   var lastTime = 0;

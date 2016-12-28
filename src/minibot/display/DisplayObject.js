@@ -37,8 +37,8 @@ DisplayObject.prototype.onAddedToParent = function() {
  * @param {Integer} id The id of the resource.
  */
 DisplayObject.AddResource = function(klass, type, id) {
-  if(klass.RESOURCES == undefined) klass.RESOURCES = {};
-  if(klass.RESOURCES[type] == undefined) klass.RESOURCES[type] = {};
+  if(klass.RESOURCES === undefined) klass.RESOURCES = {};
+  if(klass.RESOURCES[type] === undefined) klass.RESOURCES[type] = {};
   klass.RESOURCES[type][id] = null;
 };
 
@@ -48,7 +48,7 @@ DisplayObject.AddResource = function(klass, type, id) {
  * @param {object} object
  */
 DisplayObject.AddObject = function(klass, object) {
-  if(klass.OBJECTS == undefined) klass.OBJECTS = [];
+  if(klass.OBJECTS === undefined) klass.OBJECTS = [];
   klass.OBJECTS.push(object);
 };
 
@@ -60,9 +60,9 @@ DisplayObject.AddObject = function(klass, object) {
  * @returns {resource} The resource. A result of null means the resource is not on the map.
  */
 DisplayObject.GetResource = function(klass, type, id) {
-  if(klass.RESOURCES == undefined) return null;
-  if(klass.RESOURCES[type] == undefined) return null;
-  if(klass.RESOURCES[type][id] == undefined) return null;
+  if(klass.RESOURCES === undefined) return null;
+  if(klass.RESOURCES[type] === undefined) return null;
+  if(klass.RESOURCES[type][id] === undefined) return null;
   return klass.RESOURCES[type][id];
 };
 

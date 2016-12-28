@@ -1,4 +1,5 @@
 import Manager from 'minibot/core/Manager';
+import * as Utils from 'minibot/core/Utils';
 
 
 class ResourceManager extends Manager
@@ -73,7 +74,7 @@ class ResourceManager extends Manager
     }
 
     if(this.typeIndex >= this.typeOrder.length) {
-      this.completeCallback.bind(this).defer();
+      Utils.Defer(this.completeCallback, this);
       return;
     }
 
@@ -101,7 +102,7 @@ class ResourceManager extends Manager
     if(resource.isLoaded()) {
       this.handleResourceLoaded();
     } else {
-      resource.load(this, this.handleResourceLoaded.bind(this));
+      resource.load(this, Utils.Bind(this.handleResourceLoaded, this));
     }
   }
 
@@ -112,7 +113,7 @@ class ResourceManager extends Manager
     this.progressCallback(progress);
 
     if(this.typeLoadedCount >= this.typeCount[this.typeIndex]) {
-      this.loadNextType.bind(this).defer();
+      Utils.Defer(this.loadNextType, this);
     }
   }
 
@@ -126,7 +127,16 @@ class ResourceManager extends Manager
 
 }
 
+ResourceManager.getInstance = function(key)
+{
+  if(!Manager.hasCore(key)) {
+    new ResourceManager(key);
+  }
+  var retVal = Manager.getInstance(key);
+  return retVal;
+};
 
-export default ResourceManager
+
+export default ResourceManager;
 
 

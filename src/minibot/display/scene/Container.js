@@ -255,6 +255,7 @@ class Container extends SceneDisplayObject
     if(!this.scalable) return;
 
     var s = scale / this.scale;
+    var d, l, layer, displayObject;
 
     for(l = 0; l < this.layers.length; l++) {
       layer = this.layers[l];

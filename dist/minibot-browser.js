@@ -1,4 +1,102 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var core, display, engine, event, geom, graphics, network, resource;
+
+/** @namespace Core namespace */
+core = {};
+core.Manager = require('minibot/core/Manager').default;
+core.Utils = require('minibot/core/Utils');
+
+/** @namespace Display namespace */
+display = {};
+display.DisplayObject = require('minibot/display/DisplayObject').default;
+
+/** @namespace Display.Scene namespace */
+display.scene = {};
+display.scene.SceneDisplayObject = require('minibot/display/scene/SceneDisplayObject').default;
+display.scene.Animation = require('minibot/display/scene/Animation').default;
+display.scene.Button = require('minibot/display/scene/Button').default;
+display.scene.Container = require('minibot/display/scene/Container').default;
+//display.scene.Mask = require('minibot/display/scene/Mask').default;
+display.scene.Rect = require('minibot/display/scene/Rect').default;
+//display.scene.RoundedRect = require('minibot/display/scene/RoundedRect').default;
+display.scene.Sprite = require('minibot/display/scene/Sprite').default;
+display.scene.Scene = require('minibot/display/scene/Scene').default;
+display.scene.Text = require('minibot/display/scene/Text').default;
+display.scene.TextStyle = require('minibot/display/scene/TextStyle').default;
+
+/** @namespace Display.Html namespace */
+display.html = {};
+display.html.HtmlElement = require('minibot/display/html/HtmlElement').default;
+display.html.CanvasScene = require('minibot/display/html/CanvasScene').default;
+
+// /** @namespace Engine namespace */
+engine = {};
+engine.Engine = require('minibot/engine/Engine').default;
+engine.EngineComponent = require('minibot/engine/EngineComponent').default;
+engine.EngineFactory = require('minibot/engine/EngineFactory').default;
+engine.EngineObject = require('minibot/engine/EngineObject').default;
+engine.EngineSystem = require('minibot/engine/EngineSystem').default;
+
+engine.component = {};
+engine.component.DisplayComponent = require('minibot/engine/component/DisplayComponent').default;
+engine.component.PhysicsComponent = require('minibot/engine/component/PhysicsComponent').default;
+engine.component.InputComponent = require('minibot/engine/component/InputComponent').default;
+
+engine.system = {};
+engine.system.DisplaySystem = require('minibot/engine/system/DisplaySystem').default;
+
+/** @namespace Event namespace */
+event = {};
+event.EventDispatcher = require('minibot/event/EventDispatcher').default;
+event.BaseEvent = require('minibot/event/BaseEvent').default;
+event.MouseEvent = require('minibot/event/MouseEvent').default;
+event.TouchEvent = require('minibot/event/TouchEvent').default;
+event.ButtonEvent = require('minibot/event/ButtonEvent').default;
+event.EngineEvent = require('minibot/event/EngineEvent').default;
+event.KeyboardEvent = require('minibot/event/KeyboardEvent').default;
+
+event.enum = {};
+event.enum.Keyboard = require('minibot/event/enum/Keyboard').default;
+
+/** @namespace Geom namespace */
+geom = {};
+geom.Vector2 = require('minibot/geom/Vector2').default;
+geom.Rectangle = require('minibot/geom/Rectangle').default;
+
+/** @namespace Graphics namespace */
+graphics = {};
+graphics.Color = require('minibot/graphics/Color').default;
+graphics.Pattern = require('minibot/graphics/Pattern').default;
+
+network = {};
+network.Ajax = require('minibot/network/Ajax').default;
+
+// /** @namespace Resource namespace */
+resource = {};
+resource.Resource = require('minibot/resource/Resource').default;
+resource.ResourceManager = require('minibot/resource/ResourceManager').default;
+resource.AnimationResource = require('minibot/resource/AnimationResource').default;
+resource.ImageResource = require('minibot/resource/ImageResource').default;
+resource.SpriteResource = require('minibot/resource/SpriteResource').default;
+
+exports.default = {
+  core: core,
+  display: display,
+  engine: engine,
+  event: event,
+  geom: geom,
+  graphics: graphics,
+  network: network,
+  resource: resource
+};
+
+},{"minibot/core/Manager":2,"minibot/core/Utils":3,"minibot/display/DisplayObject":4,"minibot/display/html/CanvasScene":6,"minibot/display/html/HtmlElement":7,"minibot/display/scene/Animation":8,"minibot/display/scene/Button":10,"minibot/display/scene/Container":11,"minibot/display/scene/Rect":12,"minibot/display/scene/Scene":13,"minibot/display/scene/SceneDisplayObject":14,"minibot/display/scene/Sprite":15,"minibot/display/scene/Text":16,"minibot/display/scene/TextStyle":17,"minibot/engine/Engine":18,"minibot/engine/EngineComponent":19,"minibot/engine/EngineFactory":20,"minibot/engine/EngineObject":21,"minibot/engine/EngineSystem":22,"minibot/engine/component/DisplayComponent":23,"minibot/engine/component/InputComponent":24,"minibot/engine/component/PhysicsComponent":25,"minibot/engine/system/DisplaySystem":26,"minibot/event/BaseEvent":27,"minibot/event/ButtonEvent":28,"minibot/event/EngineEvent":29,"minibot/event/EventDispatcher":30,"minibot/event/KeyboardEvent":32,"minibot/event/MouseEvent":33,"minibot/event/TouchEvent":34,"minibot/event/enum/Keyboard":35,"minibot/geom/Rectangle":36,"minibot/geom/Vector2":37,"minibot/graphics/Color":38,"minibot/graphics/Pattern":39,"minibot/network/Ajax":40,"minibot/resource/AnimationResource":41,"minibot/resource/ImageResource":42,"minibot/resource/Resource":43,"minibot/resource/ResourceManager":44,"minibot/resource/SpriteResource":45}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21,16 +119,37 @@ var Manager
 function Manager(key) {
   _classCallCheck(this, Manager);
 
-  if (Manager.instanceMap[key] != null) {
+  if (key in Manager.instanceMap) {
     throw new Error(Manager.MULTITON_MSG);
   }
   Manager.instanceMap[key] = this;
 };
 
+Manager.instanceMap = [];
+
+Manager.MULTITON_MSG = "Manager instance for this Multiton key already constructed!";
+
+Manager.getInstance = function (key) {
+  if (null === key) return null;
+  if (Manager.instanceMap[key] === null) {
+    Manager.instanceMap[key] = new Manager(key);
+  }
+  return Manager.instanceMap[key];
+};
+
+Manager.hasCore = function (key) {
+  return key in Manager.instanceMap;
+};
+
+Manager.removeCore = function (key) {
+  if (Manager.instanceMap[key] === null) return;
+  delete Manager.instanceMap[key];
+};
+
 exports.default = Manager;
 
-},{}],2:[function(require,module,exports){
-"use strict";
+},{}],3:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -49,8 +168,15 @@ var BindAsEventListener = function BindAsEventListener(fx, ctx) {
 };
 
 var Bind = function Bind(fx, ctx) {
+  var args = Array.prototype.slice.call(arguments, 2);
   return function () {
-    fx.apply(ctx, arguments);
+    var _args;
+    if (arguments.length > 0) {
+      _args = args.concat(Array.prototype.slice.call(arguments));
+    } else {
+      _args = args;
+    }
+    fx.apply(ctx, _args);
   };
 };
 
@@ -61,11 +187,58 @@ var Defer = function Defer(fx, ctx) {
   }, 0);
 };
 
+var StringToQueryParams = function StringToQueryParams(str, separator) {
+  var match = str.trim().match(/([^?#]*)(#.*)?$/);
+  var params = {};
+  if (match) {
+    var segments = match[1].split(separator || '&');
+    var pair, key, value;
+    for (var i = 0; i < segments.length; i++) {
+      pair = segments[i];
+      if ((pair = pair.split('='))[0]) {
+        key = decodeURIComponent(pair.shift());
+        value = pair.length > 1 ? pair.join('=') : pair[0];
+        if (key in params) {
+          if (!Object.isArray(params[key])) params[key] = [params[key]];
+          params[key].push(value);
+        } else {
+          params[key] = value;
+        }
+      }
+    }
+  }
+  return params;
+};
+
+// var ParamsToQueryString = function(params) {
+//   var results = [];
+//   var key, value;
+//   for(key in params) {
+//     value = params[key];
+//     key = encodeURIComponent(key);
+
+//     if (value && typeof value == 'object') {
+//       if (isArray(value)) {
+//         var queryValues = [];
+//         for (var i = 0, len = values.length, value; i < len; i++) {
+//           value = values[i];
+//           queryValues.push(toQueryPair(key, value));
+//         }
+//         return results.concat(queryValues);
+//       }
+//     } else results.push(toQueryPair(key, values));
+//   }
+//     return results;
+//   }).join('&');
+// }
+
+
 exports.Bind = Bind;
 exports.BindAsEventListener = BindAsEventListener;
 exports.Defer = Defer;
+exports.StringToQueryParams = StringToQueryParams;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -115,8 +288,8 @@ DisplayObject.prototype.onAddedToParent = function () {
  * @param {Integer} id The id of the resource.
  */
 DisplayObject.AddResource = function (klass, type, id) {
-  if (klass.RESOURCES == undefined) klass.RESOURCES = {};
-  if (klass.RESOURCES[type] == undefined) klass.RESOURCES[type] = {};
+  if (klass.RESOURCES === undefined) klass.RESOURCES = {};
+  if (klass.RESOURCES[type] === undefined) klass.RESOURCES[type] = {};
   klass.RESOURCES[type][id] = null;
 };
 
@@ -126,7 +299,7 @@ DisplayObject.AddResource = function (klass, type, id) {
  * @param {object} object
  */
 DisplayObject.AddObject = function (klass, object) {
-  if (klass.OBJECTS == undefined) klass.OBJECTS = [];
+  if (klass.OBJECTS === undefined) klass.OBJECTS = [];
   klass.OBJECTS.push(object);
 };
 
@@ -138,9 +311,9 @@ DisplayObject.AddObject = function (klass, object) {
  * @returns {resource} The resource. A result of null means the resource is not on the map.
  */
 DisplayObject.GetResource = function (klass, type, id) {
-  if (klass.RESOURCES == undefined) return null;
-  if (klass.RESOURCES[type] == undefined) return null;
-  if (klass.RESOURCES[type][id] == undefined) return null;
+  if (klass.RESOURCES === undefined) return null;
+  if (klass.RESOURCES[type] === undefined) return null;
+  if (klass.RESOURCES[type][id] === undefined) return null;
   return klass.RESOURCES[type][id];
 };
 
@@ -150,7 +323,7 @@ DisplayObject.ALIGN_VERT_CENTER = 2;
 
 exports.default = DisplayObject;
 
-},{"minibot/event/EventDispatcher":29}],4:[function(require,module,exports){
+},{"minibot/event/EventDispatcher":30}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -216,7 +389,7 @@ var CanvasBuffer = function (_Buffer) {
 
 exports.default = CanvasBuffer;
 
-},{"minibot/display/scene/Buffer":8}],5:[function(require,module,exports){
+},{"minibot/display/scene/Buffer":9}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -330,7 +503,7 @@ var CanvasScene = function (_Scene) {
 
       if (_this.eventTypes & _Scene3.default.MOUSE_EVENTS) {
         // Mouse Event Handling
-        _this.mouseBfx = (0, _Utils.Bind)(_this.handleMouseEvent, _this);
+        _this.mouseBfx = (0, _Utils.BindAsEventListener)(_this.handleMouseEvent, _this);
         _this.element.onmousedown = _this.mouseBfx;
         _this.element.onmouseup = _this.mouseBfx;
         _this.element.onmousemove = _this.mouseBfx;
@@ -338,7 +511,7 @@ var CanvasScene = function (_Scene) {
 
       if (_this.eventTypes & _Scene3.default.TOUCH_EVENTS) {
         // Mouse Event Handling
-        _this.touchBfx = (0, _Utils.Bind)(_this.handleTouchEvent, _this);
+        _this.touchBfx = (0, _Utils.BindAsEventListener)(_this.handleTouchEvent, _this);
         _this.element.ontouchstart = _this.touchBfx;
         _this.element.ontouchend = _this.touchBfx;
         _this.element.ontouchmove = _this.touchBfx;
@@ -346,7 +519,7 @@ var CanvasScene = function (_Scene) {
 
       if (_this.eventTypes & _Scene3.default.KEYBOARD_EVENTS) {
         // Keyboard Event Handling
-        _this.keyboardBfx = (0, _Utils.Bind)(_this.handleKeyboardEvent, _this);
+        _this.keyboardBfx = (0, _Utils.BindAsEventListener)(_this.handleKeyboardEvent, _this);
         document.onkeydown = _this.keyboardBfx;
         document.onkeyup = _this.keyboardBfx;
       }
@@ -613,7 +786,7 @@ var CanvasScene = function (_Scene) {
 
 exports.default = CanvasScene;
 
-},{"minibot/core/Utils":2,"minibot/display/html/CanvasBuffer":4,"minibot/display/scene/Scene":12,"minibot/event/KeyboardEvent":31,"minibot/event/MouseEvent":32,"minibot/event/TouchEvent":33,"minibot/event/enum/Keyboard":34,"minibot/graphics/Color":37}],6:[function(require,module,exports){
+},{"minibot/core/Utils":3,"minibot/display/html/CanvasBuffer":5,"minibot/display/scene/Scene":13,"minibot/event/KeyboardEvent":32,"minibot/event/MouseEvent":33,"minibot/event/TouchEvent":34,"minibot/event/enum/Keyboard":35,"minibot/graphics/Color":38}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -812,7 +985,7 @@ var HtmlElement = function (_DisplayObject) {
 
 exports.default = HtmlElement;
 
-},{"minibot/core/Utils":2,"minibot/display/DisplayObject":3,"minibot/event/HtmlEvent":30}],7:[function(require,module,exports){
+},{"minibot/core/Utils":3,"minibot/display/DisplayObject":4,"minibot/event/HtmlEvent":31}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -973,7 +1146,7 @@ var Animation = function (_SceneDisplayObject) {
 
 exports.default = Animation;
 
-},{"minibot/display/scene/SceneDisplayObject":13}],8:[function(require,module,exports){
+},{"minibot/display/scene/SceneDisplayObject":14}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1039,7 +1212,7 @@ var Buffer = function (_Container) {
 
 exports.default = Buffer;
 
-},{"./Container":10}],9:[function(require,module,exports){
+},{"./Container":11}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1378,7 +1551,7 @@ var Button = function (_SceneDisplayObject) {
 
 exports.default = Button;
 
-},{"./SceneDisplayObject":13,"minibot/core/Utils":2,"minibot/event/ButtonEvent":27,"minibot/event/MouseEvent":32,"minibot/event/TouchEvent":33}],10:[function(require,module,exports){
+},{"./SceneDisplayObject":14,"minibot/core/Utils":3,"minibot/event/ButtonEvent":28,"minibot/event/MouseEvent":33,"minibot/event/TouchEvent":34}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1653,6 +1826,7 @@ var Container = function (_SceneDisplayObject) {
       if (!this.scalable) return;
 
       var s = scale / this.scale;
+      var d, l, layer, displayObject;
 
       for (l = 0; l < this.layers.length; l++) {
         layer = this.layers[l];
@@ -1698,7 +1872,7 @@ var Container = function (_SceneDisplayObject) {
 
 exports.default = Container;
 
-},{"./SceneDisplayObject":13}],11:[function(require,module,exports){
+},{"./SceneDisplayObject":14}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1784,7 +1958,7 @@ var Rect = function (_SceneDisplayObject) {
 
 exports.default = Rect;
 
-},{"./SceneDisplayObject":13,"minibot/graphics/Color":37,"minibot/graphics/Pattern":38}],12:[function(require,module,exports){
+},{"./SceneDisplayObject":14,"minibot/graphics/Color":38,"minibot/graphics/Pattern":39}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2108,7 +2282,7 @@ Scene.TOUCH_EVENTS = 4;
 
 exports.default = Scene;
 
-},{"./Container":10,"minibot/event/EventDispatcher":29}],13:[function(require,module,exports){
+},{"./Container":11,"minibot/event/EventDispatcher":30}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2324,7 +2498,7 @@ var SceneDisplayObject = function (_DisplayObject) {
 
 exports.default = SceneDisplayObject;
 
-},{"minibot/display/DisplayObject":3}],14:[function(require,module,exports){
+},{"minibot/display/DisplayObject":4}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2408,7 +2582,7 @@ var Sprite = function (_SceneDisplayObject) {
 
 exports.default = Sprite;
 
-},{"minibot/display/scene/SceneDisplayObject":13}],15:[function(require,module,exports){
+},{"minibot/display/scene/SceneDisplayObject":14}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2507,7 +2681,7 @@ var Text = function (_SceneDisplayObject) {
 
 exports.default = Text;
 
-},{"minibot/display/scene/SceneDisplayObject":13}],16:[function(require,module,exports){
+},{"minibot/display/scene/SceneDisplayObject":14}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2591,7 +2765,7 @@ var TextStyle
 
 exports.default = TextStyle;
 
-},{"minibot/graphics/Color":37}],17:[function(require,module,exports){
+},{"minibot/graphics/Color":38}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2783,7 +2957,7 @@ var Engine = function (_EventDispatcher) {
 
 exports.default = Engine;
 
-},{"minibot/event/EventDispatcher":29}],18:[function(require,module,exports){
+},{"minibot/event/EventDispatcher":30}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2921,10 +3095,10 @@ var EngineComponent = function () {
 
 exports.default = EngineComponent;
 
-},{"minibot/event/EngineEvent":28}],19:[function(require,module,exports){
+},{"minibot/event/EngineEvent":29}],20:[function(require,module,exports){
 "use strict";
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3061,7 +3235,7 @@ var EngineObject = function (_EventDispatcher) {
 
 exports.default = EngineObject;
 
-},{"minibot/event/EngineEvent":28,"minibot/event/EventDispatcher":29}],21:[function(require,module,exports){
+},{"minibot/event/EngineEvent":29,"minibot/event/EventDispatcher":30}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3170,7 +3344,7 @@ var EngineSystem = function () {
 
 exports.default = EngineSystem;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3234,7 +3408,7 @@ var DisplayComponent = function (_EngineComponent) {
 
 exports.default = DisplayComponent;
 
-},{"minibot/engine/EngineComponent":18}],23:[function(require,module,exports){
+},{"minibot/engine/EngineComponent":19}],24:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3267,7 +3441,7 @@ var InputComponent = function (_EngineComponent) {
 
 exports.default = InputComponent;
 
-},{"minibot/engine/EngineComponent":18}],24:[function(require,module,exports){
+},{"minibot/engine/EngineComponent":19}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3300,7 +3474,7 @@ var PhysicsComponent = function (_EngineComponent) {
 
 exports.default = PhysicsComponent;
 
-},{"minibot/engine/EngineComponent":18}],25:[function(require,module,exports){
+},{"minibot/engine/EngineComponent":19}],26:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3407,7 +3581,7 @@ var DisplaySystem = function (_EngineSystem) {
 
 exports.default = DisplaySystem;
 
-},{"minibot/engine/EngineSystem":21}],26:[function(require,module,exports){
+},{"minibot/engine/EngineSystem":22}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3475,7 +3649,7 @@ var BaseEvent
 
 exports.default = BaseEvent;
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3533,7 +3707,7 @@ ButtonEvent.SELECT = "buttonSelect";
 
 exports.default = ButtonEvent;
 
-},{"./BaseEvent":26}],28:[function(require,module,exports){
+},{"./BaseEvent":27}],29:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3597,7 +3771,7 @@ var EngineEvent = function (_BaseEvent) {
 
 exports.default = EngineEvent;
 
-},{"./BaseEvent":26}],29:[function(require,module,exports){
+},{"./BaseEvent":27}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3715,10 +3889,10 @@ var EventDispatcher
 
 exports.default = EventDispatcher;
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3774,7 +3948,7 @@ KeyboardEvent.KEY_UP = "keyUp";
 
 exports.default = KeyboardEvent;
 
-},{"./BaseEvent":26}],32:[function(require,module,exports){
+},{"./BaseEvent":27}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3846,7 +4020,7 @@ MouseEvent.MOUSE_MOVE = "mouseMove";
 
 exports.default = MouseEvent;
 
-},{"./BaseEvent":26}],33:[function(require,module,exports){
+},{"./BaseEvent":27}],34:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3909,7 +4083,7 @@ TouchEvent.TOUCH_MOVE = "touchMove";
 
 exports.default = TouchEvent;
 
-},{"./BaseEvent":26}],34:[function(require,module,exports){
+},{"./BaseEvent":27}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3963,7 +4137,7 @@ exports.default = {
 
 };
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3998,7 +4172,7 @@ function Rectangle(x, y, w, h) {
 
 exports.default = Rectangle;
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4264,7 +4438,7 @@ Vector2.temp = new Vector2();
 
 exports.default = Vector2;
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4416,7 +4590,7 @@ Color.TYPE = 'color';
 
 exports.default = Color;
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4478,7 +4652,569 @@ var Pattern
 
 exports.default = Pattern;
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Utils = require('minibot/core/Utils');
+
+var Utils = _interopRequireWildcard(_Utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _toString = Object.prototype.toString,
+    NULL_TYPE = 'Null',
+    UNDEFINED_TYPE = 'Undefined',
+    BOOLEAN_TYPE = 'Boolean',
+    NUMBER_TYPE = 'Number',
+    STRING_TYPE = 'String',
+    OBJECT_TYPE = 'Object',
+    FUNCTION_CLASS = '[object Function]',
+    BOOLEAN_CLASS = '[object Boolean]',
+    NUMBER_CLASS = '[object Number]',
+    STRING_CLASS = '[object String]',
+    ARRAY_CLASS = '[object Array]',
+    DATE_CLASS = '[object Date]';
+
+var $break = {};
+
+function extend(destination, source) {
+  for (var property in source) {
+    destination[property] = source[property];
+  }return destination;
+}
+
+function isHash(object) {
+  return object instanceof Object;
+}
+
+function isFunction(object) {
+  return _toString.call(object) === FUNCTION_CLASS;
+}
+
+function isString(object) {
+  return _toString.call(object) === STRING_CLASS;
+}
+
+function isNumber(object) {
+  return _toString.call(object) === NUMBER_CLASS;
+}
+
+function isDate(object) {
+  return _toString.call(object) === DATE_CLASS;
+}
+
+function isUndefined(object) {
+  return typeof object === "undefined";
+}
+
+function include(arr, object) {
+  if (isFunction(arr.indexOf)) if (arr.indexOf(object) != -1) return true;
+
+  var found = false;
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] == object) {
+      found = true;
+      break;
+    }
+  }
+  return found;
+}
+
+function isJSON(str) {
+  if (str.blank()) return false;
+  str = str.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@');
+  str = str.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
+  str = str.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
+  return (/^[\],:{}\s]*$/.test(str)
+  );
+}
+
+function evalJSON(json, sanitize) {
+  try {
+    if (!sanitize || isJSON(json)) return eval('(' + json + ')');
+  } catch (e) {}
+  throw new SyntaxError('Badly formed JSON string: ' + json);
+}
+
+var Try = {
+  these: function these() {
+    var returnValue;
+
+    for (var i = 0, length = arguments.length; i < length; i++) {
+      var lambda = arguments[i];
+      try {
+        returnValue = lambda();
+        break;
+      } catch (e) {}
+    }
+
+    return returnValue;
+  }
+};
+
+var Ajax = {
+  getTransport: function getTransport() {
+    return Try.these(function () {
+      return new XMLHttpRequest();
+    }, function () {
+      return new ActiveXObject('Msxml2.XMLHTTP');
+    }, function () {
+      return new ActiveXObject('Microsoft.XMLHTTP');
+    }) || false;
+  },
+
+  activeRequestCount: 0
+};
+
+var Responders = {
+  responders: [],
+
+  register: function register(responder) {
+    if (!include(this, responder)) this.responders.push(responder);
+  },
+
+  unregister: function unregister(responder) {
+    this.responders = this.responders.without(responder);
+  },
+
+  dispatch: function dispatch(callback, request, transport, json) {
+    var responder;
+    for (var i = 0; i < this.responders.length; i++) {
+      responder = this.responders[i];
+      if (isFunction(responder[callback])) {
+        try {
+          responder[callback].apply(responder, [request, transport, json]);
+        } catch (e) {}
+      }
+    }
+  }
+};
+
+//extend(Ajax.Responders, Enumerable);
+
+Responders.register({
+  onCreate: function onCreate() {
+    Ajax.activeRequestCount++;
+  },
+  onComplete: function onComplete() {
+    Ajax.activeRequestCount--;
+  }
+});
+
+var Base = function Base(options) {
+  _classCallCheck(this, Base);
+
+  this.options = {
+    method: 'post',
+    asynchronous: true,
+    contentType: 'application/x-www-form-urlencoded',
+    encoding: 'UTF-8',
+    parameters: '',
+    evalJSON: true,
+    evalJS: true
+  };
+  extend(this.options, options || {});
+
+  this.options.method = this.options.method.toLowerCase();
+
+  if (isHash(this.options.parameters)) this.options.parameters = this.options.parameters.toObject();
+};
+
+var Request = function (_Base) {
+  _inherits(Request, _Base);
+
+  // = Class.create(Ajax.Base, {  _complete: false,
+
+  function Request(url, options) {
+    _classCallCheck(this, Request);
+
+    var _this = _possibleConstructorReturn(this, (Request.__proto__ || Object.getPrototypeOf(Request)).call(this, options));
+
+    _this.complete = false;
+    _this.transport = Ajax.getTransport();
+    _this.request(url);
+    return _this;
+  }
+
+  _createClass(Request, [{
+    key: 'request',
+    value: function request(url) {
+      this.url = url;
+      this.method = this.options.method;
+      var params = isString(this.options.parameters) ? this.options.parameters : toQueryString(this.options.parameters);
+
+      if (!include(['get', 'post'], this.method)) {
+        params += (params ? '&' : '') + "_method=" + this.method;
+        this.method = 'post';
+      }
+
+      if (params && this.method === 'get') {
+        this.url += (include(this.url, '?') ? '&' : '?') + params;
+      }
+
+      this.parameters = Utils.StringToQueryParams(params);
+
+      try {
+        var response = new Response(this);
+        if (this.options.onCreate) this.options.onCreate(response);
+        Responders.dispatch('onCreate', this, response);
+
+        this.transport.open(this.method.toUpperCase(), this.url, this.options.asynchronous);
+
+        if (this.options.asynchronous) Utils.Defer(this.respondToReadyState, this, 1);
+
+        this.transport.onreadystatechange = Utils.Bind(this.onStateChange, this);
+        this.setRequestHeaders();
+
+        this.body = this.method == 'post' ? this.options.postBody || params : null;
+        this.transport.send(this.body);
+
+        /* Force Firefox to handle ready state 4 for synchronous requests */
+        if (!this.options.asynchronous && this.transport.overrideMimeType) this.onStateChange();
+      } catch (e) {
+        this.dispatchException(e);
+      }
+    }
+  }, {
+    key: 'onStateChange',
+    value: function onStateChange() {
+      var readyState = this.transport.readyState;
+      if (readyState > 1 && !(readyState == 4 && this._complete)) this.respondToReadyState(this.transport.readyState);
+    }
+  }, {
+    key: 'setRequestHeaders',
+    value: function setRequestHeaders() {
+      var headers = {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'text/javascript, text/html, application/xml, text/xml, */*'
+      };
+
+      if (this.method == 'post') {
+        headers['Content-type'] = this.options.contentType + (this.options.encoding ? '; charset=' + this.options.encoding : '');
+
+        /* Force "Connection: close" for older Mozilla browsers to work
+         * around a bug where XMLHttpRequest sends an incorrect
+         * Content-length header. See Mozilla Bugzilla #246651.
+         */
+        if (this.transport.overrideMimeType && (navigator.userAgent.match(/Gecko\/(\d{4})/) || [0, 2005])[1] < 2005) headers['Connection'] = 'close';
+      }
+
+      if (_typeof(this.options.requestHeaders) == 'object') {
+        var extras = this.options.requestHeaders;
+
+        if (isFunction(extras.push)) for (var i = 0, length = extras.length; i < length; i += 2) {
+          headers[extras[i]] = extras[i + 1];
+        } else $H(extras).each(function (pair) {
+          headers[pair.key] = pair.value;
+        });
+      }
+
+      for (var name in headers) {
+        this.transport.setRequestHeader(name, headers[name]);
+      }
+    }
+  }, {
+    key: 'success',
+    value: function success() {
+      var status = this.getStatus();
+      return !status || status >= 200 && status < 300 || status == 304;
+    }
+  }, {
+    key: 'getStatus',
+    value: function getStatus() {
+      try {
+        if (this.transport.status === 1223) return 204;
+        return this.transport.status || 0;
+      } catch (e) {
+        return 0;
+      }
+    }
+  }, {
+    key: 'respondToReadyState',
+    value: function respondToReadyState(readyState) {
+      var state = Request.Events[readyState],
+          response = new Response(this);
+
+      if (state == 'Complete') {
+        try {
+          this._complete = true;
+          (this.options['on' + response.status] || this.options['on' + (this.success() ? 'Success' : 'Failure')] || function () {})(response, response.headerJSON);
+        } catch (e) {
+          this.dispatchException(e);
+        }
+
+        var contentType = response.getHeader('Content-type');
+        if (this.options.evalJS == 'force' || this.options.evalJS && this.isSameOrigin() && contentType && contentType.match(/^\s*(text|application)\/(x-)?(java|ecma)script(;.*)?\s*$/i)) this.evalResponse();
+      }
+
+      try {
+        (this.options['on' + state] || function () {})(response, response.headerJSON);
+        Responders.dispatch('on' + state, this, response, response.headerJSON);
+      } catch (e) {
+        this.dispatchException(e);
+      }
+
+      if (state == 'Complete') {
+        this.transport.onreadystatechange = function () {};
+      }
+    }
+  }, {
+    key: 'isSameOrigin',
+    value: function isSameOrigin() {
+      var m = this.url.match(/^\s*https?:\/\/[^\/]*/);
+      return !m || m[0] == '#{protocol}//#{domain}#{port}'.interpolate({
+        protocol: location.protocol,
+        domain: document.domain,
+        port: location.port ? ':' + location.port : ''
+      });
+    }
+  }, {
+    key: 'getHeader',
+    value: function getHeader(name) {
+      try {
+        return this.transport.getResponseHeader(name) || null;
+      } catch (e) {
+        return null;
+      }
+    }
+  }, {
+    key: 'evalResponse',
+    value: function evalResponse() {
+      try {
+        return eval((this.transport.responseText || '').unfilterJSON());
+      } catch (e) {
+        this.dispatchException(e);
+      }
+    }
+  }, {
+    key: 'dispatchException',
+    value: function dispatchException(exception) {
+      (this.options.onException || function () {})(this, exception);
+      Responders.dispatch('onException', this, exception);
+    }
+  }]);
+
+  return Request;
+}(Base);
+
+Request.Events = ['Uninitialized', 'Loading', 'Loaded', 'Interactive', 'Complete'];
+
+var Response = function () {
+  function Response(request) {
+    _classCallCheck(this, Response);
+
+    this.status = 0;
+    this.statusText = '';
+
+    this.request = request;
+    var transport = this.transport = request.transport,
+        readyState = this.readyState = transport.readyState;
+
+    var BROWSER_IS_IE = false;
+
+    if (readyState > 2 && !BROWSER_IS_IE || readyState == 4) {
+      this.status = this.getStatus();
+      this.statusText = this.getStatusText();
+      this.responseText = transport.responseText == null ? '' : String(transport.responseText);
+      this.headerJSON = this._getHeaderJSON();
+    }
+
+    if (readyState == 4) {
+      var xml = transport.responseXML;
+      this.responseXML = isUndefined(xml) ? null : xml;
+      this.responseJSON = this._getResponseJSON();
+    }
+  }
+
+  _createClass(Response, [{
+    key: 'getStatus',
+    value: function getStatus() {
+      return Request.prototype.getStatus();
+    }
+  }, {
+    key: 'getStatusText',
+    value: function getStatusText() {
+      try {
+        return this.transport.statusText || '';
+      } catch (e) {
+        return '';
+      }
+    }
+  }, {
+    key: 'getHeader',
+    value: function getHeader(name) {
+      return Request.prototype.getHeader(name);
+    }
+  }, {
+    key: 'getAllHeaders',
+    value: function getAllHeaders() {
+      try {
+        return this.getAllResponseHeaders();
+      } catch (e) {
+        return null;
+      }
+    }
+  }, {
+    key: 'getResponseHeader',
+    value: function getResponseHeader(name) {
+      return this.transport.getResponseHeader(name);
+    }
+  }, {
+    key: 'getAllResponseHeaders',
+    value: function getAllResponseHeaders() {
+      return this.transport.getAllResponseHeaders();
+    }
+  }, {
+    key: '_getHeaderJSON',
+    value: function _getHeaderJSON() {
+      var json = this.getHeader('X-JSON');
+      if (!json) return null;
+      json = decodeURIComponent(escape(json));
+      try {
+        return evalJSON(json, this.request.options.sanitizeJSON || !this.request.isSameOrigin());
+      } catch (e) {
+        this.request.dispatchException(e);
+      }
+    }
+  }, {
+    key: '_getResponseJSON',
+    value: function _getResponseJSON() {
+      var options = this.request.options;
+      if (!options.evalJSON || options.evalJSON != 'force' && !(include(this.getHeader('Content-type') || ''), 'application/json') || this.responseText.blank()) return null;
+      try {
+        return evalJSON(this.responseText, options.sanitizeJSON || !this.request.isSameOrigin());
+      } catch (e) {
+        this.request.dispatchException(e);
+      }
+    }
+  }]);
+
+  return Response;
+}();
+
+/*
+Ajax.Updater = Class.create(Ajax.Request, {
+  initialize: function($super, container, url, options) {
+    this.container = {
+      success: (container.success || container),
+      failure: (container.failure || (container.success ? null : container))
+    };
+
+    options = clone(options);
+    var onComplete = options.onComplete;
+    options.onComplete = (function(response, json) {
+      this.updateContent(response.responseText);
+      if (isFunction(onComplete)) onComplete(response, json);
+    }).bind(this);
+
+    $super(url, options);
+  },
+
+  updateContent: function(responseText) {
+    var receiver = this.container[this.success() ? 'success' : 'failure'],
+        options = this.options;
+
+    if (!options.evalScripts) responseText = responseText.stripScripts();
+
+    if (receiver = $(receiver)) {
+      if (options.insertion) {
+        if (isString(options.insertion)) {
+          var insertion = { }; insertion[options.insertion] = responseText;
+          receiver.insert(insertion);
+        }
+        else options.insertion(receiver, responseText);
+      }
+      else receiver.update(responseText);
+    }
+  }
+});
+
+Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
+  initialize: function($super, container, url, options) {
+    $super(options);
+    this.onComplete = this.options.onComplete;
+
+    this.frequency = (this.options.frequency || 2);
+    this.decay = (this.options.decay || 1);
+
+    this.updater = { };
+    this.container = container;
+    this.url = url;
+
+    this.start();
+  },
+
+  start: function() {
+    this.options.onComplete = this.updateComplete.bind(this);
+    this.onTimerEvent();
+  },
+
+  stop: function() {
+    this.updater.options.onComplete = undefined;
+    clearTimeout(this.timer);
+    (this.onComplete || function(){}).apply(this, arguments);
+  },
+
+  updateComplete: function(response) {
+    if (this.options.decay) {
+      this.decay = (response.responseText == this.lastText ?
+        this.decay * this.options.decay : 1);
+
+      this.lastText = response.responseText;
+    }
+    this.timer = this.onTimerEvent.bind(this).delay(this.decay * this.frequency);
+  },
+
+  onTimerEvent: function() {
+    this.updater = new Ajax.Updater(this.container, this.url, this.options);
+  }
+});
+
+
+function $(element) {
+  if (arguments.length > 1) {
+    for (var i = 0, elements = [], length = arguments.length; i < length; i++)
+      elements.push($(arguments[i]));
+    return elements;
+  }
+  if (isString(element))
+    element = document.getElementById(element);
+  return Element.extend(element);
+}
+
+if (Prototype.BrowserFeatures.XPath) {
+  document._getElementsByXPath = function(expression, parentElement) {
+    var results = [];
+    var query = document.evaluate(expression, $(parentElement) || document,
+      null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    for (var i = 0, length = query.snapshotLength; i < length; i++)
+      results.push(Element.extend(query.snapshotItem(i)));
+    return results;
+  };
+}
+
+*/
+
+Ajax.Request = Request;
+Ajax.Response = Response;
+
+exports.default = Ajax;
+
+},{"minibot/core/Utils":3}],41:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4581,10 +5317,12 @@ var AnimationResource = function (_Resource) {
 /** @lends resource.AnimationResource# */
 );
 
+AnimationResource.TYPE = 3;
+
 exports.default = AnimationResource;
 
-},{"minibot/resource/Resource":41,"minibot/resource/SpriteResource":43}],40:[function(require,module,exports){
-"use strict";
+},{"minibot/resource/Resource":43,"minibot/resource/SpriteResource":45}],42:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4592,9 +5330,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Resource2 = require("minibot/resource/Resource");
+var _Resource2 = require('minibot/resource/Resource');
 
 var _Resource3 = _interopRequireDefault(_Resource2);
+
+var _Utils = require('minibot/core/Utils');
+
+var Utils = _interopRequireWildcard(_Utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4629,25 +5373,25 @@ var ImageResource = function (_Resource) {
   }
 
   _createClass(ImageResource, [{
-    key: "load",
+    key: 'load',
     value: function load(manager, callback) {
       this.loaded = true;
       if (this.src != null) {
         this.img = new Image();
-        this.img.addEventListener("load", this.handleLoadImageSuccess.bindAsEventListener(this, callback), false);
-        this.img.addEventListener("error", this.handleLoadImageFailure.bindAsEventListener(this, callback), false);
+        this.img.addEventListener("load", Utils.BindAsEventListener(this.handleLoadImageSuccess, this, callback), false);
+        this.img.addEventListener("error", Utils.BindAsEventListener(this.handleLoadImageFailure, this, callback), false);
         this.img.src = this.src;
       } else {
         callback();
       }
     }
   }, {
-    key: "handleLoadImageSuccess",
+    key: 'handleLoadImageSuccess',
     value: function handleLoadImageSuccess(event, callback) {
       callback();
     }
   }, {
-    key: "handleLoadImageFailure",
+    key: 'handleLoadImageFailure',
     value: function handleLoadImageFailure(event, callback) {
       // TODO: Adjust error reporting
       console.log('ImageResource: Failed to load image.');
@@ -4660,9 +5404,11 @@ var ImageResource = function (_Resource) {
 /** @lends resource.ImageResource# */
 );
 
+ImageResource.TYPE = 1;
+
 exports.default = ImageResource;
 
-},{"minibot/resource/Resource":41}],41:[function(require,module,exports){
+},{"minibot/core/Utils":3,"minibot/resource/Resource":43}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4726,7 +5472,7 @@ var Resource
 
 exports.default = Resource;
 
-},{"minibot/core/Utils":2}],42:[function(require,module,exports){
+},{"minibot/core/Utils":3}],44:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4738,6 +5484,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _Manager2 = require('minibot/core/Manager');
 
 var _Manager3 = _interopRequireDefault(_Manager2);
+
+var _Utils = require('minibot/core/Utils');
+
+var Utils = _interopRequireWildcard(_Utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4819,7 +5571,7 @@ var ResourceManager = function (_Manager) {
       }
 
       if (this.typeIndex >= this.typeOrder.length) {
-        this.completeCallback.bind(this).defer();
+        Utils.Defer(this.completeCallback, this);
         return;
       }
 
@@ -4847,7 +5599,7 @@ var ResourceManager = function (_Manager) {
       if (resource.isLoaded()) {
         this.handleResourceLoaded();
       } else {
-        resource.load(this, this.handleResourceLoaded.bind(this));
+        resource.load(this, Utils.Bind(this.handleResourceLoaded, this));
       }
     }
   }, {
@@ -4858,7 +5610,7 @@ var ResourceManager = function (_Manager) {
       this.progressCallback(progress);
 
       if (this.typeLoadedCount >= this.typeCount[this.typeIndex]) {
-        this.loadNextType.bind(this).defer();
+        Utils.Defer(this.loadNextType, this);
       }
     }
   }, {
@@ -4876,9 +5628,17 @@ var ResourceManager = function (_Manager) {
 /** @lends resource.ResourceManager# */
 );
 
+ResourceManager.getInstance = function (key) {
+  if (!_Manager3.default.hasCore(key)) {
+    new ResourceManager(key);
+  }
+  var retVal = _Manager3.default.getInstance(key);
+  return retVal;
+};
+
 exports.default = ResourceManager;
 
-},{"minibot/core/Manager":1}],43:[function(require,module,exports){
+},{"minibot/core/Manager":2,"minibot/core/Utils":3}],45:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4965,9 +5725,11 @@ var SpriteResource = function (_Resource) {
 /** @lends resource.SpriteResource# */
 );
 
+SpriteResource.TYPE = 2;
+
 exports.default = SpriteResource;
 
-},{"minibot/resource/ImageResource":40,"minibot/resource/Resource":41}],44:[function(require,module,exports){
+},{"minibot/resource/ImageResource":42,"minibot/resource/Resource":43}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5141,100 +5903,32 @@ system.PlatformName = {
 
 exports.default = system;
 
-},{"minibot/display/html/CanvasScene":5}],"minibot":[function(require,module,exports){
+},{"minibot/display/html/CanvasScene":6}],"minibot":[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var core, display, engine, event, geom, graphics, resource, system;
+var _baseMinibot = require('base-minibot');
 
-/** @namespace Core namespace */
-exports.core = core = {};
-core.Manager = require('minibot/core/Manager').default;
-core.Utils = require('minibot/core/Utils');
+var _baseMinibot2 = _interopRequireDefault(_baseMinibot);
 
-/** @namespace Display namespace */
-exports.display = display = {};
-display.DisplayObject = require('minibot/display/DisplayObject').default;
-
-/** @namespace Display.Scene namespace */
-display.scene = {};
-display.scene.SceneDisplayObject = require('minibot/display/scene/SceneDisplayObject').default;
-display.scene.Animation = require('minibot/display/scene/Animation').default;
-display.scene.Button = require('minibot/display/scene/Button').default;
-display.scene.Container = require('minibot/display/scene/Container').default;
-//display.scene.Mask = require('minibot/display/scene/Mask').default;
-display.scene.Rect = require('minibot/display/scene/Rect').default;
-//display.scene.RoundedRect = require('minibot/display/scene/RoundedRect').default;
-display.scene.Sprite = require('minibot/display/scene/Sprite').default;
-display.scene.Scene = require('minibot/display/scene/Scene').default;
-display.scene.Text = require('minibot/display/scene/Text').default;
-display.scene.TextStyle = require('minibot/display/scene/TextStyle').default;
-
-/** @namespace Display.Html namespace */
-display.html = {};
-display.html.HtmlElement = require('minibot/display/html/HtmlElement').default;
-display.html.CanvasScene = require('minibot/display/html/CanvasScene').default;
-
-// /** @namespace Engine namespace */
-exports.engine = engine = {};
-engine.Engine = require('minibot/engine/Engine').default;
-engine.EngineComponent = require('minibot/engine/EngineComponent').default;
-engine.EngineFactory = require('minibot/engine/EngineFactory').default;
-engine.EngineObject = require('minibot/engine/EngineObject').default;
-engine.EngineSystem = require('minibot/engine/EngineSystem').default;
-
-engine.component = {};
-engine.component.DisplayComponent = require('minibot/engine/component/DisplayComponent').default;
-engine.component.PhysicsComponent = require('minibot/engine/component/PhysicsComponent').default;
-engine.component.InputComponent = require('minibot/engine/component/InputComponent').default;
-
-engine.system = {};
-engine.system.DisplaySystem = require('minibot/engine/system/DisplaySystem').default;
-
-/** @namespace Event namespace */
-exports.event = event = {};
-event.EventDispatcher = require('minibot/event/EventDispatcher').default;
-event.BaseEvent = require('minibot/event/BaseEvent').default;
-event.MouseEvent = require('minibot/event/MouseEvent').default;
-event.TouchEvent = require('minibot/event/TouchEvent').default;
-event.ButtonEvent = require('minibot/event/ButtonEvent').default;
-event.EngineEvent = require('minibot/event/EngineEvent').default;
-event.KeyboardEvent = require('minibot/event/KeyboardEvent').default;
-
-event.enum = {};
-event.enum.Keyboard = require('minibot/event/enum/Keyboard').default;
-
-/** @namespace Geom namespace */
-exports.geom = geom = {};
-geom.Vector2 = require('minibot/geom/Vector2').default;
-geom.Rectangle = require('minibot/geom/Rectangle').default;
-
-/** @namespace Graphics namespace */
-exports.graphics = graphics = {};
-graphics.Color = require('minibot/graphics/Color').default;
-graphics.Pattern = require('minibot/graphics/Pattern').default;
-
-// /** @namespace Resource namespace */
-exports.resource = resource = {};
-resource.Resource = require('minibot/resource/Resource').default;
-resource.ResourceManager = require('minibot/resource/ResourceManager').default;
-resource.AnimationResource = require('minibot/resource/AnimationResource').default;
-resource.ImageResource = require('minibot/resource/ImageResource').default;
-resource.SpriteResource = require('minibot/resource/SpriteResource').default;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /** @namespace System namespace */
-exports.system = system = require('minibot/system/web').default;
+var system = require('minibot/system/browser').default;
 
-exports.core = core;
-exports.display = display;
-exports.engine = engine;
-exports.event = event;
-exports.geom = geom;
-exports.graphics = graphics;
-exports.resource = resource;
-exports.system = system;
+exports.default = {
+  core: _baseMinibot2.default.core,
+  display: _baseMinibot2.default.display,
+  engine: _baseMinibot2.default.engine,
+  event: _baseMinibot2.default.event,
+  geom: _baseMinibot2.default.geom,
+  graphics: _baseMinibot2.default.graphics,
+  network: _baseMinibot2.default.network,
+  resource: _baseMinibot2.default.resource,
+  system: system
+};
 
-},{"minibot/core/Manager":1,"minibot/core/Utils":2,"minibot/display/DisplayObject":3,"minibot/display/html/CanvasScene":5,"minibot/display/html/HtmlElement":6,"minibot/display/scene/Animation":7,"minibot/display/scene/Button":9,"minibot/display/scene/Container":10,"minibot/display/scene/Rect":11,"minibot/display/scene/Scene":12,"minibot/display/scene/SceneDisplayObject":13,"minibot/display/scene/Sprite":14,"minibot/display/scene/Text":15,"minibot/display/scene/TextStyle":16,"minibot/engine/Engine":17,"minibot/engine/EngineComponent":18,"minibot/engine/EngineFactory":19,"minibot/engine/EngineObject":20,"minibot/engine/EngineSystem":21,"minibot/engine/component/DisplayComponent":22,"minibot/engine/component/InputComponent":23,"minibot/engine/component/PhysicsComponent":24,"minibot/engine/system/DisplaySystem":25,"minibot/event/BaseEvent":26,"minibot/event/ButtonEvent":27,"minibot/event/EngineEvent":28,"minibot/event/EventDispatcher":29,"minibot/event/KeyboardEvent":31,"minibot/event/MouseEvent":32,"minibot/event/TouchEvent":33,"minibot/event/enum/Keyboard":34,"minibot/geom/Rectangle":35,"minibot/geom/Vector2":36,"minibot/graphics/Color":37,"minibot/graphics/Pattern":38,"minibot/resource/AnimationResource":39,"minibot/resource/ImageResource":40,"minibot/resource/Resource":41,"minibot/resource/ResourceManager":42,"minibot/resource/SpriteResource":43,"minibot/system/web":44}]},{},[]);
+},{"base-minibot":1,"minibot/system/browser":46}]},{},[]);

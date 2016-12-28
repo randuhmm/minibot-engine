@@ -5,9 +5,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var minibot = require('minibot');
-var CanvasScene = minibot.display.html.CanvasScene;
-var Bind = minibot.core.Utils.Bind;
+var _minibot = require('minibot');
+
+var _minibot2 = _interopRequireDefault(_minibot);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var CanvasScene = _minibot2.default.display.html.CanvasScene;
+var Bind = _minibot2.default.core.Utils.Bind;
 
 var BaseDemo = function BaseDemo(element, options) {
   if (options === null || options === undefined) {
@@ -24,15 +29,15 @@ var BaseDemo = function BaseDemo(element, options) {
 };
 
 BaseDemo.prototype.run = function () {
-  minibot.system.SetUpdateCallback(Bind(this.update, this));
-  minibot.system.SetRenderCallback(Bind(this.render, this));
-  minibot.system.Run();
+  _minibot2.default.system.SetUpdateCallback(Bind(this.update, this));
+  _minibot2.default.system.SetRenderCallback(Bind(this.render, this));
+  _minibot2.default.system.Run();
 };
 
 BaseDemo.prototype.destroy = function () {
   this.canvasElement.remove();
-  minibot.system.Stop();
-  minibot.system.SetRenderCallback(null);
+  _minibot2.default.system.Stop();
+  _minibot2.default.system.SetRenderCallback(null);
 };
 
 BaseDemo.prototype.update = function (dt) {
@@ -56,18 +61,21 @@ var _BaseDemo = require('./BaseDemo');
 
 var _BaseDemo2 = _interopRequireDefault(_BaseDemo);
 
+var _minibot = require('minibot');
+
+var _minibot2 = _interopRequireDefault(_minibot);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var minibot = require('minibot');
-var Button = minibot.display.scene.Button,
-    Color = minibot.graphics.Color,
-    Rect = minibot.display.scene.Rect,
-    Container = minibot.display.scene.Container,
-    Text = minibot.display.scene.Text,
-    TextStyle = minibot.display.scene.TextStyle,
-    BindAsEventListener = minibot.core.Utils.BindAsEventListener,
-    MouseEvent = minibot.event.MouseEvent,
-    ButtonEvent = minibot.event.ButtonEvent;
+var Button = _minibot2.default.display.scene.Button,
+    Color = _minibot2.default.graphics.Color,
+    Rect = _minibot2.default.display.scene.Rect,
+    Container = _minibot2.default.display.scene.Container,
+    Text = _minibot2.default.display.scene.Text,
+    TextStyle = _minibot2.default.display.scene.TextStyle,
+    BindAsEventListener = _minibot2.default.core.Utils.BindAsEventListener,
+    MouseEvent = _minibot2.default.event.MouseEvent,
+    ButtonEvent = _minibot2.default.event.ButtonEvent;
 
 var CustomButton = function CustomButton(text) {
 
@@ -162,12 +170,15 @@ var _BaseDemo = require('./BaseDemo');
 
 var _BaseDemo2 = _interopRequireDefault(_BaseDemo);
 
+var _minibot = require('minibot');
+
+var _minibot2 = _interopRequireDefault(_minibot);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var minibot = require('minibot');
-var CanvasScene = minibot.display.html.CanvasScene,
-    Color = minibot.graphics.Color,
-    Vector2 = minibot.geom.Vector2;
+var CanvasScene = _minibot2.default.display.html.CanvasScene,
+    Color = _minibot2.default.graphics.Color,
+    Vector2 = _minibot2.default.geom.Vector2;
 
 var Demo = function Demo(element) {
   _BaseDemo2.default.call(this, element);
@@ -227,12 +238,15 @@ var _BaseDemo = require('./BaseDemo');
 
 var _BaseDemo2 = _interopRequireDefault(_BaseDemo);
 
+var _minibot = require('minibot');
+
+var _minibot2 = _interopRequireDefault(_minibot);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var minibot = require('minibot');
-var Text = minibot.display.scene.Text,
-    TextStyle = minibot.display.scene.TextStyle,
-    Color = minibot.graphics.Color;
+var Text = _minibot2.default.display.scene.Text,
+    TextStyle = _minibot2.default.display.scene.TextStyle,
+    Color = _minibot2.default.graphics.Color;
 
 var Demo = function Demo(element) {
   _BaseDemo2.default.call(this, element);

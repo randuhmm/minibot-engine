@@ -1,6 +1,6 @@
 
 import BaseDemo from './BaseDemo';
-var minibot = require('minibot');
+import minibot from 'minibot';
 var CanvasScene = minibot.display.html.CanvasScene
 , Color = minibot.graphics.Color
 , Vector2 = minibot.geom.Vector2

@@ -1,6 +1,6 @@
 
 import BaseDemo from './BaseDemo';
-var minibot = require('minibot');
+import minibot from 'minibot';
 var Text = minibot.display.scene.Text
 , TextStyle = minibot.display.scene.TextStyle
 , Color = minibot.graphics.Color
