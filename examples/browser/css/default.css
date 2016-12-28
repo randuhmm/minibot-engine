@@ -1,0 +1,31 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: arial, san-serif;
+}
+
+#wrapper {
+    /*background: none repeat scroll 0 0 #D08D00;
+    border-radius: 10px 10px 10px 10px;*/
+    margin: 20px auto;
+    padding: 20px;
+    width: 640px;
+}
+
+#demoButtons input{
+    border: 1px solid #000000;
+    display: block;
+    float: left;
+    margin: 3px;
+    padding: 8px 0;
+    width: 154px;
+    cursor: pointer;
+}
+
+#demoScene {
+    background: #FFF;
+}

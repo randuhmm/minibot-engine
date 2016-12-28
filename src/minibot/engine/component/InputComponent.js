@@ -1,24 +1,12 @@
-define(
-	[
-		'minibot/engine/EngineComponent'
-	],
-	function
-	(
-		EngineComponent
-	)
-	{
-		
-		var InputComponent = Class.create(
-			EngineComponent,
-			{
-				
-				
-			}
-		);
-		
-		return InputComponent;
-		
-	}
-	
-);
+
+import EngineComponent from 'minibot/engine/EngineComponent';
+
+class InputComponent extends EngineComponent
+{
+  
+  
+}
+
+export default InputComponent
+
 
