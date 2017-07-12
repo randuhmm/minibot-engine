@@ -32,6 +32,7 @@ class ResourceManager extends Manager
 
   addType(type, className)
   {
+    if(type in this.typeMap) return;
     this.typeOrder.push(type);
     this.typeCount.push(0);
     this.typeMap[type] = className;
