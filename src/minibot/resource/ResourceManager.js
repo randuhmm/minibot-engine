@@ -42,6 +42,7 @@ class ResourceManager extends Manager
   addResource(type, id, data)
   {
     if(this.typeMap[type] == undefined) return;
+    if(id in this.resourceMap[type]) return;
     var className = this.typeMap[type];
     var resource = new className(id, data);
     this.resourceMap[type][id] = resource;
