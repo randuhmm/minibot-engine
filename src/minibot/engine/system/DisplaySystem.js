@@ -4,18 +4,11 @@ import EngineSystem from 'minibot/engine/EngineSystem';
 class DisplaySystem extends EngineSystem
 {
 
-  // scene: null,
-
-  // layers: null,
-
-  constructor(type, scene)
+  constructor(type)
   {
     super(type);
-
-    this.scene = scene;
-
+    this.scene = null;
     this.layers = new Array();
-
   }
 
   update(dt)
@@ -25,7 +18,7 @@ class DisplaySystem extends EngineSystem
 
   addObject(obj)
   {
-    var c = $super(obj);
+    var c = super.addObject(obj);
     if(c == null) return null;
 
     var l = c.getLayers();
@@ -49,7 +42,7 @@ class DisplaySystem extends EngineSystem
 
   getScene()
   {
-    return this.scene;
+    return this.engine.getScene();
   }
 
   getCamera()
@@ -61,9 +54,13 @@ class DisplaySystem extends EngineSystem
   render(dt)
   {
 
+    var x = 0;
+    var y = 0;
     var camera = this.getCamera();
-    var cameraX = camera.getProperty("x") * -1;
-    var cameraY = camera.getProperty("y") * -1;
+    if(camera != null) {
+      var x = camera.getProperty("x") * -1;
+      var y = camera.getProperty("y") * -1;
+    }
 
     var i, j, layer, component;
     for(i = 0; i < this.layers.length; i++) {
@@ -71,7 +68,7 @@ class DisplaySystem extends EngineSystem
       for(j = 0; j < layer.length; j++) {
         component = layer[j];
         if(!component.isVisible()) continue;
-        component.render(dt, i, cameraX, cameraY);
+        component.render(dt, i, x, y);
       }
     }
   }

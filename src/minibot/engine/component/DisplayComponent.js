@@ -29,7 +29,13 @@ class DisplayComponent extends EngineComponent
   getLayers()
   {
     // override
-    return [];
+    return this.layers;
+  }
+
+  setLayers(layers)
+  {
+    // override
+    this.layers = layers;
   }
 
   isVisible()

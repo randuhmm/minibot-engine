@@ -5,14 +5,6 @@ import EngineEvent from 'minibot/event/EngineEvent';
 class EngineObject extends EventDispatcher
 {
 
-  // type: null,
-
-  // components: null,
-
-  // data: null,
-
-  // engine: null,
-
   constructor(type, data)
   {
     super();
@@ -22,6 +14,14 @@ class EngineObject extends EventDispatcher
 
     if(data == undefined) data = {};
     this.data = data;
+
+    this.engine = null;
+  }
+
+  destroy()
+  {
+    this.components = null;
+    this.engine = null;
   }
 
   getType()
@@ -36,6 +36,13 @@ class EngineObject extends EventDispatcher
       this.components[type] = component;
       component.setObject(this);
       component.onAddedToObject();
+    }
+  }
+
+  onComponentsAdded()
+  {
+    for(var c in this.components) {
+      this.components[c].onComponentsAdded();
     }
   }
 
@@ -99,6 +106,13 @@ class EngineObject extends EventDispatcher
   hasProperty(key)
   {
     return (this.data[key] != undefined);
+  }
+
+  sendMessage(message)
+  {
+    for(var c in this.components) {
+      this.components[c].receiveMessage(message);
+    }
   }
 
   buildEvent(type, data, component)

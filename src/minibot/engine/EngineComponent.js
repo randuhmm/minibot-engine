@@ -53,6 +53,11 @@ class EngineComponent
     //-- OVERRIDE
   }
   
+  onComponentsAdded()
+  {
+    //-- OVERRIDE
+  }
+  
   setSystem(system)
   {
     this.system = system;

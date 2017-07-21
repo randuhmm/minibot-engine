@@ -5,56 +5,57 @@ class Engine extends EventDispatcher
 /** @lends engine.Engine# */
 {
 
-  // List of all systems
-  // systems: null,
-
-  // List of all systems by type
-  // systemsByType: null,
-
-  // List of all objects
-  // objects: null,
-
-  // List of objects by type
-  // objectsByType: null,
-
-  // The primary camera
-  // camera: null,
-
-  // the player
-  // player: null,
-
-  // The resource map
-  // resources: null,
-
-  // The update order
-  // updateOrder: null,
-
-  constructor()
+  constructor(systems, updateOrder)
   {
     super();
-
-    this.resources = {};
-
+    // List of all systems
     this.systems = [];
+    // List of all systems by type
     this.systemsByType = {};
-
+    // List of all objects
     this.objects = [];
+    // List of objects by type
     this.objectsByType = {};
+    // The resource map
+    this.resources = {};
+    // The update order
+    this.updateOrder = updateOrder;
+    // The primary camera
+    this.camera = null;
+    // the player
+    this.player = null;
+    // the scene
+    this.scene = null;
+    // the scene
+    this.viewport = null;
 
+    // Add the systems
+    for(var i = 0; i < systems.length; i++) {
+      this.addSystem(systems[i]);
+    }
+
+    // Initialize the systems
+    for(var i = 0; i < this.systems.length; i++) {
+      this.systems[i].onInitialized();
+    }
   }
 
   // Public Methods -->
 
   // Update/Render Methods -->
 
+  start()
+  {
+    if(this.running) return;
+    this.running = true;
+  }
+
   update(dt)
   {
-
     // Update the Systems in preset order
     for(var s = 0; s < this.updateOrder.length; s++) {
       this.systemsByType[this.updateOrder[s]].update(dt);
     }
-
   }
 
   render(dt)
@@ -70,6 +71,31 @@ class Engine extends EventDispatcher
   setUpdateOrder(updateOrder)
   {
     this.updateOrder = updateOrder;
+  }
+
+  setScene(scene)
+  {
+    this.scene = scene;
+  }
+
+  getScene(scene)
+  {
+    return this.scene;
+  }
+
+  setCamera(camera)
+  {
+    this.camera = camera;
+  }
+
+  getCamera(camera)
+  {
+    return this.camera;
+  }
+
+  setViewport(viewport)
+  {
+    this.viewport = viewport;
   }
 
   // <-- Update/Render Methods
@@ -100,6 +126,11 @@ class Engine extends EventDispatcher
 
   }
 
+  getSystem(type)
+  {
+    return this.systemsByType[type];
+  }
+
   addObject(obj)
   {
     // Add to objects
@@ -123,7 +154,20 @@ class Engine extends EventDispatcher
 
   removeObject()
   {
+    var i = this.objects.indexOf(obj);
+    if(i != -1) this.objects.splice(i, 1);
 
+    var type = obj.getType();
+    var arr = this.objectsByType[type];
+    i = arr.indexOf(obj);
+    if(i != -1) arr.splice(i, 1);
+
+    for(var i = 0; i < this.systems.length; i++) {
+      this.systems[i].removeObject(obj);
+    }
+
+    // TODO: Add Removed Hook?
+    //obj.onRemovedFromEngine(this);
   }
 
   // <-- Object/System Methods

@@ -44,6 +44,7 @@ engine.component.InputComponent = require('minibot/engine/component/InputCompone
 
 engine.system = {};
 engine.system.DisplaySystem = require('minibot/engine/system/DisplaySystem').default;
+engine.system.InputSystem = require('minibot/engine/system/InputSystem').default;
 
 /** @namespace Event namespace */
 event = {};

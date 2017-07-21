@@ -3,24 +3,28 @@
 class EngineSystem
 {
 
-  // type: null,
-
-  // components: null,
-
-  // componentsByObject: null,
-
-  // engine: null,
-
   constructor(type)
   {
     this.type = type;
-
     this.components = [];
-
     this.componentsByObject = {};
-
     this.engine = null;
+    this.initialized = false;
+  }
 
+  destroy()
+  {
+    for(var i = 0; i < this.components.length; i++) {
+      this.components[i].destroy();
+    }
+    this.components = null;
+    this.componentsByObject = null;
+    this.engine = null;
+  }
+  
+  onInitialized()
+  {
+    this.initialized = true;
   }
 
   getType()
@@ -58,7 +62,20 @@ class EngineSystem
 
   removeObject(obj)
   {
+    if(obj.hasComponent(this.type)) {
+      var c = obj.getComponent(this.type);
 
+      var i = this.components.indexOf(c);
+      if(i != -1) this.components.splice(i, 1);
+
+      if(this.componentsByObject[obj] != undefined) {
+        delete this.componentsByObject[obj];
+      }
+
+      return c;
+    }
+
+    return null;
   }
 
   setEngine(engine)
@@ -92,6 +109,16 @@ class EngineSystem
     for(var i = 0; i < this.components.length; i++) {
       this.components[i].update(dt);
     }
+  }
+  
+  dispatchEvent(event)
+  {
+    this.engine.dispatchEvent(event);
+  }
+
+  addEventListener(type, callback)
+  {
+    this.engine.addEventListener(type, callback);
   }
 
 }
