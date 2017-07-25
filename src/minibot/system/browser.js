@@ -96,9 +96,21 @@ system.Stop = function()
 
 system.CreateScene = function(options)
 {
+  if(!('element' in options)) {
+    options['element'] = document.createElement('canvas');
+  }
   var scene = new CanvasScene(options);
   return scene;
 };
+
+// system.CreateBuffer = function(options)
+// {
+//   if(!'element' in options) {
+//     options['element'] = document.createElement('canvas');
+//   }
+//   var buffer = new CanvasBuffer(options);
+//   return buffer;
+// };
 
 // Browser | Native
 system.GetWrapperType = function()

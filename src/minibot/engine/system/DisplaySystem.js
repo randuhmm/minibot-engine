@@ -51,15 +51,12 @@ class DisplaySystem extends EngineSystem
   }
 
   // render the scene layer by layer, check if each component is on screen first
-  render(dt)
+  render(dt, x, y)
   {
-
-    var x = 0;
-    var y = 0;
     var camera = this.getCamera();
     if(camera != null) {
-      var x = camera.getProperty("x") * -1;
-      var y = camera.getProperty("y") * -1;
+      x += camera.getProperty("x") * -1;
+      y += camera.getProperty("y") * -1;
     }
 
     var i, j, layer, component;
