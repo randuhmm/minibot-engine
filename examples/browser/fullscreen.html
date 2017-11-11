@@ -1,0 +1,58 @@
+<html>
+    <head>
+      <title>MiniBot Library: Demos</title>
+      <meta charset="utf-8">
+      <script src="js/minibot-browser.js"></script>
+      <script type="text/javascript">
+
+        var onWindowLoad = function() {
+          var minibot = require('minibot').default;
+          var startButton = document.getElementById('start');
+          var exitButton = document.getElementById('exit');
+          var wrapper = document.getElementById('wrapper');
+          wrapper.style = "display: none;";
+
+          startButton.onclick = function(event) {
+            startButton.style = "display: none;";
+            wrapper.style = "display: visible;";
+            minibot.system.FullScreen.start(wrapper, {
+                'onReady': onReady,
+                'onExit': onExit
+            });
+          };
+
+          exitButton.onclick = function(event) {
+            minibot.system.FullScreen.exit();
+          };
+
+          var onReady = function() {
+            console.log('onReady');
+            console.log(minibot.system.FullScreen.size());
+          };
+
+          var onExit = function() {
+            console.log('onExit');
+            wrapper.style = "display: none;";
+            startButton.style = "display: visible;";
+          };
+
+        };
+        window.onload = onWindowLoad;
+
+      </script>
+      <link rel="stylesheet" type="text/css" href="css/default.css">
+      <style>
+        div#wrapper {
+            margin: 0;
+            padding: 0;
+        }
+      </style>
+    </head>
+    <body>
+      <button id="start">Click to Start</button>
+      <div id="wrapper">
+          <button id="exit">Click to Exit</button>
+      </div>
+    </body>
+    </html>
+    

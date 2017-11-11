@@ -50,6 +50,7 @@ engine.component.InputComponent = require('minibot/engine/component/InputCompone
 
 engine.system = {};
 engine.system.DisplaySystem = require('minibot/engine/system/DisplaySystem').default;
+engine.system.InputSystem = require('minibot/engine/system/InputSystem').default;
 
 /** @namespace Event namespace */
 event = {};
@@ -96,7 +97,7 @@ exports.default = {
   resource: resource
 };
 
-},{"minibot/core/Manager":2,"minibot/core/Utils":3,"minibot/display/DisplayObject":4,"minibot/display/html/CanvasScene":6,"minibot/display/html/HtmlElement":7,"minibot/display/scene/Animation":8,"minibot/display/scene/Button":10,"minibot/display/scene/Container":11,"minibot/display/scene/Rect":12,"minibot/display/scene/Scene":13,"minibot/display/scene/SceneDisplayObject":14,"minibot/display/scene/Sprite":15,"minibot/display/scene/Text":16,"minibot/display/scene/TextStyle":17,"minibot/engine/Engine":18,"minibot/engine/EngineComponent":19,"minibot/engine/EngineFactory":20,"minibot/engine/EngineObject":21,"minibot/engine/EngineSystem":22,"minibot/engine/component/DisplayComponent":23,"minibot/engine/component/InputComponent":24,"minibot/engine/component/PhysicsComponent":25,"minibot/engine/system/DisplaySystem":26,"minibot/event/BaseEvent":27,"minibot/event/ButtonEvent":28,"minibot/event/EngineEvent":29,"minibot/event/EventDispatcher":30,"minibot/event/KeyboardEvent":32,"minibot/event/MouseEvent":33,"minibot/event/TouchEvent":34,"minibot/event/enum/Keyboard":35,"minibot/geom/Rectangle":36,"minibot/geom/Vector2":37,"minibot/graphics/Color":38,"minibot/graphics/Pattern":39,"minibot/network/Ajax":40,"minibot/resource/AnimationResource":41,"minibot/resource/ImageResource":42,"minibot/resource/Resource":43,"minibot/resource/ResourceManager":44,"minibot/resource/SpriteResource":45}],2:[function(require,module,exports){
+},{"minibot/core/Manager":2,"minibot/core/Utils":3,"minibot/display/DisplayObject":4,"minibot/display/html/CanvasScene":6,"minibot/display/html/HtmlElement":7,"minibot/display/scene/Animation":8,"minibot/display/scene/Button":10,"minibot/display/scene/Container":11,"minibot/display/scene/Rect":12,"minibot/display/scene/Scene":13,"minibot/display/scene/SceneDisplayObject":14,"minibot/display/scene/Sprite":15,"minibot/display/scene/Text":16,"minibot/display/scene/TextStyle":17,"minibot/engine/Engine":18,"minibot/engine/EngineComponent":19,"minibot/engine/EngineFactory":20,"minibot/engine/EngineObject":21,"minibot/engine/EngineSystem":22,"minibot/engine/component/DisplayComponent":23,"minibot/engine/component/InputComponent":24,"minibot/engine/component/PhysicsComponent":25,"minibot/engine/system/DisplaySystem":26,"minibot/engine/system/InputSystem":27,"minibot/event/BaseEvent":28,"minibot/event/ButtonEvent":29,"minibot/event/EngineEvent":30,"minibot/event/EventDispatcher":31,"minibot/event/KeyboardEvent":33,"minibot/event/MouseEvent":34,"minibot/event/TouchEvent":35,"minibot/event/enum/Keyboard":36,"minibot/geom/Rectangle":37,"minibot/geom/Vector2":38,"minibot/graphics/Color":39,"minibot/graphics/Pattern":40,"minibot/network/Ajax":41,"minibot/resource/AnimationResource":42,"minibot/resource/ImageResource":43,"minibot/resource/Resource":44,"minibot/resource/ResourceManager":45,"minibot/resource/SpriteResource":46}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -323,7 +324,7 @@ DisplayObject.ALIGN_VERT_CENTER = 2;
 
 exports.default = DisplayObject;
 
-},{"minibot/event/EventDispatcher":30}],5:[function(require,module,exports){
+},{"minibot/event/EventDispatcher":31}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -786,7 +787,7 @@ var CanvasScene = function (_Scene) {
 
 exports.default = CanvasScene;
 
-},{"minibot/core/Utils":3,"minibot/display/html/CanvasBuffer":5,"minibot/display/scene/Scene":13,"minibot/event/KeyboardEvent":32,"minibot/event/MouseEvent":33,"minibot/event/TouchEvent":34,"minibot/event/enum/Keyboard":35,"minibot/graphics/Color":38}],7:[function(require,module,exports){
+},{"minibot/core/Utils":3,"minibot/display/html/CanvasBuffer":5,"minibot/display/scene/Scene":13,"minibot/event/KeyboardEvent":33,"minibot/event/MouseEvent":34,"minibot/event/TouchEvent":35,"minibot/event/enum/Keyboard":36,"minibot/graphics/Color":39}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -985,7 +986,7 @@ var HtmlElement = function (_DisplayObject) {
 
 exports.default = HtmlElement;
 
-},{"minibot/core/Utils":3,"minibot/display/DisplayObject":4,"minibot/event/HtmlEvent":31}],8:[function(require,module,exports){
+},{"minibot/core/Utils":3,"minibot/display/DisplayObject":4,"minibot/event/HtmlEvent":32}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1551,7 +1552,7 @@ var Button = function (_SceneDisplayObject) {
 
 exports.default = Button;
 
-},{"./SceneDisplayObject":14,"minibot/core/Utils":3,"minibot/event/ButtonEvent":28,"minibot/event/MouseEvent":33,"minibot/event/TouchEvent":34}],11:[function(require,module,exports){
+},{"./SceneDisplayObject":14,"minibot/core/Utils":3,"minibot/event/ButtonEvent":29,"minibot/event/MouseEvent":34,"minibot/event/TouchEvent":35}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1958,7 +1959,7 @@ var Rect = function (_SceneDisplayObject) {
 
 exports.default = Rect;
 
-},{"./SceneDisplayObject":14,"minibot/graphics/Color":38,"minibot/graphics/Pattern":39}],13:[function(require,module,exports){
+},{"./SceneDisplayObject":14,"minibot/graphics/Color":39,"minibot/graphics/Pattern":40}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2282,7 +2283,7 @@ Scene.TOUCH_EVENTS = 4;
 
 exports.default = Scene;
 
-},{"./Container":11,"minibot/event/EventDispatcher":30}],14:[function(require,module,exports){
+},{"./Container":11,"minibot/event/EventDispatcher":31}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2765,7 +2766,7 @@ var TextStyle
 
 exports.default = TextStyle;
 
-},{"minibot/graphics/Color":38}],18:[function(require,module,exports){
+},{"minibot/graphics/Color":39}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2789,43 +2790,41 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Engine = function (_EventDispatcher) {
   _inherits(Engine, _EventDispatcher);
 
-  // List of all systems
-  // systems: null,
-
-  // List of all systems by type
-  // systemsByType: null,
-
-  // List of all objects
-  // objects: null,
-
-  // List of objects by type
-  // objectsByType: null,
-
-  // The primary camera
-  // camera: null,
-
-  // the player
-  // player: null,
-
-  // The resource map
-  // resources: null,
-
-  // The update order
-  // updateOrder: null,
-
-  function Engine() {
+  function Engine(systems, updateOrder) {
     _classCallCheck(this, Engine);
 
+    // List of all systems
     var _this = _possibleConstructorReturn(this, (Engine.__proto__ || Object.getPrototypeOf(Engine)).call(this));
 
-    _this.resources = {};
-
     _this.systems = [];
+    // List of all systems by type
     _this.systemsByType = {};
-
+    // List of all objects
     _this.objects = [];
+    // List of objects by type
     _this.objectsByType = {};
+    // The resource map
+    _this.resources = {};
+    // The update order
+    _this.updateOrder = updateOrder;
+    // The primary camera
+    _this.camera = null;
+    // the player
+    _this.player = null;
+    // the scene
+    _this.scene = null;
+    // the scene
+    _this.viewport = null;
 
+    // Add the systems
+    for (var i = 0; i < systems.length; i++) {
+      _this.addSystem(systems[i]);
+    }
+
+    // Initialize the systems
+    for (var i = 0; i < _this.systems.length; i++) {
+      _this.systems[i].onInitialized();
+    }
     return _this;
   }
 
@@ -2834,9 +2833,14 @@ var Engine = function (_EventDispatcher) {
   // Update/Render Methods -->
 
   _createClass(Engine, [{
+    key: 'start',
+    value: function start() {
+      if (this.running) return;
+      this.running = true;
+    }
+  }, {
     key: 'update',
     value: function update(dt) {
-
       // Update the Systems in preset order
       for (var s = 0; s < this.updateOrder.length; s++) {
         this.systemsByType[this.updateOrder[s]].update(dt);
@@ -2856,6 +2860,31 @@ var Engine = function (_EventDispatcher) {
     key: 'setUpdateOrder',
     value: function setUpdateOrder(updateOrder) {
       this.updateOrder = updateOrder;
+    }
+  }, {
+    key: 'setScene',
+    value: function setScene(scene) {
+      this.scene = scene;
+    }
+  }, {
+    key: 'getScene',
+    value: function getScene(scene) {
+      return this.scene;
+    }
+  }, {
+    key: 'setCamera',
+    value: function setCamera(camera) {
+      this.camera = camera;
+    }
+  }, {
+    key: 'getCamera',
+    value: function getCamera(camera) {
+      return this.camera;
+    }
+  }, {
+    key: 'setViewport',
+    value: function setViewport(viewport) {
+      this.viewport = viewport;
     }
 
     // <-- Update/Render Methods
@@ -2885,6 +2914,11 @@ var Engine = function (_EventDispatcher) {
     key: 'removeSystem',
     value: function removeSystem() {}
   }, {
+    key: 'getSystem',
+    value: function getSystem(type) {
+      return this.systemsByType[type];
+    }
+  }, {
     key: 'addObject',
     value: function addObject(obj) {
       // Add to objects
@@ -2907,7 +2941,22 @@ var Engine = function (_EventDispatcher) {
     }
   }, {
     key: 'removeObject',
-    value: function removeObject() {}
+    value: function removeObject() {
+      var i = this.objects.indexOf(obj);
+      if (i != -1) this.objects.splice(i, 1);
+
+      var type = obj.getType();
+      var arr = this.objectsByType[type];
+      i = arr.indexOf(obj);
+      if (i != -1) arr.splice(i, 1);
+
+      for (var i = 0; i < this.systems.length; i++) {
+        this.systems[i].removeObject(obj);
+      }
+
+      // TODO: Add Removed Hook?
+      //obj.onRemovedFromEngine(this);
+    }
 
     // <-- Object/System Methods
 
@@ -2957,7 +3006,7 @@ var Engine = function (_EventDispatcher) {
 
 exports.default = Engine;
 
-},{"minibot/event/EventDispatcher":30}],19:[function(require,module,exports){
+},{"minibot/event/EventDispatcher":31}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3024,6 +3073,11 @@ var EngineComponent = function () {
   }, {
     key: 'onAddedToObject',
     value: function onAddedToObject() {
+      //-- OVERRIDE
+    }
+  }, {
+    key: 'onComponentsAdded',
+    value: function onComponentsAdded() {
       //-- OVERRIDE
     }
   }, {
@@ -3095,7 +3149,7 @@ var EngineComponent = function () {
 
 exports.default = EngineComponent;
 
-},{"minibot/event/EngineEvent":29}],20:[function(require,module,exports){
+},{"minibot/event/EngineEvent":30}],20:[function(require,module,exports){
 "use strict";
 
 },{}],21:[function(require,module,exports){
@@ -3126,14 +3180,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var EngineObject = function (_EventDispatcher) {
   _inherits(EngineObject, _EventDispatcher);
 
-  // type: null,
-
-  // components: null,
-
-  // data: null,
-
-  // engine: null,
-
   function EngineObject(type, data) {
     _classCallCheck(this, EngineObject);
 
@@ -3144,10 +3190,18 @@ var EngineObject = function (_EventDispatcher) {
 
     if (data == undefined) data = {};
     _this.data = data;
+
+    _this.engine = null;
     return _this;
   }
 
   _createClass(EngineObject, [{
+    key: 'destroy',
+    value: function destroy() {
+      this.components = null;
+      this.engine = null;
+    }
+  }, {
     key: 'getType',
     value: function getType() {
       return this.type;
@@ -3160,6 +3214,13 @@ var EngineObject = function (_EventDispatcher) {
         this.components[type] = component;
         component.setObject(this);
         component.onAddedToObject();
+      }
+    }
+  }, {
+    key: 'onComponentsAdded',
+    value: function onComponentsAdded() {
+      for (var c in this.components) {
+        this.components[c].onComponentsAdded();
       }
     }
   }, {
@@ -3223,6 +3284,13 @@ var EngineObject = function (_EventDispatcher) {
       return this.data[key] != undefined;
     }
   }, {
+    key: 'sendMessage',
+    value: function sendMessage(message) {
+      for (var c in this.components) {
+        this.components[c].receiveMessage(message);
+      }
+    }
+  }, {
     key: 'buildEvent',
     value: function buildEvent(type, data, component) {
       if (component == undefined) component = null;
@@ -3235,7 +3303,7 @@ var EngineObject = function (_EventDispatcher) {
 
 exports.default = EngineObject;
 
-},{"minibot/event/EngineEvent":29,"minibot/event/EventDispatcher":30}],22:[function(require,module,exports){
+},{"minibot/event/EngineEvent":30,"minibot/event/EventDispatcher":31}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3247,28 +3315,32 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EngineSystem = function () {
-
-  // type: null,
-
-  // components: null,
-
-  // componentsByObject: null,
-
-  // engine: null,
-
   function EngineSystem(type) {
     _classCallCheck(this, EngineSystem);
 
     this.type = type;
-
     this.components = [];
-
     this.componentsByObject = {};
-
     this.engine = null;
+    this.initialized = false;
   }
 
   _createClass(EngineSystem, [{
+    key: "destroy",
+    value: function destroy() {
+      for (var i = 0; i < this.components.length; i++) {
+        this.components[i].destroy();
+      }
+      this.components = null;
+      this.componentsByObject = null;
+      this.engine = null;
+    }
+  }, {
+    key: "onInitialized",
+    value: function onInitialized() {
+      this.initialized = true;
+    }
+  }, {
     key: "getType",
     value: function getType() {
       return this.type;
@@ -3303,7 +3375,22 @@ var EngineSystem = function () {
     }
   }, {
     key: "removeObject",
-    value: function removeObject(obj) {}
+    value: function removeObject(obj) {
+      if (obj.hasComponent(this.type)) {
+        var c = obj.getComponent(this.type);
+
+        var i = this.components.indexOf(c);
+        if (i != -1) this.components.splice(i, 1);
+
+        if (this.componentsByObject[obj] != undefined) {
+          delete this.componentsByObject[obj];
+        }
+
+        return c;
+      }
+
+      return null;
+    }
   }, {
     key: "setEngine",
     value: function setEngine(engine) {
@@ -3321,7 +3408,9 @@ var EngineSystem = function () {
     }
   }, {
     key: "onResourcesLoaded",
-    value: function onResourcesLoaded() {}
+    value: function onResourcesLoaded() {
+      //-- OVERRIDE
+    }
   }, {
     key: "update",
     value: function update(dt) {}
@@ -3336,6 +3425,16 @@ var EngineSystem = function () {
       for (var i = 0; i < this.components.length; i++) {
         this.components[i].update(dt);
       }
+    }
+  }, {
+    key: "dispatchEvent",
+    value: function dispatchEvent(event) {
+      this.engine.dispatchEvent(event);
+    }
+  }, {
+    key: "addEventListener",
+    value: function addEventListener(type, callback) {
+      this.engine.addEventListener(type, callback);
     }
   }]);
 
@@ -3393,7 +3492,13 @@ var DisplayComponent = function (_EngineComponent) {
     key: 'getLayers',
     value: function getLayers() {
       // override
-      return [];
+      return this.layers;
+    }
+  }, {
+    key: 'setLayers',
+    value: function setLayers(layers) {
+      // override
+      this.layers = layers;
     }
   }, {
     key: 'isVisible',
@@ -3483,6 +3588,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _EngineSystem2 = require("minibot/engine/EngineSystem");
 
 var _EngineSystem3 = _interopRequireDefault(_EngineSystem2);
@@ -3498,19 +3605,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DisplaySystem = function (_EngineSystem) {
   _inherits(DisplaySystem, _EngineSystem);
 
-  // scene: null,
-
-  // layers: null,
-
-  function DisplaySystem(type, scene) {
+  function DisplaySystem(type) {
     _classCallCheck(this, DisplaySystem);
 
     var _this = _possibleConstructorReturn(this, (DisplaySystem.__proto__ || Object.getPrototypeOf(DisplaySystem)).call(this, type));
 
-    _this.scene = scene;
-
+    _this.scene = null;
     _this.layers = new Array();
-
     return _this;
   }
 
@@ -3522,7 +3623,7 @@ var DisplaySystem = function (_EngineSystem) {
   }, {
     key: "addObject",
     value: function addObject(obj) {
-      var c = $super(obj);
+      var c = _get(DisplaySystem.prototype.__proto__ || Object.getPrototypeOf(DisplaySystem.prototype), "addObject", this).call(this, obj);
       if (c == null) return null;
 
       var l = c.getLayers();
@@ -3546,7 +3647,7 @@ var DisplaySystem = function (_EngineSystem) {
   }, {
     key: "getScene",
     value: function getScene() {
-      return this.scene;
+      return this.engine.getScene();
     }
   }, {
     key: "getCamera",
@@ -3558,11 +3659,12 @@ var DisplaySystem = function (_EngineSystem) {
 
   }, {
     key: "render",
-    value: function render(dt) {
-
+    value: function render(dt, x, y) {
       var camera = this.getCamera();
-      var cameraX = camera.getProperty("x") * -1;
-      var cameraY = camera.getProperty("y") * -1;
+      if (camera != null) {
+        x += camera.getProperty("x") * -1;
+        y += camera.getProperty("y") * -1;
+      }
 
       var i, j, layer, component;
       for (i = 0; i < this.layers.length; i++) {
@@ -3570,7 +3672,7 @@ var DisplaySystem = function (_EngineSystem) {
         for (j = 0; j < layer.length; j++) {
           component = layer[j];
           if (!component.isVisible()) continue;
-          component.render(dt, i, cameraX, cameraY);
+          component.render(dt, i, x, y);
         }
       }
     }
@@ -3582,6 +3684,90 @@ var DisplaySystem = function (_EngineSystem) {
 exports.default = DisplaySystem;
 
 },{"minibot/engine/EngineSystem":22}],27:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _EngineSystem2 = require('minibot/engine/EngineSystem');
+
+var _EngineSystem3 = _interopRequireDefault(_EngineSystem2);
+
+var _EngineEvent = require('minibot/event/EngineEvent');
+
+var _EngineEvent2 = _interopRequireDefault(_EngineEvent);
+
+var _Utils = require('minibot/core/Utils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var InputSystem = function (_EngineSystem) {
+  _inherits(InputSystem, _EngineSystem);
+
+  function InputSystem(type) {
+    _classCallCheck(this, InputSystem);
+
+    var _this = _possibleConstructorReturn(this, (InputSystem.__proto__ || Object.getPrototypeOf(InputSystem)).call(this, type));
+
+    _this.inputQueue = [];
+    _this.inputHandlers = {};
+    return _this;
+  }
+
+  _createClass(InputSystem, [{
+    key: 'onAddedToEngine',
+    value: function onAddedToEngine() {
+      this.addEventListener(_EngineEvent2.default.INPUT, (0, _Utils.BindAsEventListener)(this.handleInput, this));
+    }
+  }, {
+    key: 'update',
+    value: function update(dt) {
+      while (this.inputQueue.length) {
+        var q = this.inputQueue.shift();
+        while (this.inputQueue.length && this.inputQueue[0].type == q.type) {
+          q = this.inputQueue.shift();
+        }
+        var c = this.inputHandlers[q.type];
+        if (c != null) {
+          c.input(q.type, q.data);
+        }
+      }
+    }
+  }, {
+    key: 'handleInput',
+    value: function handleInput(event) {
+      this.inputQueue.push(event.data);
+    }
+  }, {
+    key: 'addInputHandler',
+    value: function addInputHandler(component, type) {
+      if (this.inputHandlers[type] != null) {
+        // THROW AN ERROR HERE or change to array type...
+        alert('hey fix this so it can use multiple handlers');
+      } else {
+        this.inputHandlers[type] = component;
+      }
+    }
+  }, {
+    key: 'removeInputHandler',
+    value: function removeInputHandler(component, type) {}
+  }]);
+
+  return InputSystem;
+}(_EngineSystem3.default);
+
+exports.default = InputSystem;
+
+},{"minibot/core/Utils":3,"minibot/engine/EngineSystem":22,"minibot/event/EngineEvent":30}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3649,7 +3835,7 @@ var BaseEvent
 
 exports.default = BaseEvent;
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3707,7 +3893,7 @@ ButtonEvent.SELECT = "buttonSelect";
 
 exports.default = ButtonEvent;
 
-},{"./BaseEvent":27}],29:[function(require,module,exports){
+},{"./BaseEvent":28}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3771,7 +3957,7 @@ var EngineEvent = function (_BaseEvent) {
 
 exports.default = EngineEvent;
 
-},{"./BaseEvent":27}],30:[function(require,module,exports){
+},{"./BaseEvent":28}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3889,7 +4075,7 @@ var EventDispatcher
 
 exports.default = EventDispatcher;
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3931,7 +4117,7 @@ HtmlEvent.BLUR = "HtmlEvent_Blur";
 
 exports.default = HtmlEvent;
 
-},{"minibot/event/BaseEvent":27}],32:[function(require,module,exports){
+},{"minibot/event/BaseEvent":28}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3987,7 +4173,7 @@ KeyboardEvent.KEY_UP = "keyUp";
 
 exports.default = KeyboardEvent;
 
-},{"./BaseEvent":27}],33:[function(require,module,exports){
+},{"./BaseEvent":28}],34:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4059,7 +4245,7 @@ MouseEvent.MOUSE_MOVE = "mouseMove";
 
 exports.default = MouseEvent;
 
-},{"./BaseEvent":27}],34:[function(require,module,exports){
+},{"./BaseEvent":28}],35:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4122,7 +4308,7 @@ TouchEvent.TOUCH_MOVE = "touchMove";
 
 exports.default = TouchEvent;
 
-},{"./BaseEvent":27}],35:[function(require,module,exports){
+},{"./BaseEvent":28}],36:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4176,7 +4362,7 @@ exports.default = {
 
 };
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4211,7 +4397,7 @@ function Rectangle(x, y, w, h) {
 
 exports.default = Rectangle;
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4477,7 +4663,7 @@ Vector2.temp = new Vector2();
 
 exports.default = Vector2;
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4629,7 +4815,7 @@ Color.TYPE = 'color';
 
 exports.default = Color;
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4691,7 +4877,7 @@ var Pattern
 
 exports.default = Pattern;
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5253,7 +5439,7 @@ Ajax.Response = Response;
 
 exports.default = Ajax;
 
-},{"minibot/core/Utils":3}],41:[function(require,module,exports){
+},{"minibot/core/Utils":3}],42:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5360,7 +5546,7 @@ AnimationResource.TYPE = 3;
 
 exports.default = AnimationResource;
 
-},{"minibot/resource/Resource":43,"minibot/resource/SpriteResource":45}],42:[function(require,module,exports){
+},{"minibot/resource/Resource":44,"minibot/resource/SpriteResource":46}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5447,7 +5633,7 @@ ImageResource.TYPE = 1;
 
 exports.default = ImageResource;
 
-},{"minibot/core/Utils":3,"minibot/resource/Resource":43}],43:[function(require,module,exports){
+},{"minibot/core/Utils":3,"minibot/resource/Resource":44}],44:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5511,7 +5697,7 @@ var Resource
 
 exports.default = Resource;
 
-},{"minibot/core/Utils":3}],44:[function(require,module,exports){
+},{"minibot/core/Utils":3}],45:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5570,6 +5756,7 @@ var ResourceManager = function (_Manager) {
   _createClass(ResourceManager, [{
     key: 'addType',
     value: function addType(type, className) {
+      if (type in this.typeMap) return;
       this.typeOrder.push(type);
       this.typeCount.push(0);
       this.typeMap[type] = className;
@@ -5579,6 +5766,7 @@ var ResourceManager = function (_Manager) {
     key: 'addResource',
     value: function addResource(type, id, data) {
       if (this.typeMap[type] == undefined) return;
+      if (id in this.resourceMap[type]) return;
       var className = this.typeMap[type];
       var resource = new className(id, data);
       this.resourceMap[type][id] = resource;
@@ -5677,7 +5865,7 @@ ResourceManager.getInstance = function (key) {
 
 exports.default = ResourceManager;
 
-},{"minibot/core/Manager":2,"minibot/core/Utils":3}],45:[function(require,module,exports){
+},{"minibot/core/Manager":2,"minibot/core/Utils":3}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5768,7 +5956,7 @@ SpriteResource.TYPE = 2;
 
 exports.default = SpriteResource;
 
-},{"minibot/resource/ImageResource":42,"minibot/resource/Resource":43}],46:[function(require,module,exports){
+},{"minibot/resource/ImageResource":43,"minibot/resource/Resource":44}],47:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5783,7 +5971,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (function () {
   var lastTime = 0;
-  var vendors = ['webkit', 'moz'];
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
   for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
     window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
     window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
@@ -5868,9 +6056,21 @@ system.Stop = function () {
 };
 
 system.CreateScene = function (options) {
+  if (!('element' in options)) {
+    options['element'] = document.createElement('canvas');
+  }
   var scene = new _CanvasScene2.default(options);
   return scene;
 };
+
+// system.CreateBuffer = function(options)
+// {
+//   if(!'element' in options) {
+//     options['element'] = document.createElement('canvas');
+//   }
+//   var buffer = new CanvasBuffer(options);
+//   return buffer;
+// };
 
 // Browser | Native
 system.GetWrapperType = function () {
@@ -5940,9 +6140,94 @@ system.PlatformName = {
   OTHER: "Other"
 };
 
+system.FullScreen = require('minibot/system/browser/FullScreen').default;
+
 exports.default = system;
 
-},{"minibot/display/html/CanvasScene":6}],"minibot":[function(require,module,exports){
+},{"minibot/display/html/CanvasScene":6,"minibot/system/browser/FullScreen":48}],48:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var FullScreen = {};
+
+FullScreen.start = function (root, options) {
+    if (FullScreen.isActive) return false;
+
+    if (root === null || root === undefined) {
+        throw new Error("FullScreen: Required parameter 'root' is not present");
+    }
+    if (options === null || options === undefined) options = {};
+    if (!('backgroundColor' in options)) options.backgroundColor = '#000000';
+
+    FullScreen.isActive = true;
+    FullScreen.root = root;
+    FullScreen.options = options;
+    FullScreen._request();
+    return true;
+};
+
+FullScreen.exit = function () {
+    document.webkitExitFullscreen();
+};
+
+FullScreen.size = function () {
+    return FullScreen.root.getBoundingClientRect();
+};
+
+FullScreen._init = function () {
+    FullScreen.isActive = false;
+    FullScreen.isReady = false;
+    FullScreen.root = null;
+    FullScreen.options = null;
+};
+
+FullScreen._onReady = function () {
+    FullScreen.isReady = true;
+    // Callback, wait 200ms for the screen & DOM to normalize
+    setTimeout(function () {
+        if (FullScreen.options && 'onReady' in FullScreen.options) FullScreen.options.onReady();
+    }, 200);
+};
+
+FullScreen._onExit = function () {
+    // Callback
+    if (FullScreen.options && 'onExit' in FullScreen.options) FullScreen.options.onExit();
+    FullScreen._init();
+};
+
+FullScreen._request = function () {
+    // Request fullscreen
+    // TODO: Allow cross-platform with polyfill or other
+    var root = FullScreen.root;
+    if (root.webkitRequestFullscreen) {
+        document.addEventListener('webkitfullscreenchange', FullScreen._onFullscreenChange);
+        root.webkitRequestFullscreen();
+    }
+};
+
+FullScreen._onFullscreenChange = function (event) {
+    var root = FullScreen.root;
+    if (document.webkitIsFullScreen) {
+        console.log("Enter Fullscreen");
+        root.style.width = '100%';
+        root.style.height = '100%';
+        root.style.backgroundColor = FullScreen.options.backgroundColor;
+        FullScreen._onReady();
+    } else {
+        console.log("Exit Fullscreen");
+        FullScreen._onExit();
+    }
+};
+
+FullScreen._init();
+
+exports.default = FullScreen;
+
+},{}],"minibot":[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5970,4 +6255,4 @@ exports.default = {
   system: system
 };
 
-},{"base-minibot":1,"minibot/system/browser":46}]},{},[]);
+},{"base-minibot":1,"minibot/system/browser":47}]},{},[]);
